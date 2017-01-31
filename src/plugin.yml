@@ -1,0 +1,92 @@
+name: YannyCraft
+version: 0.4.17
+author: Yanny
+main: me.noip.yanny.Main
+load: STARTUP
+description: YannyCraft server plugin
+
+commands:
+# Auth commands
+  login:
+    description: Prihlasenie hraca
+    usage: /login [heslo]
+  register:
+    description: Registracia hraca
+    usage: /register [heslo] [heslo]
+    aliases: [reg]
+  changepassword:
+    description: Zmena hesla
+    usage: /changepassword [nove_heslo] [nove_heslo]
+    aliases: [changepasswd, chp]
+# Essentials commands
+  spawn:
+    description: Teleport na spawn
+    permission: yannycraft.spawn
+    usage: /spawn [hrac]
+  setspawn:
+    description: Nastavi spawn lokaciu
+    permission: yannycraft.setspawn
+    usage: /setspawn
+  tp:
+    description: Teleportujes sa k hracovi
+    permission: yannycraft.tp
+    usage: /tp [hrac]
+  tpa:
+    description: Posles poziadavku na teleport k hracovi
+    permission: yannycraft.tpa
+    usage: /tpa [hrac]
+  tphere:
+    description: Teleportujes k sebe hraca
+    permission: yannycraft.tphere
+    usage: /tphere [hrac]
+  tpaccept:
+    description: Prijmes poziadavku hraca na teleport k tebe
+    permission: yannycraft.tpa
+    usage: /tpaccept
+  tpdeny:
+    description: Zamietnes poziadavku hraca na teleport k tebe
+    permission: yannycraft.tpa
+    usage: /tpdeny
+  heal:
+    description: Doplnis zdravie sebe/hracovi
+    permission: yannycraft.heal
+    usage: /heal [hrac]
+  feed:
+    description: Nakrmis seba/hraca
+    permission: yannycraft.feed
+    usage: /feed [hrac]
+# Home commands
+  back:
+    description: Vrat sa na miesto pred teleportom
+    permission: yannycraft.back
+    usage: /back
+  home:
+    description: Teleport na svoj domov
+    permission: yannycraft.home
+    usage: /home
+  sethome:
+    description: Nastav svoj domov
+    permission: yannycraft.home
+    usage: /sethome
+
+permissions:
+  yannycraft.spawn:
+    default: true
+  yannycraft.spawn.other:
+    default: op
+  yannycraft.setspawn:
+    default: op
+  yannycraft.tp:
+    default: op
+  yannycraft.tpa:
+    default: true
+  yannycraft.tphere:
+    default: op
+  yannycraft.heal:
+    default: op
+  yannycraft.feed:
+    default: op
+  yannycraft.back:
+    default: true
+  yannycraft.home:
+    default: true
