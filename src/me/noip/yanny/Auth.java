@@ -4,8 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,51 +27,24 @@ class Auth {
     private AuthListener authListener;
     private Connection connection = null;
     private Statement statement = null;
-    private ConfigurationSection section;
     private static final String DATABASE = "users.db";
+    private AuthConfiguration authConfiguration;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
 
     Auth(JavaPlugin plugin) {
         this.plugin = plugin;
-        FileConfiguration configuration = plugin.getConfig();
-
-        section = configuration.getConfigurationSection("auth");
-        if (section == null) {
-            section = configuration.createSection("auth");
-        }
-
-        section.addDefault("msg_register", "Zaregistruj sa /register [heslo] [heslo]");
-        section.addDefault("msg_login", "Prihlas sa /login [heslo]");
-        section.addDefault("msg_registered", "Bol si uspesne zaregistrovany");
-        section.addDefault("msg_logged", "Bol si uspesne prihlaseny");
-        section.addDefault("msg_password_changed", "Heslo bolo uspesne zmenene");
-
-        section.addDefault("msg_registered_all", "Hrac {player} sa registroval na server");
-        section.addDefault("msg_logged_all", "Hrac {player} sa prihlasil na server");
-
-        section.addDefault("msg_err_logged", "Uz si prihlaseny");
-        section.addDefault("msg_err_registered", "Uz si zaregistrovany");
-        section.addDefault("msg_err_wrong_password", "Zadal si zle heslo");
-        section.addDefault("msg_err_not_registered", "Najprv sa zaregistruj");
-        section.addDefault("msg_err_password_not_same", "Zadane hesla sa nezhoduju");
-        section.addDefault("msg_err_characters", "Heslo moze obsahovat len znaky [a-z], [A-Z] a [0-9]");
-        section.addDefault("msg_err_length", "Heslo musi mat 6 - 32 znakov");
-        section.addDefault("msg_err_register", "Chyba pocas registracie, skus znova");
-        section.addDefault("msg_err_password", "Chyba pocas zmeny hesla, skus znova");
-        section.addDefault("msg_err_command", "Nemas opravnenie na prikaz ak nie si prihlaseny");
-        section.addDefault("msg_err_chat", "Nemas opravnenie na prikaz ak nie si prihlaseny");
-
+        authConfiguration = new AuthConfiguration(plugin);
+        authListener = new AuthListener();
         loginExecutor = new LoginExecutor();
         registerExecutor = new RegisterExecutor();
         changePasswordExecutor = new ChangePasswordExecutor();
-
-        authListener = new AuthListener();
     }
 
     void onEnable() {
-        plugin.getServer().getPluginManager().registerEvents(authListener, plugin);
+        authConfiguration.load();
 
+        plugin.getServer().getPluginManager().registerEvents(authListener, plugin);
         plugin.getCommand("login").setExecutor(loginExecutor);
         plugin.getCommand("register").setExecutor(registerExecutor);
         plugin.getCommand("changepassword").setExecutor(changePasswordExecutor);
@@ -94,7 +65,7 @@ class Auth {
         }
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration);
             authPlayerWrapper.loginAfterReload();
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
         }
@@ -124,6 +95,8 @@ class Auth {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        authConfiguration.save();
     }
 
     boolean isLogged(Player player) {
@@ -202,7 +175,7 @@ class Auth {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration);
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
@@ -252,7 +225,7 @@ class Auth {
                 String msg = event.getMessage();
 
                 if (!msg.startsWith("/login") && !msg.startsWith("/register")) {
-                    player.sendMessage(ChatColor.RED + section.getString("msg_err_command"));
+                    player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_command"));
                     event.setCancelled(true);
                 }
             }
@@ -274,7 +247,7 @@ class Auth {
             }
 
             if (!authPlayerWrapper.isLogged()){
-                player.sendMessage(ChatColor.RED + section.getString("msg_err_chat"));
+                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_chat"));
                 event.setCancelled(true);
             }
 

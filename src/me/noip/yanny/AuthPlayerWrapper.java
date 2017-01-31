@@ -3,10 +3,7 @@ package me.noip.yanny;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -24,26 +21,26 @@ class AuthPlayerWrapper {
     private Statement statement;
     private Location loginLocation;
     private GameMode loginGameMode;
-    private ConfigurationSection configuration;
+    private AuthConfiguration authConfiguration;
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(JavaPlugin plugin, Player player, Statement statement) {
+    AuthPlayerWrapper(JavaPlugin plugin, Player player, Statement statement, AuthConfiguration authConfiguration) {
         this.plugin = plugin;
         this.player = player;
         this.statement = statement;
-        configuration = plugin.getConfig().getConfigurationSection("auth");
+        this.authConfiguration = authConfiguration;
 
         if (restoreData(player)) {
             loginLocation = player.getLocation();
             loginGameMode = player.getGameMode();
             registered = true;
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_login"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
         } else {
             loginLocation = (Location)plugin.getConfig().getConfigurationSection("essentials").get("spawn");
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_register"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_register"));
         }
 
         logged = false;
@@ -60,19 +57,19 @@ class AuthPlayerWrapper {
 
     void register(String password, String passwordAgain) {
         if (logged || registered) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_registered"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_registered"));
             return;
         }
         if (!password.equals(passwordAgain)) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_password_not_same"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password_not_same"));
             return;
         }
         if (!password.matches("[A-Za-z0-9]+")) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_characters"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_characters"));
             return;
         }
         if ((password.length() < 6) || (password.length() > 32)) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_length"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_length"));
             return;
         }
 
@@ -85,30 +82,30 @@ class AuthPlayerWrapper {
                     + "DATETIME('now'))");
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_register"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_register"));
             return;
         }
 
         registered = true;
         logged = true;
-        plugin.getServer().broadcastMessage(ChatColor.GOLD + configuration.getString("msg_registered_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
-        player.sendMessage(ChatColor.GREEN + configuration.getString("msg_registered"));
+        plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_registered_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
+        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_registered"));
         player.setGameMode(GameMode.SURVIVAL);
     }
 
     void login(String password) {
         if (!registered) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_not_registered"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_not_registered"));
             return;
         }
         if (logged) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_logged"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_logged"));
             return;
         }
 
         try {
             if (!checkPassword(password)) {
-                player.sendMessage(ChatColor.RED + configuration.getString("msg_err_wrong_password"));
+                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_wrong_password"));
                 return;
             }
         } catch (Exception e) {
@@ -117,33 +114,33 @@ class AuthPlayerWrapper {
         }
 
         logged = true;
-        plugin.getServer().broadcastMessage(ChatColor.GOLD + configuration.getString("msg_logged_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
-        player.sendMessage(ChatColor.GREEN + configuration.getString("msg_logged"));
+        plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_logged_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
+        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
     }
 
     void loginAfterReload() {
         logged = true;
-        player.sendMessage(ChatColor.GREEN + configuration.getString("msg_logged"));
+        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
     }
 
     void changePassword(String password, String passwordAgain) {
         if (!logged || !registered) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_registered"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_registered"));
         }
         if (!password.equals(passwordAgain)) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_password_not_same"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password_not_same"));
             return;
         }
         if (!password.matches("[A-Za-z0-9]+")) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_characters"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_characters"));
             return;
         }
         if ((password.length() < 6) || (password.length() > 32)) {
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_length"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_length"));
             return;
         }
 
@@ -152,11 +149,11 @@ class AuthPlayerWrapper {
             statement.executeUpdate("UPDATE users SET Password = '" + goodPassword + "' WHERE ID = '" + player.getUniqueId().toString() + "'");
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + configuration.getString("msg_err_password"));
+            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password"));
             return;
         }
 
-        player.sendMessage(ChatColor.GREEN + configuration.getString("msg_password_changed"));
+        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_password_changed"));
     }
 
     boolean isLogged() {

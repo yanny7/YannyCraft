@@ -22,9 +22,6 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-
         auth.onEnable();
         playerConfiguration.onEnable();
         essentials.onEnable();
@@ -44,7 +41,6 @@ public class Main extends JavaPlugin {
         home.onDisable();
         rpg.onDisable();
 
-        saveConfig();
         getLogger().info("Disabled YannyCraft plugin");
     }
 

@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -169,6 +168,7 @@ class Home {
             Location from = event.getFrom();
 
             if (!teleportCauses.contains(event.getCause())) {
+                plugin.getLogger().warning("Invalid cause: " + event.getCause().name());
                 return;
             }
 
