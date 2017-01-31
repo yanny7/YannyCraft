@@ -25,7 +25,7 @@ class AuthPlayerWrapper {
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(JavaPlugin plugin, Player player, Statement statement, AuthConfiguration authConfiguration) {
+    AuthPlayerWrapper(JavaPlugin plugin, Player player, Statement statement, AuthConfiguration authConfiguration, EssentialsConfiguration essentialsConfiguration) {
         this.plugin = plugin;
         this.player = player;
         this.statement = statement;
@@ -37,7 +37,7 @@ class AuthPlayerWrapper {
             registered = true;
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
         } else {
-            loginLocation = (Location)plugin.getConfig().getConfigurationSection("essentials").get("spawn");
+            loginLocation = essentialsConfiguration.getSpawnLocation(player);
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_register"));
@@ -45,7 +45,7 @@ class AuthPlayerWrapper {
 
         logged = false;
 
-        player.teleport((Location)plugin.getConfig().getConfigurationSection("essentials").get("spawn"));
+        player.teleport(essentialsConfiguration.getSpawnLocation(player));
         player.setGameMode(GameMode.SPECTATOR);
     }
 

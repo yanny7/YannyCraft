@@ -7,30 +7,36 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 class Essentials {
 
+    private static final String CFG_BACK = "backLocation";
+    private static final String CFG_HOME = "homeLocation";
+
     private JavaPlugin plugin;
+    private PlayerConfiguration playerConfiguration;
+    private Auth auth;
 
     private Map<UUID, PermissionAttachment> permissionAttachment;
     private Map<Player, Player> teleportRequest;
+    private EssentialsConfiguration essentialsConfiguration;
 
     private EssentialsListener essentialsListener;
-    private ConfigurationSection section;
-
     private SpawnExecutor spawnExecutor;
     private SetSpawnExecutor setSpawnExecutor;
     private TpExecutor tpExecutor;
@@ -40,27 +46,18 @@ class Essentials {
     private TpdenyExecutor tpdenyExecutor;
     private HealExecutor healExecutor;
     private FeedExecutor feedExecutor;
+    private BackExecutor backExecutor;
+    private HomeExecutor homeExecutor;
+    private SetHomeExecutor setHomeExecutor;
 
-    Essentials(JavaPlugin plugin) {
+    Essentials(JavaPlugin plugin, PlayerConfiguration playerConfiguration, Auth auth) {
         this.plugin = plugin;
-        FileConfiguration configuration = plugin.getConfig();
-
-        section = configuration.getConfigurationSection("essentials");
-        if (section == null) {
-            section = configuration.createSection("essentials");
-        }
-
-        section.addDefault("msg_spawn_set", "Nova spawn lokacia bola nastavena");
-        section.addDefault("msg_tpa_sended", "Poziadavka na teleport bola odoslana hracovi");
-        section.addDefault("msg_tpa_received", "Hrac {player} sa chce k tebe teleportovat /tpaccept prijmi, /tpdeny zamietni");
-        section.addDefault("msg_tpdeny", "Poziadavka na teleport bola zamietnuta");
-        section.addDefault("msg_teleported", "Bol si teleportovany k hracovi {player}");
-
-        section.addDefault("msg_err_invalid_user", "Hrac {player} neexistuje");
-        section.addDefault("msg_err_permission", "Na tento prikaz nemas prava");
+        this.playerConfiguration = playerConfiguration;
+        this.auth = auth;
 
         permissionAttachment = new HashMap<>();
         teleportRequest = new HashMap<>();
+        essentialsConfiguration = new EssentialsConfiguration(plugin);
 
         essentialsListener = new EssentialsListener();
         spawnExecutor = new SpawnExecutor();
@@ -72,9 +69,14 @@ class Essentials {
         tpdenyExecutor = new TpdenyExecutor();
         healExecutor = new HealExecutor();
         feedExecutor = new FeedExecutor();
+        backExecutor = new BackExecutor();
+        homeExecutor = new HomeExecutor();
+        setHomeExecutor = new SetHomeExecutor();
     }
 
     void onEnable() {
+        essentialsConfiguration.load();
+
         plugin.getServer().getPluginManager().registerEvents(essentialsListener, plugin);
         plugin.getCommand("spawn").setExecutor(spawnExecutor);
         plugin.getCommand("setspawn").setExecutor(setSpawnExecutor);
@@ -85,6 +87,9 @@ class Essentials {
         plugin.getCommand("tpdeny").setExecutor(tpdenyExecutor);
         plugin.getCommand("heal").setExecutor(healExecutor);
         plugin.getCommand("feed").setExecutor(feedExecutor);
+        plugin.getCommand("back").setExecutor(backExecutor);
+        plugin.getCommand("home").setExecutor(homeExecutor);
+        plugin.getCommand("sethome").setExecutor(setHomeExecutor);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin));
@@ -99,6 +104,11 @@ class Essentials {
 
         permissionAttachment.clear();
         teleportRequest.clear();
+        essentialsConfiguration.save();
+    }
+
+    EssentialsConfiguration getEssentialsConfiguration() {
+        return essentialsConfiguration;
     }
 
     class SpawnExecutor implements CommandExecutor {
@@ -117,18 +127,18 @@ class Essentials {
             }
 
             if (args.length == 0) {
-                player.teleport((Location)section.get("spawn"));
+                player.teleport(essentialsConfiguration.getSpawnLocation(player));
             } else {
                 if (player.hasPermission("yannycraft.spawn.other")) {
                     Player target = plugin.getServer().getPlayer(args[0]);
 
                     if (target != null) {
-                        target.teleport((Location)section.get("spawn"));
+                        target.teleport(essentialsConfiguration.getSpawnLocation(player));
                     } else {
-                        player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                        player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
                     }
                 } else {
-                    player.sendMessage(ChatColor.RED + section.getString("msg_err_permission"));
+                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_permission"));
                 }
             }
 
@@ -144,8 +154,8 @@ class Essentials {
             }
 
             Player player = (Player) commandSender;
-            section.set("spawn", player.getLocation());
-            player.sendMessage(ChatColor.GREEN + section.getString("msg_spawn_set"));
+            essentialsConfiguration.setSpawnLocation(player.getLocation());
+            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_spawn_set"));
             return true;
         }
     }
@@ -163,7 +173,7 @@ class Essentials {
             if (target != null) {
                 player.teleport(target.getLocation());
             } else {
-                player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
             }
             return true;
         }
@@ -180,11 +190,11 @@ class Essentials {
             Player target = plugin.getServer().getPlayer(args[0]);
 
             if (target != null) {
-                player.sendMessage(ChatColor.GREEN + section.getString("msg_tpa_sended"));
-                target.sendMessage(ChatColor.GREEN + section.getString("msg_tpa_received").replace("{player}", ChatColor.GOLD + player.getDisplayName() + ChatColor.GREEN));
+                player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_tpa_sended"));
+                target.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_tpa_received").replace("{player}", ChatColor.GOLD + player.getDisplayName() + ChatColor.GREEN));
                 teleportRequest.put(target, player);
             } else {
-                player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
             }
             return true;
         }
@@ -202,9 +212,9 @@ class Essentials {
 
             if (target != null) {
                 target.teleport(player.getLocation());
-                target.sendMessage(ChatColor.GREEN + section.getString("msg_teleported").replace("{player}", ChatColor.GOLD + player.getDisplayName() + ChatColor.GREEN));
+                target.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_teleported").replace("{player}", ChatColor.GOLD + player.getDisplayName() + ChatColor.GREEN));
             } else {
-                player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
             }
             return true;
         }
@@ -225,7 +235,7 @@ class Essentials {
                 if (target != null) {
                     target.teleport(player.getLocation());
                 } else {
-                    player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
                 }
             }
 
@@ -244,8 +254,8 @@ class Essentials {
 
             if (teleportRequest.containsKey(player)) {
                 Player target = teleportRequest.remove(player);
-                player.sendMessage(ChatColor.GREEN + section.getString("msg_tpdeny"));
-                target.sendMessage(ChatColor.RED + section.getString("msg_tpdeny"));
+                player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_tpdeny"));
+                target.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_tpdeny"));
             }
             return true;
         }
@@ -268,7 +278,7 @@ class Essentials {
                 if (target != null) {
                     target.setHealth(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
                 } else {
-                    player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
                 }
             }
             return true;
@@ -292,14 +302,100 @@ class Essentials {
                 if (target != null) {
                     target.setFoodLevel(20);
                 } else {
-                    player.sendMessage(ChatColor.RED + section.getString("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
                 }
             }
             return true;
         }
     }
 
+    class BackExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length != 0)) {
+                return false;
+            }
+
+            Player player = (Player) commandSender;
+            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
+
+            if (configuration == null) {
+                plugin.getLogger().warning("BackExecutor: Configuration not found!" + player.getDisplayName());
+                return false;
+            }
+
+            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
+            player.teleport((Location) homeSection.get(CFG_BACK));
+            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_back"));
+            return true;
+        }
+    }
+
+    class HomeExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length != 0)) {
+                return false;
+            }
+
+            Player player = (Player) commandSender;
+            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
+
+            if (configuration == null) {
+                plugin.getLogger().warning("HomeExecutor: Configuration not found!" + player.getDisplayName());
+                return false;
+            }
+
+            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
+            player.teleport((Location)homeSection.get(CFG_HOME));
+            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home"));
+            return true;
+        }
+    }
+
+    class SetHomeExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length != 0)) {
+                return false;
+            }
+
+            Player player = (Player) commandSender;
+            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
+
+            if (configuration == null) {
+                plugin.getLogger().warning("SetHomeExecutor: Configuration not found!" + player.getDisplayName());
+                return false;
+            }
+
+            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
+            homeSection.set(CFG_HOME, player.getLocation());
+            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home_created"));
+            return true;
+        }
+    }
+
     class EssentialsListener implements Listener {
+        private EnumSet<PlayerTeleportEvent.TeleportCause> teleportCauses = EnumSet.of(PlayerTeleportEvent.TeleportCause.COMMAND, PlayerTeleportEvent.TeleportCause.PLUGIN, PlayerTeleportEvent.TeleportCause.UNKNOWN);
+
+        @EventHandler
+        void onPlayerAuth(PlayerAuthEvent event) {
+            Player player = event.getPlayer();
+            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
+
+            if (configuration == null) {
+                plugin.getLogger().warning("onPlayerAuth: Configuration not found!" + player.getDisplayName());
+                return;
+            }
+
+            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
+            if (homeSection == null) {
+                homeSection = configuration.createSection("home");
+                homeSection.set(CFG_HOME, essentialsConfiguration.getSpawnLocation(player));
+                homeSection.set(CFG_BACK, essentialsConfiguration.getSpawnLocation(player));
+            }
+        }
+
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
@@ -318,10 +414,49 @@ class Essentials {
         }
 
         @EventHandler
-        void onWorldLoaded(WorldLoadEvent event) {
-            if (!section.isSet("spawn")) {
-                section.addDefault("spawn", event.getWorld().getSpawnLocation());
+        void onPlayerDeath(PlayerDeathEvent event) {
+            Player player = event.getEntity();
+            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
+
+            if (configuration == null) {
+                plugin.getLogger().warning("onPlayerAuth: Configuration not found!" + player.getDisplayName());
+                return;
             }
+
+            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
+            homeSection.set(CFG_BACK, player.getLocation());
+        }
+
+        @EventHandler
+        void onWorldLoad(WorldLoadEvent event) {
+            String spawnWorld = essentialsConfiguration.getSpawnWorld();
+            if ((spawnWorld != null) && (spawnWorld.equals(event.getWorld().getName()))) {
+                essentialsConfiguration.loadSpawnLocation(spawnWorld);
+            }
+        }
+
+        @EventHandler
+        void onPlayerTeleport(PlayerTeleportEvent event) {
+            Player player = event.getPlayer();
+            Location from = event.getFrom();
+
+            if (!teleportCauses.contains(event.getCause())) {
+                return;
+            }
+
+            if (!auth.isLogged(player)) {
+                return;
+            }
+
+            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
+
+            if (configuration == null) {
+                plugin.getLogger().warning("onPlayerTeleport: Configuration not found!" + player.getDisplayName());
+                return;
+            }
+
+            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
+            homeSection.set(CFG_BACK, from);
         }
     }
 }

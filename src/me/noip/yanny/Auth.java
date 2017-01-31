@@ -29,6 +29,7 @@ class Auth {
     private Statement statement = null;
     private static final String DATABASE = "users.db";
     private AuthConfiguration authConfiguration;
+    private EssentialsConfiguration essentialsConfiguration;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
 
@@ -65,7 +66,7 @@ class Auth {
         }
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration, essentialsConfiguration);
             authPlayerWrapper.loginAfterReload();
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
         }
@@ -97,6 +98,10 @@ class Auth {
         }
 
         authConfiguration.save();
+    }
+
+    void setEssentialsConfiguration(EssentialsConfiguration essentialsConfiguration) {
+        this.essentialsConfiguration = essentialsConfiguration;
     }
 
     boolean isLogged(Player player) {
@@ -175,7 +180,7 @@ class Auth {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration, essentialsConfiguration);
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);

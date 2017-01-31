@@ -4,6 +4,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 class ServerConfigurationWrapper extends YamlConfiguration {
 
@@ -47,5 +49,16 @@ class ServerConfigurationWrapper extends YamlConfiguration {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    static Map<String,String> convertMap(Map<String, Object> map) {
+        Map<String,String> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if(entry.getValue() instanceof String){
+                newMap.put(entry.getKey(), (String) entry.getValue());
+            }
+        }
+
+        return newMap;
     }
 }

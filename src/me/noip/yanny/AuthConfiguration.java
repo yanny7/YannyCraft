@@ -46,7 +46,9 @@ class AuthConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(convertMap(translationSection.getValues(false)));
+        translationMap.putAll(ServerConfigurationWrapper.convertMap(translationSection.getValues(false)));
+
+        save(); // save defaults
     }
 
     void save() {
@@ -59,16 +61,5 @@ class AuthConfiguration {
 
     String getTranslation(String key) {
         return translationMap.get(key);
-    }
-
-    private Map<String,String> convertMap(Map<String, Object> map) {
-        Map<String,String> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getValue() instanceof String){
-                newMap.put(entry.getKey(), (String) entry.getValue());
-            }
-        }
-
-        return newMap;
     }
 }
