@@ -1,11 +1,13 @@
 package me.noip.yanny;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -15,6 +17,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 class RpgConfiguration {
@@ -42,8 +46,8 @@ class RpgConfiguration {
             Enchantment.ARROW_INFINITE
     };
 
-    private EnumSet<EntityType> ARMOR_WEARERS = EnumSet.of(EntityType.ZOMBIE, EntityType.PIG_ZOMBIE, EntityType.SKELETON, EntityType.HUSK, EntityType.WITHER_SKELETON);
-    private EnumSet<EntityType> SWORD_WEARERS = EnumSet.of(EntityType.ZOMBIE, EntityType.PIG_ZOMBIE, EntityType.HUSK, EntityType.WITHER_SKELETON);
+    private static final EnumSet<EntityType> ARMOR_WEARERS = EnumSet.of(EntityType.ZOMBIE, EntityType.PIG_ZOMBIE, EntityType.SKELETON, EntityType.HUSK, EntityType.WITHER_SKELETON);
+    private static final EnumSet<EntityType> SWORD_WEARERS = EnumSet.of(EntityType.ZOMBIE, EntityType.PIG_ZOMBIE, EntityType.HUSK, EntityType.WITHER_SKELETON);
 
     private static final String BOSS_SPAWN_RATE = "boss_spawn_rate";
     private static final String BOSS_DROP_CHANCE = "boss_drop_chance";
@@ -51,6 +55,14 @@ class RpgConfiguration {
     private static final String BOSS_HEALTH = "boss_health";
     private static final String BOSS_ENCHANTMENT_CHANCE = "boss_enchantment_chance";
     private static final String BOSS_DEATH_EXP = "boss_death_exp";
+
+    private static final String CONFIGURATION_NAME = "rpg";
+    private static final String TRANSLATION_SECTION = "translation";
+    private static final String BOSS_SECTION = "boss";
+
+    private ServerConfigurationWrapper serverConfigurationWrapper;
+    private RewardWrapper rewardWrapper;
+    private Map<String, String> translationMap = new HashMap<>();
 
     private double bossSpawnRate = 0.1;
     private double bossDropChance = 0.25;
@@ -60,40 +72,68 @@ class RpgConfiguration {
     private int bossDeathExp = 100;
 
     private Plugin plugin;
+    private PlayerConfiguration playerConfiguration;
     private Random random;
 
-    RpgConfiguration(Plugin plugin, ConfigurationSection configuration) {
+    RpgConfiguration(Plugin plugin, PlayerConfiguration playerConfiguration) {
         this.plugin = plugin;
+        this.playerConfiguration = playerConfiguration;
         random = new Random();
 
-        ConfigurationSection rewardSection = configuration.getConfigurationSection("rpg_reward");
-        if (rewardSection == null) {
+        translationMap.put("msg_reward", "Dostal si odmenu!");
 
-        } else {
-
-        }
-
-        ConfigurationSection bossSection = configuration.getConfigurationSection("rpg_boss");
-        if (bossSection == null) {
-            bossSection = configuration.createSection("rpg_boss");
-            bossSection.set(BOSS_SPAWN_RATE, bossSpawnRate);
-            bossSection.set(BOSS_DROP_CHANCE, bossDropChance);
-            bossSection.set(BOSS_ARMORED_HEALTH, bossArmoredHealth);
-            bossSection.set(BOSS_HEALTH, bossHealth);
-            bossSection.set(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
-            bossSection.set(BOSS_DEATH_EXP, bossDeathExp);
-        } else {
-            bossSpawnRate = bossSection.getDouble(BOSS_SPAWN_RATE, bossSpawnRate);
-            bossDropChance = bossSection.getDouble(BOSS_DROP_CHANCE, bossDropChance);
-            bossArmoredHealth = bossSection.getInt(BOSS_ARMORED_HEALTH, bossArmoredHealth);
-            bossHealth = bossSection.getInt(BOSS_HEALTH, bossHealth);
-            bossEnchantmentChance = bossSection.getDouble(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
-            bossDeathExp = bossSection.getInt(BOSS_DEATH_EXP, bossDeathExp);
-        }
+        serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
+        rewardWrapper = new RewardWrapper(serverConfigurationWrapper, plugin);
     }
 
-    ItemStack getReward() {
-        return null;
+    void load() {
+        serverConfigurationWrapper.load();
+
+        ConfigurationSection bossSection = serverConfigurationWrapper.getConfigurationSection(BOSS_SECTION);
+        if (bossSection == null) {
+            bossSection = serverConfigurationWrapper.createSection(BOSS_SECTION);
+        }
+        bossSpawnRate = bossSection.getDouble(BOSS_SPAWN_RATE, bossSpawnRate);
+        bossDropChance = bossSection.getDouble(BOSS_DROP_CHANCE, bossDropChance);
+        bossArmoredHealth = bossSection.getInt(BOSS_ARMORED_HEALTH, bossArmoredHealth);
+        bossHealth = bossSection.getInt(BOSS_HEALTH, bossHealth);
+        bossEnchantmentChance = bossSection.getDouble(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
+        bossDeathExp = bossSection.getInt(BOSS_DEATH_EXP, bossDeathExp);
+
+        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        if (translationSection == null) {
+            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
+        }
+        translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
+
+        rewardWrapper.load();
+        save(); // save defaults
+    }
+
+    void save() {
+        ConfigurationSection bossSection = serverConfigurationWrapper.getConfigurationSection(BOSS_SECTION);
+        bossSection.set(BOSS_SPAWN_RATE, bossSpawnRate);
+        bossSection.set(BOSS_DROP_CHANCE, bossDropChance);
+        bossSection.set(BOSS_ARMORED_HEALTH, bossArmoredHealth);
+        bossSection.set(BOSS_HEALTH, bossHealth);
+        bossSection.set(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
+        bossSection.set(BOSS_DEATH_EXP, bossDeathExp);
+
+        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
+            translationSection.set(pair.getKey(), pair.getValue());
+        }
+
+        rewardWrapper.save();
+        serverConfigurationWrapper.save();
+    }
+
+    String getTranslation(String key) {
+        return translationMap.get(key);
+    }
+
+    ItemStack getReward(RewardWrapper.RewardType type, int count) {
+        return rewardWrapper.getReward(type, count);
     }
 
     void bossDeathDrop(EntityDeathEvent event) {
@@ -143,6 +183,18 @@ class RpgConfiguration {
                 monster.setHealth(bossHealth);
                 monster.setGlowing(true);
                 monster.setCanPickupItems(true);
+            }
+        }
+    }
+
+    void checkForReward(Player player) {
+        for (RewardWrapper.RewardType type : RewardWrapper.RewardType.values()) {
+            ItemStack reward = rewardWrapper.getReward(type, playerConfiguration.getStatistic(player, type));
+
+            if (reward != null) {
+                player.getInventory().addItem(reward);
+                player.sendMessage(ChatColor.GREEN + translationMap.get("msg_reward"));
+                playerConfiguration.incrementStatistic(player, type);
             }
         }
     }

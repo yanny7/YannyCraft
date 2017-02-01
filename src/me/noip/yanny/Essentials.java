@@ -6,7 +6,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,9 +23,6 @@ import java.util.Map;
 import java.util.UUID;
 
 class Essentials {
-
-    private static final String CFG_BACK = "backLocation";
-    private static final String CFG_HOME = "homeLocation";
 
     private JavaPlugin plugin;
     private PlayerConfiguration playerConfiguration;
@@ -317,15 +313,7 @@ class Essentials {
             }
 
             Player player = (Player) commandSender;
-            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
-
-            if (configuration == null) {
-                plugin.getLogger().warning("BackExecutor: Configuration not found!" + player.getDisplayName());
-                return false;
-            }
-
-            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
-            player.teleport((Location) homeSection.get(CFG_BACK));
+            player.teleport(playerConfiguration.getBackLocation(player));
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_back"));
             return true;
         }
@@ -339,15 +327,7 @@ class Essentials {
             }
 
             Player player = (Player) commandSender;
-            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
-
-            if (configuration == null) {
-                plugin.getLogger().warning("HomeExecutor: Configuration not found!" + player.getDisplayName());
-                return false;
-            }
-
-            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
-            player.teleport((Location)homeSection.get(CFG_HOME));
+            player.teleport(playerConfiguration.getHomeLocation(player));
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home"));
             return true;
         }
@@ -361,15 +341,7 @@ class Essentials {
             }
 
             Player player = (Player) commandSender;
-            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
-
-            if (configuration == null) {
-                plugin.getLogger().warning("SetHomeExecutor: Configuration not found!" + player.getDisplayName());
-                return false;
-            }
-
-            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
-            homeSection.set(CFG_HOME, player.getLocation());
+            playerConfiguration.setHomeLocation(player, player.getLocation());
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home_created"));
             return true;
         }
@@ -377,24 +349,6 @@ class Essentials {
 
     class EssentialsListener implements Listener {
         private EnumSet<PlayerTeleportEvent.TeleportCause> teleportCauses = EnumSet.of(PlayerTeleportEvent.TeleportCause.COMMAND, PlayerTeleportEvent.TeleportCause.PLUGIN, PlayerTeleportEvent.TeleportCause.UNKNOWN);
-
-        @EventHandler
-        void onPlayerAuth(PlayerAuthEvent event) {
-            Player player = event.getPlayer();
-            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
-
-            if (configuration == null) {
-                plugin.getLogger().warning("onPlayerAuth: Configuration not found!" + player.getDisplayName());
-                return;
-            }
-
-            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
-            if (homeSection == null) {
-                homeSection = configuration.createSection("home");
-                homeSection.set(CFG_HOME, essentialsConfiguration.getSpawnLocation(player));
-                homeSection.set(CFG_BACK, essentialsConfiguration.getSpawnLocation(player));
-            }
-        }
 
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
@@ -416,15 +370,7 @@ class Essentials {
         @EventHandler
         void onPlayerDeath(PlayerDeathEvent event) {
             Player player = event.getEntity();
-            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
-
-            if (configuration == null) {
-                plugin.getLogger().warning("onPlayerAuth: Configuration not found!" + player.getDisplayName());
-                return;
-            }
-
-            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
-            homeSection.set(CFG_BACK, player.getLocation());
+            playerConfiguration.setBackLocation(player, player.getLocation());
         }
 
         @EventHandler
@@ -448,15 +394,7 @@ class Essentials {
                 return;
             }
 
-            PlayerConfigurationWrapper configuration = playerConfiguration.getConfiguration(player);
-
-            if (configuration == null) {
-                plugin.getLogger().warning("onPlayerTeleport: Configuration not found!" + player.getDisplayName());
-                return;
-            }
-
-            ConfigurationSection homeSection = configuration.getConfigurationSection("home");
-            homeSection.set(CFG_BACK, from);
+            playerConfiguration.setBackLocation(player, from);
         }
     }
 }

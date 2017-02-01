@@ -49,7 +49,7 @@ class EssentialsConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(ServerConfigurationWrapper.convertMap(translationSection.getValues(false)));
+        translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
 
         save(); // save defaults
     }
