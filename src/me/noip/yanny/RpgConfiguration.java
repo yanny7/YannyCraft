@@ -112,9 +112,11 @@ class RpgConfiguration {
             statsSection = serverConfigurationWrapper.createSection(STAT_SECTION);
         }
         for (Map.Entry<String, Object> pair : statsSection.getValues(false).entrySet()) {
-            RewardWrapper.RewardType rewardType = RewardWrapper.RewardType.valueOf(pair.getKey());
+            RewardWrapper.RewardType rewardType;
 
-            if (rewardType == null) {
+            try {
+                rewardType = RewardWrapper.RewardType.valueOf(pair.getKey());
+            } catch (Exception e) {
                 plugin.getLogger().warning("RpgConfiguration.load: cant cast to RewardType: " + pair.getKey());
                 continue;
             }
