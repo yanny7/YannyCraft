@@ -57,6 +57,7 @@ class AuthPlayerWrapper {
     void onQuit() {
         if (registered) {
             storeData(player);
+            plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_disconnect_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
         }
     }
 
@@ -130,10 +131,6 @@ class AuthPlayerWrapper {
         player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
-    }
-
-    void logout() {
-        plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_disconnect_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
     }
 
     void changePassword(String password, String passwordAgain) {
