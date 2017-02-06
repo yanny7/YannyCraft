@@ -23,6 +23,7 @@ class AuthConfiguration {
 
         translationMap.put("msg_registered_all", "Hrac {player} sa registroval na server");
         translationMap.put("msg_logged_all", "Hrac {player} sa prihlasil na server");
+        translationMap.put("msg_disconnect_all", "Hrac {player} sa odhlasil zo servera");
 
         translationMap.put("msg_err_logged", "Uz si prihlaseny");
         translationMap.put("msg_err_registered", "Uz si zaregistrovany");
@@ -51,7 +52,7 @@ class AuthConfiguration {
         save(); // save defaults
     }
 
-    void save() {
+    private void save() {
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
             translationSection.set(pair.getKey(), pair.getValue());

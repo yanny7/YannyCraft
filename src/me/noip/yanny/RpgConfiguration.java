@@ -15,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -110,7 +112,7 @@ class RpgConfiguration {
         save(); // save defaults
     }
 
-    void save() {
+    private void save() {
         ConfigurationSection bossSection = serverConfigurationWrapper.getConfigurationSection(BOSS_SECTION);
         bossSection.set(BOSS_SPAWN_RATE, bossSpawnRate);
         bossSection.set(BOSS_DROP_CHANCE, bossDropChance);
@@ -126,14 +128,6 @@ class RpgConfiguration {
 
         rewardWrapper.save();
         serverConfigurationWrapper.save();
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
-    }
-
-    ItemStack getReward(RewardWrapper.RewardType type, int count) {
-        return rewardWrapper.getReward(type, count);
     }
 
     void bossDeathDrop(EntityDeathEvent event) {
@@ -176,14 +170,14 @@ class RpgConfiguration {
 
                 monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(bossArmoredHealth);
                 monster.setHealth(bossArmoredHealth);
-                monster.setGlowing(true);
-                monster.setCanPickupItems(true);
             } else {
                 monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(bossHealth);
                 monster.setHealth(bossHealth);
-                monster.setGlowing(true);
-                monster.setCanPickupItems(true);
             }
+
+            //monster.setGlowing(true); // can cause rendering problem for some settings
+            monster.setCanPickupItems(true);
+            monster.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 0, false, true), true);
         }
     }
 

@@ -96,8 +96,6 @@ class Auth {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        authConfiguration.save();
     }
 
     void setEssentialsConfiguration(EssentialsConfiguration essentialsConfiguration) {

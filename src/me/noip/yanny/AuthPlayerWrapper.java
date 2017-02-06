@@ -45,7 +45,12 @@ class AuthPlayerWrapper {
 
         logged = false;
 
-        player.teleport(essentialsConfiguration.getSpawnLocation(player));
+        Location location = essentialsConfiguration.getSpawnLocation(player);
+        if (location == null) {
+            location = player.getWorld().getSpawnLocation();
+        }
+
+        player.teleport(location);
         player.setGameMode(GameMode.SPECTATOR);
     }
 
@@ -125,6 +130,10 @@ class AuthPlayerWrapper {
         player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
+    }
+
+    void logout() {
+        plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_disconnect_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
     }
 
     void changePassword(String password, String passwordAgain) {

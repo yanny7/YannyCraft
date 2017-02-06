@@ -1,6 +1,7 @@
 package me.noip.yanny;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -51,10 +52,20 @@ class EssentialsConfiguration {
         }
         translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
 
+        // try to load spawn location, after startup this fails, after reload succeed
+        String spawnWorld = getSpawnWorld();
+        if (spawnWorld != null) {
+            for (World world : plugin.getServer().getWorlds()) {
+                if (spawnWorld.equals(world.getName())) {
+                    loadSpawnLocation(spawnWorld);
+                }
+            }
+        }
+
         save(); // save defaults
     }
 
-    void save() {
+    private void save() {
         if (spawnLocation != null) {
             ConfigurationSection spawnSection = serverConfigurationWrapper.getConfigurationSection(SPAWN_SECTION);
             spawnSection.set("world", spawnLocation.getWorld().getName());
@@ -95,9 +106,9 @@ class EssentialsConfiguration {
     }
 
     Location getSpawnLocation(Player player) {
-        if (spawnLocation == null) {
-            spawnLocation = player.getWorld().getSpawnLocation(); //TODO improve
-        }
+        /*if (spawnLocation == null) {
+            spawnLocation = player.getWorld().getSpawnLocation();
+        }*/
 
         return spawnLocation;
     }

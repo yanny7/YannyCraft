@@ -16,6 +16,7 @@ public class Main extends JavaPlugin {
         essentials = new Essentials(this, playerConfiguration, auth);
         board = new Board(this);
         rpg = new RPG(this, playerConfiguration);
+        getLogger().info("Started YannyCraft plugin");
     }
 
     @Override

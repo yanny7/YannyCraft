@@ -34,7 +34,6 @@ class RPG {
     }
 
     void onDisable() {
-        rpgConfiguration.save();
     }
 
     class RpgListener implements Listener {

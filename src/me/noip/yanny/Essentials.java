@@ -100,7 +100,6 @@ class Essentials {
 
         permissionAttachment.clear();
         teleportRequest.clear();
-        essentialsConfiguration.save();
     }
 
     EssentialsConfiguration getEssentialsConfiguration() {
