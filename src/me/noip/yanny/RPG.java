@@ -19,6 +19,7 @@ class RPG {
     private PlayerConfiguration playerConfiguration;
     private RpgListener rpgListener;
     private RpgConfiguration rpgConfiguration;
+    private RpgBoard rpgBoard;
 
     RPG(JavaPlugin plugin, PlayerConfiguration playerConfiguration) {
         this.plugin = plugin;
@@ -26,14 +27,17 @@ class RPG {
 
         rpgListener = new RpgListener();
         rpgConfiguration = new RpgConfiguration(plugin, playerConfiguration);
+        rpgBoard = new RpgBoard(plugin, playerConfiguration, rpgConfiguration);
     }
 
     void onEnable() {
         rpgConfiguration.load();
+        rpgBoard.onEnable();
         plugin.getServer().getPluginManager().registerEvents(rpgListener, plugin);
     }
 
     void onDisable() {
+        rpgBoard.onDisable();
     }
 
     class RpgListener implements Listener {
@@ -50,6 +54,7 @@ class RPG {
                 case GOLD_PICKAXE:
                 case DIAMOND_PICKAXE:
                     playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.PICKAXE);
+                    rpgBoard.updateObjective(RewardWrapper.RewardType.PICKAXE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.PICKAXE));
                     break;
                 case WOOD_SPADE:
                 case STONE_SPADE:
@@ -57,6 +62,7 @@ class RPG {
                 case GOLD_SPADE:
                 case DIAMOND_SPADE:
                     playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SPADE);
+                    rpgBoard.updateObjective(RewardWrapper.RewardType.SPADE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SPADE));
                     break;
                 case WOOD_AXE:
                 case STONE_AXE:
@@ -64,6 +70,7 @@ class RPG {
                 case GOLD_AXE:
                 case DIAMOND_AXE:
                     playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.AXE);
+                    rpgBoard.updateObjective(RewardWrapper.RewardType.AXE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.AXE));
                     break;
             }
 
@@ -83,6 +90,7 @@ class RPG {
 
                 if (monster.getHealth() - event.getFinalDamage() <= 0) {
                     playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SWORD);
+                    rpgBoard.updateObjective(RewardWrapper.RewardType.SWORD, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SWORD));
                     rpgConfiguration.checkForReward(player);
                 }
             }

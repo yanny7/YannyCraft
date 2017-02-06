@@ -31,7 +31,7 @@ class PlayerConfiguration {
             PlayerConfigurationWrapper configuration = new PlayerConfigurationWrapper(plugin, player);
             PlayerConfigurationData data = new PlayerConfigurationData(configuration, player);
 
-            configuration.load();
+            data.load();
             playerConfiguration.put(player.getUniqueId(), data);
         }
     }
@@ -136,8 +136,8 @@ class PlayerConfiguration {
             if (statisticsSection == null) {
                 statisticsSection = playerConfigurationWrapper.createSection(STATISTICS_SECTION);
             }
-            statistics.putAll(ServerConfigurationWrapper.convertMapInteger(statisticsSection.getValues(false)));
 
+            statistics.putAll(ServerConfigurationWrapper.convertMapInteger(statisticsSection.getValues(false)));
             save();
         }
 
@@ -185,13 +185,8 @@ class PlayerConfiguration {
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
-            PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
-
-            if (data == null) {
-                PlayerConfigurationWrapper configuration = new PlayerConfigurationWrapper(plugin, player);
-                data  = new PlayerConfigurationData(configuration, player);
-                plugin.getLogger().warning("onPlayerAuth: Configuration not found! Creating new one");
-            }
+            PlayerConfigurationWrapper configuration = new PlayerConfigurationWrapper(plugin, player);
+            PlayerConfigurationData data  = new PlayerConfigurationData(configuration, player);
 
             data.load();
             playerConfiguration.put(uuid, data);
@@ -208,6 +203,7 @@ class PlayerConfiguration {
             }
 
             data.save();
+            playerConfiguration.remove(player.getUniqueId());
         }
     }
 }

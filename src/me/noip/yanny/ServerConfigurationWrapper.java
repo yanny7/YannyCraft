@@ -65,7 +65,7 @@ class ServerConfigurationWrapper extends YamlConfiguration {
     static Map<String, Integer> convertMapInteger(Map<String, Object> map) {
         Map<String, Integer> newMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getValue() instanceof String){
+            if(entry.getValue() instanceof Integer){
                 newMap.put(entry.getKey(), (Integer) entry.getValue());
             }
         }

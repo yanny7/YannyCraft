@@ -177,10 +177,24 @@ class RewardWrapper {
     }
 
     enum RewardType {
-        PICKAXE,
-        SPADE,
-        AXE,
-        SWORD,
+        PICKAXE("Vykopanych blokov:"),
+        SPADE("Vytazenych blokov:"),
+        AXE("Narubaneho dreva:"),
+        SWORD("Zabitych mobov:"),
         ;
+
+        private String displayName;
+
+        RewardType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public void setDisplayName(String displayName) {
+            this.displayName = displayName;
+        }
     }
 }

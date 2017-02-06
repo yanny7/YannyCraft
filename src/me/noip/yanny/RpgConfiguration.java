@@ -18,10 +18,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 class RpgConfiguration {
 
@@ -61,6 +58,7 @@ class RpgConfiguration {
     private static final String CONFIGURATION_NAME = "rpg";
     private static final String TRANSLATION_SECTION = "translation";
     private static final String BOSS_SECTION = "boss";
+    private static final String STAT_SECTION = "stat_names";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private RewardWrapper rewardWrapper;
@@ -83,6 +81,7 @@ class RpgConfiguration {
         random = new Random();
 
         translationMap.put("msg_reward", "Dostal si odmenu!");
+        translationMap.put("msg_stats", "Hodnotenie");
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
         rewardWrapper = new RewardWrapper(serverConfigurationWrapper, plugin);
@@ -108,6 +107,26 @@ class RpgConfiguration {
         }
         translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
 
+        ConfigurationSection statsSection = serverConfigurationWrapper.getConfigurationSection(STAT_SECTION);
+        if (statsSection == null) {
+            statsSection = serverConfigurationWrapper.createSection(STAT_SECTION);
+        }
+        for (Map.Entry<String, Object> pair : statsSection.getValues(false).entrySet()) {
+            RewardWrapper.RewardType rewardType = RewardWrapper.RewardType.valueOf(pair.getKey());
+
+            if (rewardType == null) {
+                plugin.getLogger().warning("RpgConfiguration.load: cant cast to RewardType: " + pair.getKey());
+                continue;
+            }
+
+            if (!(pair.getValue() instanceof String)) {
+                plugin.getLogger().warning("RpgConfiguration.load: value is not a String: " + pair.getValue());
+                continue;
+            }
+
+            rewardType.setDisplayName((String)pair.getValue());
+        }
+
         rewardWrapper.load();
         save(); // save defaults
     }
@@ -126,8 +145,17 @@ class RpgConfiguration {
             translationSection.set(pair.getKey(), pair.getValue());
         }
 
+        ConfigurationSection statsSection = serverConfigurationWrapper.getConfigurationSection(STAT_SECTION);
+        for (RewardWrapper.RewardType rewardType : RewardWrapper.RewardType.values()) {
+            statsSection.set(rewardType.name(), rewardType.getDisplayName());
+        }
+
         rewardWrapper.save();
         serverConfigurationWrapper.save();
+    }
+
+    String getTranslation(String key) {
+        return translationMap.get(key);
     }
 
     void bossDeathDrop(EntityDeathEvent event) {
