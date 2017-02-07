@@ -149,7 +149,9 @@ class Essentials {
             }
 
             Player player = (Player) commandSender;
-            essentialsConfiguration.setSpawnLocation(player.getLocation());
+            Location location = player.getLocation();
+            essentialsConfiguration.setSpawnLocation(location);
+            player.getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ()); // update also world location
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_spawn_set"));
             return true;
         }
