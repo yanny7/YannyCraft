@@ -12,13 +12,20 @@ import java.util.Map;
 class EssentialsConfiguration {
 
     private static final String CONFIGURATION_NAME = "essentials";
+
     private static final String TRANSLATION_SECTION = "translation";
     private static final String SPAWN_SECTION = "spawn";
+    private static final String CHAT_SECTION = "chat";
+
+    private static final String CHAT_NORMAL = "normal";
+    private static final String CHAT_OP = "op";
 
     private Plugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
     private Location spawnLocation = null;
+    private String normalChatFormat = "<&a{PLAYER}&r> {MSG}";
+    private String opChatFormat = "<&4{PLAYER}&r> {MSG}";
 
     EssentialsConfiguration(Plugin plugin) {
         this.plugin = plugin;
@@ -62,6 +69,13 @@ class EssentialsConfiguration {
             }
         }
 
+        ConfigurationSection chatSection = serverConfigurationWrapper.getConfigurationSection(CHAT_SECTION);
+        if (chatSection == null) {
+            chatSection = serverConfigurationWrapper.createSection(CHAT_SECTION);
+        }
+        normalChatFormat = chatSection.getString(CHAT_NORMAL, normalChatFormat);
+        opChatFormat = chatSection.getString(CHAT_OP, opChatFormat);
+
         save(); // save defaults
     }
 
@@ -80,6 +94,11 @@ class EssentialsConfiguration {
         for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
             translationSection.set(pair.getKey(), pair.getValue());
         }
+
+        ConfigurationSection chatSection = serverConfigurationWrapper.getConfigurationSection(CHAT_SECTION);
+        chatSection.set(CHAT_NORMAL, normalChatFormat);
+        chatSection.set(CHAT_OP, opChatFormat);
+
         serverConfigurationWrapper.save();
     }
 
@@ -111,6 +130,14 @@ class EssentialsConfiguration {
         }*/
 
         return spawnLocation;
+    }
+
+    String getChatNormal() {
+        return normalChatFormat;
+    }
+
+    String getChatOp() {
+        return opChatFormat;
     }
 
     String getTranslation(String key) {
