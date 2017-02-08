@@ -9,9 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class PlayerConfiguration {
 
@@ -93,8 +91,19 @@ class PlayerConfiguration {
         if (data != null) {
             return data.getStatistic(type);
         } else {
-            plugin.getLogger().warning("Cant get correct statistic for player " + player.getDisplayName());
+            plugin.getLogger().warning("PlayerConfiguration.getStatistic: Cant get correct statistic for player " + player.getDisplayName());
             return 0;
+        }
+    }
+
+    List<String> getChestLocations(Player player) {
+        PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
+
+        if (data != null) {
+            return data.getChestLocations();
+        } else {
+            plugin.getLogger().warning("PlayerConfiguration.getChestLocations: Cant get correct statistic for player " + player.getDisplayName());
+            return new ArrayList<>();
         }
     }
 
@@ -102,6 +111,7 @@ class PlayerConfiguration {
 
         private static final String HOME_SECTION = "home";
         private static final String STATISTICS_SECTION = "statistics";
+        private static final String CHEST_SECTION = "chests";
 
         private static final String HOME_LOCATION = "home_location";
         private static final String BACK_LOCATION = "back_location";
@@ -112,6 +122,7 @@ class PlayerConfiguration {
         private Location homeLocation;
         private Location backLocation;
         private Map<String, Integer> statistics = new HashMap<>();
+        private List<String> chestLocations = new ArrayList<>();
 
         PlayerConfigurationData(PlayerConfigurationWrapper playerConfigurationWrapper, Player player) {
             this.playerConfigurationWrapper = playerConfigurationWrapper;
@@ -137,6 +148,12 @@ class PlayerConfiguration {
                 statisticsSection = playerConfigurationWrapper.createSection(STATISTICS_SECTION);
             }
 
+            ConfigurationSection chestsSection = playerConfigurationWrapper.getConfigurationSection(CHEST_SECTION);
+            if (chestsSection == null) {
+                chestsSection = playerConfigurationWrapper.createSection(CHEST_SECTION);
+            }
+            chestLocations = chestsSection.getStringList(CHEST_SECTION);
+
             statistics.putAll(ServerConfigurationWrapper.convertMapInteger(statisticsSection.getValues(false)));
             save();
         }
@@ -150,6 +167,9 @@ class PlayerConfiguration {
             for (HashMap.Entry<String, Integer> pair : statistics.entrySet()) {
                 statisticsSection.set(pair.getKey(), pair.getValue());
             }
+
+            ConfigurationSection chestsSection = playerConfigurationWrapper.getConfigurationSection(CHEST_SECTION);
+            chestsSection.set(CHEST_SECTION, chestLocations);
 
             playerConfigurationWrapper.save();
         }
@@ -176,6 +196,10 @@ class PlayerConfiguration {
 
         int getStatistic(RewardWrapper.RewardType type) {
             return statistics.get(type.name());
+        }
+
+        List<String> getChestLocations() {
+            return chestLocations;
         }
     }
 

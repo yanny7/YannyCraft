@@ -34,20 +34,6 @@ class Essentials {
     private Map<Player, Player> teleportRequest;
     private EssentialsConfiguration essentialsConfiguration;
 
-    private EssentialsListener essentialsListener;
-    private SpawnExecutor spawnExecutor;
-    private SetSpawnExecutor setSpawnExecutor;
-    private TpExecutor tpExecutor;
-    private TpaExecutor tpaExecutor;
-    private TphereExecutor tphereExecutor;
-    private TpacceptExecutor tpacceptExecutor;
-    private TpdenyExecutor tpdenyExecutor;
-    private HealExecutor healExecutor;
-    private FeedExecutor feedExecutor;
-    private BackExecutor backExecutor;
-    private HomeExecutor homeExecutor;
-    private SetHomeExecutor setHomeExecutor;
-
     Essentials(JavaPlugin plugin, PlayerConfiguration playerConfiguration, Auth auth) {
         this.plugin = plugin;
         this.playerConfiguration = playerConfiguration;
@@ -56,38 +42,24 @@ class Essentials {
         permissionAttachment = new HashMap<>();
         teleportRequest = new HashMap<>();
         essentialsConfiguration = new EssentialsConfiguration(plugin);
-
-        essentialsListener = new EssentialsListener();
-        spawnExecutor = new SpawnExecutor();
-        setSpawnExecutor = new SetSpawnExecutor();
-        tpExecutor = new TpExecutor();
-        tpaExecutor = new TpaExecutor();
-        tphereExecutor = new TphereExecutor();
-        tpacceptExecutor = new TpacceptExecutor();
-        tpdenyExecutor = new TpdenyExecutor();
-        healExecutor = new HealExecutor();
-        feedExecutor = new FeedExecutor();
-        backExecutor = new BackExecutor();
-        homeExecutor = new HomeExecutor();
-        setHomeExecutor = new SetHomeExecutor();
     }
 
     void onEnable() {
         essentialsConfiguration.load();
 
-        plugin.getServer().getPluginManager().registerEvents(essentialsListener, plugin);
-        plugin.getCommand("spawn").setExecutor(spawnExecutor);
-        plugin.getCommand("setspawn").setExecutor(setSpawnExecutor);
-        plugin.getCommand("tp").setExecutor(tpExecutor);
-        plugin.getCommand("tpa").setExecutor(tpaExecutor);
-        plugin.getCommand("tphere").setExecutor(tphereExecutor);
-        plugin.getCommand("tpaccept").setExecutor(tpacceptExecutor);
-        plugin.getCommand("tpdeny").setExecutor(tpdenyExecutor);
-        plugin.getCommand("heal").setExecutor(healExecutor);
-        plugin.getCommand("feed").setExecutor(feedExecutor);
-        plugin.getCommand("back").setExecutor(backExecutor);
-        plugin.getCommand("home").setExecutor(homeExecutor);
-        plugin.getCommand("sethome").setExecutor(setHomeExecutor);
+        plugin.getServer().getPluginManager().registerEvents(new EssentialsListener(), plugin);
+        plugin.getCommand("spawn").setExecutor(new SpawnExecutor());
+        plugin.getCommand("setspawn").setExecutor(new SetSpawnExecutor());
+        plugin.getCommand("tp").setExecutor(new TpExecutor());
+        plugin.getCommand("tpa").setExecutor(new TpaExecutor());
+        plugin.getCommand("tphere").setExecutor(new TphereExecutor());
+        plugin.getCommand("tpaccept").setExecutor(new TpacceptExecutor());
+        plugin.getCommand("tpdeny").setExecutor(new TpdenyExecutor());
+        plugin.getCommand("heal").setExecutor(new HealExecutor());
+        plugin.getCommand("feed").setExecutor(new FeedExecutor());
+        plugin.getCommand("back").setExecutor(new BackExecutor());
+        plugin.getCommand("home").setExecutor(new HomeExecutor());
+        plugin.getCommand("sethome").setExecutor(new SetHomeExecutor());
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin));

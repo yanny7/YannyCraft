@@ -1,5 +1,5 @@
 name: YannyCraft
-version: 0.4.21
+version: 0.4.22
 author: Yanny
 main: me.noip.yanny.Main
 load: STARTUP
@@ -68,6 +68,11 @@ commands:
     description: Nastav svoj domov
     permission: yannycraft.home
     usage: /sethome
+# Chest commands
+  chest:
+    description: Zisti lokaciu tvojej truhlice
+    permission: yannycraft.chest
+    usage: /chest
 
 permissions:
   yannycraft.spawn:
@@ -89,4 +94,6 @@ permissions:
   yannycraft.back:
     default: true
   yannycraft.home:
+    default: true
+  yannycraft.chest:
     default: true

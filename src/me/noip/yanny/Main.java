@@ -8,12 +8,14 @@ public class Main extends JavaPlugin {
     private PlayerConfiguration playerConfiguration;
     private Essentials essentials;
     private RPG rpg;
+    private ChestLocker chestLocker;
 
     public Main() {
         auth = new Auth(this);
         playerConfiguration = new PlayerConfiguration(this);
         essentials = new Essentials(this, playerConfiguration, auth);
         rpg = new RPG(this, playerConfiguration);
+        chestLocker = new ChestLocker(this, playerConfiguration);
         getLogger().info("Started YannyCraft plugin");
     }
 
@@ -25,6 +27,7 @@ public class Main extends JavaPlugin {
         playerConfiguration.onEnable();
         essentials.onEnable();
         rpg.onEnable();
+        chestLocker.onEnable();
 
         getLogger().info("Enabled YannyCraft plugin");
     }
@@ -35,6 +38,7 @@ public class Main extends JavaPlugin {
         playerConfiguration.onDisable();
         essentials.onDisable();
         rpg.onDisable();
+        chestLocker.onDisable();
 
         getLogger().info("Disabled YannyCraft plugin");
     }
