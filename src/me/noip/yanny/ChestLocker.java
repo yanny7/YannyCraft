@@ -1,5 +1,6 @@
 package me.noip.yanny;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,21 +14,23 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 class ChestLocker {
 
     private JavaPlugin plugin;
-    private PlayerConfiguration playerConfiguration;
     private ChestConfiguration chestConfiguration;
+    private Random random = new Random();
 
-    ChestLocker(JavaPlugin plugin, PlayerConfiguration playerConfiguration) {
+    ChestLocker(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.playerConfiguration = playerConfiguration;
         chestConfiguration = new ChestConfiguration(plugin);
     }
 
@@ -38,7 +41,7 @@ class ChestLocker {
     }
 
     void onDisable() {
-        chestConfiguration.save();
+        chestConfiguration.getChestLocations().clear();
     }
 
     private class ChestExecutor implements CommandExecutor {
@@ -48,7 +51,7 @@ class ChestLocker {
                 return false;
             }
 
-            Player player = (Player) commandSender;
+            //Player player = (Player) commandSender;
 
             return true;
         }
@@ -61,19 +64,19 @@ class ChestLocker {
             if (event.getBlock().getType() == Material.CHEST) {
                 Player player = event.getPlayer();
                 String blockLocation = ChestConfiguration.locationToString(event.getBlock().getLocation());
-                List<String> playerChests = playerConfiguration.getChestLocations(player);
-                List<String> allChests = chestConfiguration.getChestsLocation();
-                boolean isOwner = playerChests.contains(blockLocation);
-                boolean isFree = !allChests.contains(blockLocation);
+                Map<String, String> allChests = chestConfiguration.getChestLocations();
+                String ownerUUID = allChests.get(blockLocation);
+                boolean isFree = ownerUUID == null;
+                boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
 
                 if (!isFree) {
                     if (isOwner) {
-                        playerChests.remove(blockLocation);
                         allChests.remove(blockLocation);
-                        player.sendMessage("Your chest removed from protection!");
+                        chestConfiguration.save();
+                        player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_destroyed"));
                     } else {
                         event.setCancelled(true);
-                        player.sendMessage("This chest is protected!");
+                        player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_protected"));
                     }
                 }
             }
@@ -94,20 +97,19 @@ class ChestLocker {
                     if (second.getType() == Material.CHEST) {
                         Player player = event.getPlayer();
                         String blockLocation = ChestConfiguration.locationToString(second.getLocation());
-                        List<String> playerChests = playerConfiguration.getChestLocations(player);
-                        List<String> allChests = chestConfiguration.getChestsLocation();
-                        boolean isOwner = playerChests.contains(blockLocation);
-                        boolean isFree = !allChests.contains(blockLocation);
+                        Map<String, String> allChests = chestConfiguration.getChestLocations();
+                        String ownerUUID = allChests.get(blockLocation);
+                        boolean isFree = ownerUUID == null;
+                        boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
 
                         if (!isFree) {
                             if (isOwner) {
                                 String chestLocation = ChestConfiguration.locationToString(block.getLocation());
-                                playerChests.add(chestLocation);
-                                allChests.add(chestLocation);
-                                player.sendMessage("Second chest added to protection!");
+                                allChests.put(chestLocation, player.getUniqueId().toString());
+                                chestConfiguration.save();
                             } else {
                                 event.setCancelled(true);
-                                player.sendMessage("This chest nearby is protected!");
+                                player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_not_owned"));
                             }
 
                             break;
@@ -123,21 +125,24 @@ class ChestLocker {
             Action action = event.getAction();
             Block block = event.getClickedBlock();
 
+            if (event.getHand() == EquipmentSlot.OFF_HAND) {
+                return;
+            }
+
             if ((block != null) && (block.getType() == Material.CHEST)) {
                 Location chestLocation = block.getLocation();
                 String blockLocation = ChestConfiguration.locationToString(chestLocation);
-                List<String> playerChests = playerConfiguration.getChestLocations(player);
-                List<String> allChests = chestConfiguration.getChestsLocation();
-                boolean isOwner = playerChests.contains(blockLocation);
-                boolean isFree = !allChests.contains(blockLocation);
+                Map<String, String> allChests = chestConfiguration.getChestLocations();
+                String ownerUUID = allChests.get(blockLocation);
+                boolean isFree = ownerUUID == null;
+                boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
 
                 if (isFree) {
                     ItemStack itemStack = player.getInventory().getItemInMainHand();
 
                     if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (itemStack.getType() == Material.EMERALD)) {
-                        playerChests.add(blockLocation);
-                        allChests.add(blockLocation);
-                        player.sendMessage("Chest is now yours!");
+                        allChests.put(blockLocation, player.getUniqueId().toString());
+                        player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_lock"));
 
                         List<Block> around = new ArrayList<>();
                         around.add(block.getRelative(1, 0, 0));
@@ -148,25 +153,55 @@ class ChestLocker {
                         for (Block second : around) {
                             if (second.getType() == Material.CHEST) {
                                 String secondLocation = ChestConfiguration.locationToString(second.getLocation());
-                                playerChests.add(secondLocation);
-                                allChests.add(secondLocation);
-                                player.sendMessage("Double chest detected and added!");
+                                allChests.put(secondLocation, player.getUniqueId().toString());
                                 break;
                             }
                         }
 
-                        return;
-                    }
+                        if (itemStack.getAmount() > 1) {
+                            itemStack.setAmount(itemStack.getAmount() - 1);
+                        } else {
+                            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                        }
 
-                    plugin.getLogger().warning("Chest opened - its free");
-                } else if (isOwner) {
-                    plugin.getLogger().warning("Chest opened - its yours");
-                } else {
-                    if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (player.getInventory().getItemInMainHand().getType() == Material.EMERALD)) {
-                        plugin.getLogger().warning("Chest locked - lockpicking");
                         event.setCancelled(true);
+                        chestConfiguration.save();
+                    }
+                } else if (!isOwner) {
+                    if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (player.getInventory().getItemInMainHand().getType() == Material.EMERALD)) {
+                        ItemStack itemStack = player.getInventory().getItemInMainHand();
+
+                        if (itemStack.getAmount() > 1) {
+                            itemStack.setAmount(itemStack.getAmount() - 1);
+                        } else {
+                            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                        }
+
+                        if (random.nextDouble() < chestConfiguration.getLockpickingChance()) {
+                            player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_unlocked"));
+                            allChests.remove(blockLocation);
+
+                            List<Block> around = new ArrayList<>();
+                            around.add(block.getRelative(1, 0, 0));
+                            around.add(block.getRelative(-1, 0, 0));
+                            around.add(block.getRelative(0, 0, 1));
+                            around.add(block.getRelative(0, 0, -1));
+
+                            for (Block second : around) {
+                                if (second.getType() == Material.CHEST) {
+                                    String secondLocation = ChestConfiguration.locationToString(second.getLocation());
+                                    allChests.remove(secondLocation);
+                                    break;
+                                }
+                            }
+
+                            chestConfiguration.save();
+                        } else {
+                            player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_lockpicking"));
+                            event.setCancelled(true);
+                        }
                     } else {
-                        player.sendMessage("Chest is locked!");
+                        player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_locked"));
                         event.setCancelled(true);
                     }
                 }

@@ -15,7 +15,7 @@ public class Main extends JavaPlugin {
         playerConfiguration = new PlayerConfiguration(this);
         essentials = new Essentials(this, playerConfiguration, auth);
         rpg = new RPG(this, playerConfiguration);
-        chestLocker = new ChestLocker(this, playerConfiguration);
+        chestLocker = new ChestLocker(this);
         getLogger().info("Started YannyCraft plugin");
     }
 
