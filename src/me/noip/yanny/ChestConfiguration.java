@@ -49,6 +49,8 @@ class ChestConfiguration {
         translationMap.put("msg_chest_owned", "Truhlica je uz uzamknuta");
         translationMap.put("msg_chest_not_owned", "Nevlastnis tuto truhlicu");
         translationMap.put("msg_chest_lockpicking", "Nepodarilo sa ti odomknut truhlicu");
+        translationMap.put("msg_chest_invalid", "Nemieris na truhlicu");
+        translationMap.put("msg_chest_not_locked", "Truhlica je odomknuta");
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }

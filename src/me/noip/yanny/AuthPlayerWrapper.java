@@ -211,7 +211,7 @@ class AuthPlayerWrapper {
     private boolean storeData(Player player) {
         try {
             setInventoryStatement.setString(1, playerToString(player));
-            setInventoryStatement.setString(1, player.getUniqueId().toString());
+            setInventoryStatement.setString(2, player.getUniqueId().toString());
             setInventoryStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,6 +17,12 @@ public class Main extends JavaPlugin {
     private ChestLocker chestLocker;
 
     public Main() {
+        if (!getDataFolder().exists()) {
+            if (!getDataFolder().mkdirs()) {
+                getLogger().warning("Cant create data folder");
+            }
+        }
+
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + "/" + DATABASE);

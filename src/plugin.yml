@@ -69,10 +69,10 @@ commands:
     permission: yannycraft.home
     usage: /sethome
 # Chest commands
-  chest:
-    description: Zisti lokaciu tvojej truhlice
+  unlock:
+    description: Odomkni truhlicu ktoru vlastnis
     permission: yannycraft.chest
-    usage: /chest
+    usage: /unlock
 
 permissions:
   yannycraft.spawn:
