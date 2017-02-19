@@ -37,14 +37,14 @@ class ChestLocker {
 
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new ChestLockerListener(), plugin);
-        plugin.getCommand("unlock").setExecutor(new ChestExecutor());
+        plugin.getCommand("unlock").setExecutor(new UnlockExecutor());
         chestConfiguration.load();
     }
 
     void onDisable() {
     }
 
-    private class ChestExecutor implements CommandExecutor {
+    private class UnlockExecutor implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
             if (!(commandSender instanceof Player) || (args.length != 0)) {
