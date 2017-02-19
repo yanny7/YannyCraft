@@ -125,6 +125,7 @@ class ChestLocker {
             }
 
             if ((block != null) && (block.getType() == Material.CHEST)) {
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
                 Location chestLocation = block.getLocation();
                 String blockLocation = ChestConfiguration.locationToString(chestLocation);
                 String ownerUUID = chestConfiguration.getOwner(blockLocation);
@@ -132,8 +133,6 @@ class ChestLocker {
                 boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
 
                 if (isFree) {
-                    ItemStack itemStack = player.getInventory().getItemInMainHand();
-
                     if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (itemStack.getType() == Material.EMERALD)) {
                         chestConfiguration.addChest(blockLocation, player.getUniqueId().toString());
                         player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_lock"));
@@ -162,8 +161,6 @@ class ChestLocker {
                     }
                 } else if (!isOwner) {
                     if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (player.getInventory().getItemInMainHand().getType() == Material.EMERALD)) {
-                        ItemStack itemStack = player.getInventory().getItemInMainHand();
-
                         if (itemStack.getAmount() > 1) {
                             itemStack.setAmount(itemStack.getAmount() - 1);
                         } else {
@@ -195,6 +192,8 @@ class ChestLocker {
                         player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_locked"));
                         event.setCancelled(true);
                     }
+                } else if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (itemStack.getType() == Material.EMERALD)) {
+                    player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_owned"));
                 }
             }
         }

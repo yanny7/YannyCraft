@@ -45,7 +45,8 @@ class ChestConfiguration {
         translationMap.put("msg_chest_locked", "Truhlica je uzamknuta");
         translationMap.put("msg_chest_unlocked", "Odomkol si truhlicu");
         translationMap.put("msg_chest_destroyed", "Znicil si uzamknutu truhlicu");
-        translationMap.put("msg_chest_protected", "Truhlica je chranena");
+        translationMap.put("msg_chest_protected", "Truhlica je uzamknuta");
+        translationMap.put("msg_chest_owned", "Truhlica je uz uzamknuta");
         translationMap.put("msg_chest_not_owned", "Nevlastnis tuto truhlicu");
         translationMap.put("msg_chest_lockpicking", "Nepodarilo sa ti odomknut truhlicu");
 
