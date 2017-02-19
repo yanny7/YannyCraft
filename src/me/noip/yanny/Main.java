@@ -2,8 +2,14 @@ package me.noip.yanny;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class Main extends JavaPlugin {
 
+    private static final String DATABASE = "users.db";
+
+    private Connection connection = null;
     private Auth auth;
     private PlayerConfiguration playerConfiguration;
     private Essentials essentials;
@@ -11,11 +17,18 @@ public class Main extends JavaPlugin {
     private ChestLocker chestLocker;
 
     public Main() {
-        auth = new Auth(this);
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + "/" + DATABASE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        auth = new Auth(this, connection);
         playerConfiguration = new PlayerConfiguration(this);
         essentials = new Essentials(this, playerConfiguration, auth);
         rpg = new RPG(this, playerConfiguration);
-        chestLocker = new ChestLocker(this);
+        chestLocker = new ChestLocker(this, connection);
         getLogger().info("Started YannyCraft plugin");
     }
 
@@ -39,6 +52,14 @@ public class Main extends JavaPlugin {
         essentials.onDisable();
         rpg.onDisable();
         chestLocker.onDisable();
+
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         getLogger().info("Disabled YannyCraft plugin");
     }

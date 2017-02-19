@@ -11,25 +11,48 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 class AuthPlayerWrapper {
 
+    private PreparedStatement registerStatement;
+    private PreparedStatement changePasswordStatement;
+    private PreparedStatement getPasswordStatement;
+    private PreparedStatement setInventoryStatement;
+    private PreparedStatement getInventoryStatement;
+
     private JavaPlugin plugin;
     private Player player;
-    private Statement statement;
     private Location loginLocation;
     private GameMode loginGameMode;
     private AuthConfiguration authConfiguration;
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(JavaPlugin plugin, Player player, Statement statement, AuthConfiguration authConfiguration, EssentialsConfiguration essentialsConfiguration) {
+    AuthPlayerWrapper(JavaPlugin plugin, Player player, Connection connection, AuthConfiguration authConfiguration, EssentialsConfiguration essentialsConfiguration) {
         this.plugin = plugin;
         this.player = player;
-        this.statement = statement;
         this.authConfiguration = authConfiguration;
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS users ("
+                    + "ID VARCHAR(64) PRIMARY KEY NOT NULL,"
+                    + "Password VARCHAR(64) NOT NULL,"
+                    + "Inventory TEXT NOT NULL,"
+                    + "LastUpdated DATETIME NOT NULL)");
+
+            registerStatement = connection.prepareStatement("INSERT INTO users (ID, Password, Inventory, LastUpdated) VALUES (?, ?, ?, DATETIME('now'))");
+            changePasswordStatement = connection.prepareStatement("UPDATE users SET Password = ? WHERE ID = ?");
+            getPasswordStatement = connection.prepareStatement("SELECT Password FROM users WHERE ID = ?");
+            setInventoryStatement = connection.prepareStatement("UPDATE users SET Inventory = ?, LastUpdated = DATETIME('now') where ID = ?");
+            getInventoryStatement = connection.prepareStatement("SELECT Inventory FROM users WHERE ID = ?");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (restoreData(player)) {
             loginLocation = player.getLocation();
@@ -81,11 +104,10 @@ class AuthPlayerWrapper {
 
         try {
             String goodPassword = PasswordHash.createHash(password);
-            statement.executeUpdate("INSERT INTO users (ID, Password, Inventory, LastUpdated) "
-                    + "VALUES ('" + player.getUniqueId().toString() + "',"
-                    + "'" + goodPassword + "',"
-                    + "'" + playerToString(player) + "',"
-                    + "DATETIME('now'))");
+            registerStatement.setString(1, player.getUniqueId().toString());
+            registerStatement.setString(2, goodPassword);
+            registerStatement.setString(3, playerToString(player));
+            registerStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_register"));
@@ -152,7 +174,8 @@ class AuthPlayerWrapper {
 
         try {
             String goodPassword = PasswordHash.createHash(password);
-            statement.executeUpdate("UPDATE users SET Password = '" + goodPassword + "' WHERE ID = '" + player.getUniqueId().toString() + "'");
+            changePasswordStatement.setString(1, goodPassword);
+            changePasswordStatement.setString(2, player.getUniqueId().toString());
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password"));
@@ -168,10 +191,11 @@ class AuthPlayerWrapper {
 
     private boolean checkPassword(String password) {
         try {
-            ResultSet rs = statement.executeQuery("SELECT Password FROM users WHERE ID = '" + player.getUniqueId().toString() + "'");
+            getPasswordStatement.setString(1, player.getUniqueId().toString());
+            ResultSet rs = getPasswordStatement.executeQuery();
 
             if (rs.next()) {
-                String hash = rs.getString("Password");
+                String hash = rs.getString(1);
 
                 return PasswordHash.validatePassword(password, hash);
             }
@@ -185,10 +209,10 @@ class AuthPlayerWrapper {
     }
 
     private boolean storeData(Player player) {
-        String sql = "UPDATE users SET Inventory = '" + playerToString(player) + "', LastUpdated = DATETIME('now') where ID = '" + player.getUniqueId() + "'";
-
         try {
-            statement.executeUpdate(sql);
+            setInventoryStatement.setString(1, playerToString(player));
+            setInventoryStatement.setString(1, player.getUniqueId().toString());
+            setInventoryStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -199,7 +223,8 @@ class AuthPlayerWrapper {
 
     private boolean restoreData(Player player) {
         try {
-            ResultSet rs = statement.executeQuery("SELECT Inventory FROM users WHERE ID = '" + player.getUniqueId().toString() + "'");
+            getInventoryStatement.setString(1, player.getUniqueId().toString());
+            ResultSet rs = getInventoryStatement.executeQuery();
 
             if (rs.next()) {
                 String invData = rs.getString("Inventory");

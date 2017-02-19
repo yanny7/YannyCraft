@@ -12,8 +12,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -21,20 +19,19 @@ import java.util.UUID;
 class Auth {
 
     private JavaPlugin plugin;
+    private Connection connection;
     private LoginExecutor loginExecutor;
     private RegisterExecutor registerExecutor;
     private ChangePasswordExecutor changePasswordExecutor;
     private AuthListener authListener;
-    private Connection connection = null;
-    private Statement statement = null;
-    private static final String DATABASE = "users.db";
     private AuthConfiguration authConfiguration;
     private EssentialsConfiguration essentialsConfiguration;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
 
-    Auth(JavaPlugin plugin) {
+    Auth(JavaPlugin plugin, Connection connection) {
         this.plugin = plugin;
+        this.connection = connection;
         authConfiguration = new AuthConfiguration(plugin);
         authListener = new AuthListener();
         loginExecutor = new LoginExecutor();
@@ -50,23 +47,8 @@ class Auth {
         plugin.getCommand("register").setExecutor(registerExecutor);
         plugin.getCommand("changepassword").setExecutor(changePasswordExecutor);
 
-        try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/" + DATABASE);
-
-            statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users ("
-                    + "ID VARCHAR(64) PRIMARY KEY NOT NULL,"
-                    + "Password VARCHAR(64) NOT NULL,"
-                    + "Inventory TEXT NOT NULL,"
-                    + "LastUpdated DATETIME NOT NULL"
-                    + ")");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration, essentialsConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, essentialsConfiguration);
             authPlayerWrapper.loginAfterReload();
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
         }
@@ -85,17 +67,6 @@ class Auth {
         }
 
         loggedPlayers.clear();
-
-        try {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     void setEssentialsConfiguration(EssentialsConfiguration essentialsConfiguration) {
@@ -178,7 +149,7 @@ class Auth {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, statement, authConfiguration, essentialsConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, essentialsConfiguration);
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
