@@ -30,6 +30,7 @@ class Residence {
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new ResidenceListener(), plugin);
         plugin.getCommand("res").setExecutor(new ResExecutor());
+        residenceConfiguration.load();
     }
 
     void onDisable() {
@@ -37,19 +38,21 @@ class Residence {
     }
 
     private Block[] findResidenceArea(Block block) {
-        if (block.getType() == Material.REDSTONE_BLOCK) {
+        Material resMaterial = residenceConfiguration.getResidenceMaterial();
+
+        if (block.getType() == resMaterial) {
             int west = 0, east = 0, south = 0, north = 0;
 
-            while (block.getRelative(west - 1, 0, 0).getType() == Material.REDSTONE_BLOCK) {
+            while (block.getRelative(west - 1, 0, 0).getType() == resMaterial) {
                 west--;
             }
-            while (block.getRelative(east + 1, 0, 0).getType() == Material.REDSTONE_BLOCK) {
+            while (block.getRelative(east + 1, 0, 0).getType() == resMaterial) {
                 east++;
             }
-            while (block.getRelative(0, 0, south - 1).getType() == Material.REDSTONE_BLOCK) {
+            while (block.getRelative(0, 0, south - 1).getType() == resMaterial) {
                 south--;
             }
-            while (block.getRelative(0, 0, north + 1).getType() == Material.REDSTONE_BLOCK) {
+            while (block.getRelative(0, 0, north + 1).getType() == resMaterial) {
                 north++;
             }
 
@@ -60,27 +63,22 @@ class Residence {
             int maxZ = second.getLocation().getBlockZ() - first.getLocation().getBlockZ();
 
             if ((maxX <= 0) || (maxZ <= 0)) {
-                plugin.getLogger().warning("Residence.findResidenceArea: zero area [" + maxX + ":" + maxZ + "]");
                 return null;
             }
 
             for (int x = 0; x < maxX; x++) {
-                if (first.getRelative(x, 0, 0).getType() != Material.REDSTONE_BLOCK) {
-                    plugin.getLogger().warning("Residence.findResidenceArea: empty side WEST");
+                if (first.getRelative(x, 0, 0).getType() != resMaterial) {
                     return null;
                 }
-                if (second.getRelative(-x, 0, 0).getType() != Material.REDSTONE_BLOCK) {
-                    plugin.getLogger().warning("Residence.findResidenceArea: empty side EAST");
+                if (second.getRelative(-x, 0, 0).getType() != resMaterial) {
                     return null;
                 }
             }
             for (int z = 0; z < maxZ; z++) {
-                if (first.getRelative(0, 0, z).getType() != Material.REDSTONE_BLOCK) {
-                    plugin.getLogger().warning("Residence.findResidenceArea: empty side SOUTH");
+                if (first.getRelative(0, 0, z).getType() != resMaterial) {
                     return null;
                 }
-                if (second.getRelative(0, 0, -z).getType() != Material.REDSTONE_BLOCK) {
-                    plugin.getLogger().warning("Residence.findResidenceArea: empty side NORTH");
+                if (second.getRelative(0, 0, -z).getType() != resMaterial) {
                     return null;
                 }
             }

@@ -1,5 +1,6 @@
 package me.noip.yanny;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -19,6 +20,8 @@ class ResidenceConfiguration {
 
     private static final String TRANSLATION_SECTION = "translation";
 
+    private static final String RESIDENCE_MATERIAL = "res_material";
+
     private Plugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
@@ -27,6 +30,8 @@ class ResidenceConfiguration {
     private PreparedStatement getResidenceStatement;
     private PreparedStatement getAllResidenceStatement;
     private PreparedStatement removeResidenceStatement;
+
+    private Material residenceMaterial;
 
     ResidenceConfiguration(Plugin plugin, Connection connection) {
         this.plugin = plugin;
@@ -56,6 +61,8 @@ class ResidenceConfiguration {
         translationMap.put("msg_res_owner", "Majitel: {player}");
         translationMap.put("msg_res_foreign", "Nemas opravnenia v tejto rezidencii");
 
+        residenceMaterial = Material.REDSTONE_BLOCK;
+
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }
 
@@ -67,6 +74,8 @@ class ResidenceConfiguration {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
         translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
+
+        residenceMaterial = Material.getMaterial(serverConfigurationWrapper.getString(RESIDENCE_MATERIAL, residenceMaterial.name()));
 
         save();
     }
@@ -80,11 +89,17 @@ class ResidenceConfiguration {
             translationSection.set(pair.getKey(), pair.getValue());
         }
 
+        serverConfigurationWrapper.set(RESIDENCE_MATERIAL, residenceMaterial.name());
+
         serverConfigurationWrapper.save();
     }
 
     String getTranslation(String key) {
         return translationMap.get(key);
+    }
+
+    Material getResidenceMaterial() {
+        return residenceMaterial;
     }
 
     void addResidence(Area area) {

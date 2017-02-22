@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -93,6 +94,24 @@ class ChestLocker {
     }
 
     private class ChestLockerListener implements Listener {
+
+        @EventHandler
+        void onEntityExplode(EntityExplodeEvent event) {
+            List<Block> removed = new ArrayList<>(event.blockList().size());
+
+            for (Block block : event.blockList()) {
+                if (block.getType() == Material.CHEST) {
+                    String blockLocation = Utils.locationToString(block.getLocation());
+                    String ownerUUID = chestConfiguration.getOwner(blockLocation);
+
+                    if (ownerUUID != null) {
+                        removed.add(block);
+                    }
+                }
+            }
+
+            event.blockList().removeAll(removed);
+        }
 
         @EventHandler
         void onChestBroken(BlockBreakEvent event) {
