@@ -1,5 +1,5 @@
 name: YannyCraft
-version: 0.4.24
+version: 0.4.25
 author: Yanny
 main: me.noip.yanny.Main
 load: STARTUP
@@ -73,6 +73,11 @@ commands:
     description: Odomkni truhlicu ktoru vlastnis
     permission: yannycraft.chest
     usage: /unlock
+# Residence commands
+  res:
+    description: Vytvori/odstrani rezidenciu
+    permission: yannycraft.res
+    usage: /res [create|remove|info]
 
 permissions:
   yannycraft.spawn:
@@ -96,4 +101,6 @@ permissions:
   yannycraft.home:
     default: true
   yannycraft.chest:
+    default: true
+  yannycraft.res:
     default: true

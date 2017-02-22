@@ -15,6 +15,7 @@ public class Main extends JavaPlugin {
     private Essentials essentials;
     private RPG rpg;
     private ChestLocker chestLocker;
+    private Residence residence;
 
     public Main() {
         if (!getDataFolder().exists()) {
@@ -35,6 +36,8 @@ public class Main extends JavaPlugin {
         essentials = new Essentials(this, playerConfiguration, auth);
         rpg = new RPG(this, playerConfiguration);
         chestLocker = new ChestLocker(this, connection);
+        residence = new Residence(this, connection);
+
         getLogger().info("Started YannyCraft plugin");
     }
 
@@ -47,6 +50,7 @@ public class Main extends JavaPlugin {
         essentials.onEnable();
         rpg.onEnable();
         chestLocker.onEnable();
+        residence.onEnable();
 
         getLogger().info("Enabled YannyCraft plugin");
     }
@@ -58,6 +62,7 @@ public class Main extends JavaPlugin {
         essentials.onDisable();
         rpg.onDisable();
         chestLocker.onDisable();
+        residence.onDisable();
 
         try {
             if (connection != null) {

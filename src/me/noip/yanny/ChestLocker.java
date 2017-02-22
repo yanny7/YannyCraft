@@ -55,7 +55,7 @@ class ChestLocker {
             Block block = player.getTargetBlock((Set<Material>) null, 5);
 
             if (block.getType() == Material.CHEST) {
-                String blockLocation = ChestConfiguration.locationToString(block.getLocation());
+                String blockLocation = Utils.locationToString(block.getLocation());
                 String ownerUUID = chestConfiguration.getOwner(blockLocation);
                 boolean isFree = ownerUUID == null;
                 boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
@@ -73,7 +73,7 @@ class ChestLocker {
 
                         for (Block second : around) {
                             if (second.getType() == Material.CHEST) {
-                                String secondLocation = ChestConfiguration.locationToString(second.getLocation());
+                                String secondLocation = Utils.locationToString(second.getLocation());
                                 chestConfiguration.removeChest(secondLocation);
                                 break;
                             }
@@ -98,7 +98,7 @@ class ChestLocker {
         void onChestBroken(BlockBreakEvent event) {
             if (event.getBlock().getType() == Material.CHEST) {
                 Player player = event.getPlayer();
-                String blockLocation = ChestConfiguration.locationToString(event.getBlock().getLocation());
+                String blockLocation = Utils.locationToString(event.getBlock().getLocation());
                 String ownerUUID = chestConfiguration.getOwner(blockLocation);
                 boolean isFree = ownerUUID == null;
                 boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
@@ -129,7 +129,7 @@ class ChestLocker {
                 for (Block second : around) {
                     if (second.getType() == Material.CHEST) {
                         Player player = event.getPlayer();
-                        String blockLocation = ChestConfiguration.locationToString(second.getLocation());
+                        String blockLocation = Utils.locationToString(second.getLocation());
                         String ownerUUID = chestConfiguration.getOwner(blockLocation);
                         String playerUUID = player.getUniqueId().toString();
                         boolean isFree = ownerUUID == null;
@@ -137,7 +137,7 @@ class ChestLocker {
 
                         if (!isFree) {
                             if (isOwner) {
-                                String chestLocation = ChestConfiguration.locationToString(block.getLocation());
+                                String chestLocation = Utils.locationToString(block.getLocation());
                                 chestConfiguration.addChest(chestLocation, playerUUID);
                             } else {
                                 event.setCancelled(true);
@@ -164,7 +164,7 @@ class ChestLocker {
             if ((block != null) && (block.getType() == Material.CHEST)) {
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
                 Location chestLocation = block.getLocation();
-                String blockLocation = ChestConfiguration.locationToString(chestLocation);
+                String blockLocation = Utils.locationToString(chestLocation);
                 String ownerUUID = chestConfiguration.getOwner(blockLocation);
                 String playerUUID = player.getUniqueId().toString();
                 boolean isFree = ownerUUID == null;
@@ -183,7 +183,7 @@ class ChestLocker {
 
                         for (Block second : around) {
                             if (second.getType() == Material.CHEST) {
-                                String secondLocation = ChestConfiguration.locationToString(second.getLocation());
+                                String secondLocation = Utils.locationToString(second.getLocation());
                                 chestConfiguration.addChest(secondLocation, playerUUID);
                                 break;
                             }
@@ -217,7 +217,7 @@ class ChestLocker {
 
                             for (Block second : around) {
                                 if (second.getType() == Material.CHEST) {
-                                    String secondLocation = ChestConfiguration.locationToString(second.getLocation());
+                                    String secondLocation = Utils.locationToString(second.getLocation());
                                     chestConfiguration.removeChest(secondLocation);
                                     break;
                                 }
