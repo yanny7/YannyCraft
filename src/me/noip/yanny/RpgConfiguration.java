@@ -207,7 +207,7 @@ class RpgConfiguration {
 
             //monster.setGlowing(true); // can cause rendering problem for some settings
             monster.setCanPickupItems(true);
-            monster.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 0, false, true), true);
+            //monster.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 0, false, true), true); // player can be affected forever
         }
     }
 
