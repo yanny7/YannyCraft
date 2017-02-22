@@ -162,7 +162,7 @@ class Residence {
                     if (area != null) {
                         UUID owner = UUID.fromString(area.uuid);
 
-                        if (owner.equals(player.getUniqueId())) {
+                        if (owner.equals(player.getUniqueId()) || player.isOp()) {
                             residenceConfiguration.removeResidence(player, area);
                             player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_removed"));
                         } else {
@@ -199,7 +199,7 @@ class Residence {
                 UUID owner = UUID.fromString(area.uuid);
                 Player player = event.getPlayer();
 
-                if (!owner.equals(player.getUniqueId())) {
+                if (!owner.equals(player.getUniqueId()) && !player.isOp()) {
                     player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_foreign"));
                     event.setCancelled(true);
                 }
@@ -214,7 +214,7 @@ class Residence {
                 UUID owner = UUID.fromString(area.uuid);
                 Player player = event.getPlayer();
 
-                if (!owner.equals(player.getUniqueId())) {
+                if (!owner.equals(player.getUniqueId()) && !player.isOp()) {
                     player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_foreign"));
                     event.setCancelled(true);
                 }

@@ -61,7 +61,7 @@ class ChestLocker {
                 boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
 
                 if (!isFree) {
-                    if (isOwner) {
+                    if (isOwner || player.isOp()) {
                         chestConfiguration.removeChest(blockLocation);
                         player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_unlocked"));
 
@@ -104,7 +104,7 @@ class ChestLocker {
                 boolean isOwner = !isFree && ownerUUID.equals(player.getUniqueId().toString());
 
                 if (!isFree) {
-                    if (isOwner) {
+                    if (isOwner || player.isOp()) {
                         chestConfiguration.removeChest(blockLocation);
                         player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_destroyed"));
                     } else {
@@ -226,7 +226,7 @@ class ChestLocker {
                             player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_lockpicking"));
                             event.setCancelled(true);
                         }
-                    } else {
+                    } else if (!player.isOp()) {
                         player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_locked"));
                         event.setCancelled(true);
                     }
