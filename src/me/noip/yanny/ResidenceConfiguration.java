@@ -152,8 +152,7 @@ class ResidenceConfiguration {
         return result;
     }
 
-    void removeResidence(Player player, Area area) {
-        String uuid = player.getUniqueId().toString();
+    void removeResidence(String uuid, Area area) {
         String loc1 = Utils.locationToString(area.first);
         String loc2 = Utils.locationToString(area.second);
 

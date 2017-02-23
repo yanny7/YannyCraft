@@ -3,6 +3,7 @@ package me.noip.yanny;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -161,7 +162,7 @@ class Residence {
                         UUID owner = UUID.fromString(area.uuid);
 
                         if (owner.equals(player.getUniqueId()) || player.isOp()) {
-                            residenceConfiguration.removeResidence(player, area);
+                            residenceConfiguration.removeResidence(area.uuid, area);
                             player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_removed"));
                         } else {
                             player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_not_owned"));
