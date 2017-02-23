@@ -3,6 +3,7 @@ package me.noip.yanny;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -10,11 +11,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Map;
 
 class AuthPlayerWrapper {
 
@@ -54,6 +57,7 @@ class AuthPlayerWrapper {
             e.printStackTrace();
         }
 
+
         if (restoreData(player)) {
             loginLocation = player.getLocation();
             loginGameMode = player.getGameMode();
@@ -63,6 +67,7 @@ class AuthPlayerWrapper {
             loginLocation = essentialsConfiguration.getSpawnLocation(player);
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
+            resetPlayer(player);
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_register"));
         }
 
@@ -240,7 +245,20 @@ class AuthPlayerWrapper {
         return false;
     }
 
-    private static String playerToString(Player player) {
+    private void resetPlayer(Player player) {
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.setExp(0);
+        player.setLevel(0);
+        player.teleport(player.getWorld().getSpawnLocation());
+        player.setGameMode(GameMode.SURVIVAL);
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+            player.removePotionEffect(potionEffect.getType());
+        }
+        player.setBedSpawnLocation(player.getWorld().getSpawnLocation());
+    }
+
+    private String playerToString(Player player) {
         YamlConfiguration yaml = new YamlConfiguration();
         PlayerInventory inv = player.getInventory();
         Inventory endInv = player.getEnderChest();
@@ -258,10 +276,17 @@ class AuthPlayerWrapper {
         yaml.set("location", player.getLocation());
         yaml.set("gamemode", player.getGameMode().toString());
 
+        ConfigurationSection potionEffectsSection = yaml.createSection("potionEffects");
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+            potionEffectsSection.set(potionEffect.getType().getName(), potionEffect);
+        }
+
+        yaml.set("bedLocation", player.getBedSpawnLocation());
+
         return yaml.saveToString();
     }
 
-    private static void stringToPlayer(String data, Player player) {
+    private void stringToPlayer(String data, Player player) {
         YamlConfiguration yaml = new YamlConfiguration();
         PlayerInventory inv = player.getInventory();
         Inventory endInv = player.getEnderChest();
@@ -294,6 +319,23 @@ class AuthPlayerWrapper {
         player.setLevel(level);
         player.teleport(location);
         player.setGameMode(gameMode);
+
+        ConfigurationSection potionEffectsSection = yaml.getConfigurationSection("potionEffects");
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+            player.removePotionEffect(potionEffect.getType());
+        }
+        if (potionEffectsSection != null) {
+            Map<String, Object> objects = potionEffectsSection.getValues(false);
+            for (Map.Entry<String, Object> entry : objects.entrySet()) {
+                if (entry.getValue() instanceof PotionEffect) {
+                    player.addPotionEffect((PotionEffect) entry.getValue());
+                } else {
+                    plugin.getLogger().warning("AuthPlayerWrapper.stringToPlayer: Object is not a PotionEffect");
+                }
+            }
+        }
+
+        player.setBedSpawnLocation((Location) yaml.get("bedLocation"));
     }
 
 }
