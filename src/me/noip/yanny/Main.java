@@ -14,6 +14,7 @@ public class Main extends JavaPlugin {
     private PlayerConfiguration playerConfiguration;
     private Essentials essentials;
     private RPG rpg;
+    private Boss boss;
     private ChestLocker chestLocker;
     private Residence residence;
 
@@ -35,6 +36,7 @@ public class Main extends JavaPlugin {
         playerConfiguration = new PlayerConfiguration(this);
         essentials = new Essentials(this, playerConfiguration, auth);
         rpg = new RPG(this, playerConfiguration);
+        boss = new Boss(this);
         chestLocker = new ChestLocker(this, connection);
         residence = new Residence(this, connection);
 
@@ -49,6 +51,7 @@ public class Main extends JavaPlugin {
         playerConfiguration.onEnable();
         essentials.onEnable();
         rpg.onEnable();
+        boss.onEnable();
         chestLocker.onEnable();
         residence.onEnable();
 
@@ -61,6 +64,7 @@ public class Main extends JavaPlugin {
         playerConfiguration.onDisable();
         essentials.onDisable();
         rpg.onDisable();
+        boss.onDisable();
         chestLocker.onDisable();
         residence.onDisable();
 

@@ -7,17 +7,14 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 class RPG {
 
     private JavaPlugin plugin;
     private PlayerConfiguration playerConfiguration;
-    private RpgListener rpgListener;
     private RpgConfiguration rpgConfiguration;
     private RpgBoard rpgBoard;
 
@@ -25,7 +22,6 @@ class RPG {
         this.plugin = plugin;
         this.playerConfiguration = playerConfiguration;
 
-        rpgListener = new RpgListener();
         rpgConfiguration = new RpgConfiguration(plugin, playerConfiguration);
         rpgBoard = new RpgBoard(plugin, playerConfiguration, rpgConfiguration);
     }
@@ -33,7 +29,7 @@ class RPG {
     void onEnable() {
         rpgConfiguration.load();
         rpgBoard.onEnable();
-        plugin.getServer().getPluginManager().registerEvents(rpgListener, plugin);
+        plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
     }
 
     void onDisable() {
@@ -106,20 +102,6 @@ class RPG {
                     monster.setCustomNameVisible(true);
                 }
             }
-        }
-
-        @EventHandler
-        void OnMobDeath(EntityDeathEvent event) {
-            rpgConfiguration.bossDeathDrop(event);
-        }
-
-        @EventHandler
-        void onMobSpawned(CreatureSpawnEvent event) {
-            if (!(event.getEntity() instanceof Monster)) {
-                return;
-            }
-
-            rpgConfiguration.createBoss((Monster) event.getEntity(), event.getSpawnReason());
         }
     }
 }
