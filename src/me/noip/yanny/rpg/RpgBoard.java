@@ -1,6 +1,5 @@
 package me.noip.yanny.rpg;
 
-import me.noip.yanny.PlayerConfiguration;
 import me.noip.yanny.auth.PlayerAuthEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,13 +13,11 @@ import java.util.Map;
 class RpgBoard {
 
     private Plugin plugin;
-    private PlayerConfiguration playerConfiguration;
     private RpgConfiguration rpgConfiguration;
     private Map<Player, Objective> objectiveMap = new HashMap<>();
 
-    RpgBoard(Plugin plugin, PlayerConfiguration playerConfiguration, RpgConfiguration rpgConfiguration) {
+    RpgBoard(Plugin plugin, RpgConfiguration rpgConfiguration) {
         this.plugin = plugin;
-        this.playerConfiguration = playerConfiguration;
         this.rpgConfiguration = rpgConfiguration;
     }
 
@@ -53,7 +50,7 @@ class RpgBoard {
 
         for (RewardWrapper.RewardType rewardType : RewardWrapper.RewardType.values()) {
             Score score = objective.getScore(rewardType.getDisplayName());
-            score.setScore(playerConfiguration.getStatistic(player, rewardType));
+            //score.setScore(playerConfiguration.getStatistic(player, rewardType));
         }
 
         objective.setDisplayName(rpgConfiguration.getTranslation("msg_stats"));

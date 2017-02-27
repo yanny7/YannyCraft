@@ -1,6 +1,5 @@
 package me.noip.yanny.rpg;
 
-import me.noip.yanny.PlayerConfiguration;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,19 +12,19 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
+
 public class RPG implements PartPlugin {
 
     private JavaPlugin plugin;
-    private PlayerConfiguration playerConfiguration;
     private RpgConfiguration rpgConfiguration;
     private RpgBoard rpgBoard;
 
-    public RPG(JavaPlugin plugin, PlayerConfiguration playerConfiguration) {
+    public RPG(JavaPlugin plugin, Connection connection) {
         this.plugin = plugin;
-        this.playerConfiguration = playerConfiguration;
 
-        rpgConfiguration = new RpgConfiguration(plugin, playerConfiguration);
-        rpgBoard = new RpgBoard(plugin, playerConfiguration, rpgConfiguration);
+        rpgConfiguration = new RpgConfiguration(plugin, connection);
+        rpgBoard = new RpgBoard(plugin, rpgConfiguration);
     }
 
     @Override
@@ -53,24 +52,24 @@ public class RPG implements PartPlugin {
                 case IRON_PICKAXE:
                 case GOLD_PICKAXE:
                 case DIAMOND_PICKAXE:
-                    playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.PICKAXE);
-                    rpgBoard.updateObjective(RewardWrapper.RewardType.PICKAXE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.PICKAXE));
+                    //playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.PICKAXE);
+                    //rpgBoard.updateObjective(RewardWrapper.RewardType.PICKAXE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.PICKAXE));
                     break;
                 case WOOD_SPADE:
                 case STONE_SPADE:
                 case IRON_SPADE:
                 case GOLD_SPADE:
                 case DIAMOND_SPADE:
-                    playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SPADE);
-                    rpgBoard.updateObjective(RewardWrapper.RewardType.SPADE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SPADE));
+                    //playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SPADE);
+                    //rpgBoard.updateObjective(RewardWrapper.RewardType.SPADE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SPADE));
                     break;
                 case WOOD_AXE:
                 case STONE_AXE:
                 case IRON_AXE:
                 case GOLD_AXE:
                 case DIAMOND_AXE:
-                    playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.AXE);
-                    rpgBoard.updateObjective(RewardWrapper.RewardType.AXE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.AXE));
+                    //playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.AXE);
+                    //rpgBoard.updateObjective(RewardWrapper.RewardType.AXE, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.AXE));
                     break;
             }
 
@@ -89,8 +88,8 @@ public class RPG implements PartPlugin {
                 Monster monster = (Monster)event.getEntity();
 
                 if (monster.getHealth() - event.getFinalDamage() <= 0) {
-                    playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SWORD);
-                    rpgBoard.updateObjective(RewardWrapper.RewardType.SWORD, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SWORD));
+                    //playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SWORD);
+                    //rpgBoard.updateObjective(RewardWrapper.RewardType.SWORD, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SWORD));
                     rpgConfiguration.checkForReward(player);
                 }
             }

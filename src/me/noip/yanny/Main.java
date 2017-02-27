@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class Main extends JavaPlugin {
 
@@ -17,7 +18,6 @@ public class Main extends JavaPlugin {
 
     private Connection connection = null;
     private Auth auth;
-    private PlayerConfiguration playerConfiguration;
     private Essentials essentials;
     private RPG rpg;
     private Boss boss;
@@ -34,14 +34,31 @@ public class Main extends JavaPlugin {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + "/" + DATABASE);
+
+            Statement statement = connection.createStatement();
+            statement.execute("CREATE TABLE IF NOT EXISTS users ("
+                    + "ID VARCHAR(64) PRIMARY KEY NOT NULL,"
+                    + "Password VARCHAR(64) NOT NULL,"
+                    + "Inventory TEXT NOT NULL,"
+                    + "HomeLocation TEXT NOT NULL,"
+                    + "BackLocation TEXT NOT NULL,"
+                    + "LastUpdated DATETIME NOT NULL)");
+            statement.execute("CREATE TABLE IF NOT EXISTS chests ("
+                    + "Location VARCHAR(64) PRIMARY KEY NOT NULL,"
+                    + "Player VARCHAR(64) NOT NULL)");
+            statement.execute("CREATE INDEX IF NOT EXISTS PlayerIndex ON chests( Player )");
+            statement.execute("CREATE TABLE IF NOT EXISTS residence ("
+                    + "Location1 VARCHAR(64) NOT NULL,"
+                    + "Location2 VARCHAR(64) NOT NULL,"
+                    + "Player VARCHAR(64) NOT NULL)");
+            statement.execute("CREATE INDEX IF NOT EXISTS PlayerIndex ON residence( Player )");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         auth = new Auth(this, connection);
-        playerConfiguration = new PlayerConfiguration(this);
-        essentials = new Essentials(this, playerConfiguration, auth);
-        rpg = new RPG(this, playerConfiguration);
+        essentials = new Essentials(this, auth, connection);
+        rpg = new RPG(this, connection);
         boss = new Boss(this);
         chestLocker = new ChestLocker(this, connection);
         residence = new Residence(this, connection);
@@ -51,10 +68,9 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        auth.setSpawnLocation(essentials.getSpawnLocation());
+        auth.setSpawnLocationProvider(essentials);
 
         auth.onEnable();
-        playerConfiguration.onEnable();
         essentials.onEnable();
         rpg.onEnable();
         boss.onEnable();
@@ -67,7 +83,6 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         auth.onDisable();
-        playerConfiguration.onDisable();
         essentials.onDisable();
         rpg.onDisable();
         boss.onDisable();

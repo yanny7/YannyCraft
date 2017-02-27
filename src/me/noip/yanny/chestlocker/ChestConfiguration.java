@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.*;
 
 class ChestConfiguration {
@@ -28,12 +27,6 @@ class ChestConfiguration {
 
     ChestConfiguration(Plugin plugin, Connection connection) {
         try {
-            Statement statement = connection.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS chests ("
-                    + "Location VARCHAR(64) PRIMARY KEY NOT NULL,"
-                    + "Player VARCHAR(64) NOT NULL)");
-            statement.execute("CREATE INDEX IF NOT EXISTS PlayerIndex ON chests( Player )");
-
             getOwnerStatement = connection.prepareStatement("SELECT Player FROM chests WHERE Location = ?");
             removeChestStatement = connection.prepareStatement("DELETE FROM chests WHERE Location = ?");
             addChestStatement = connection.prepareStatement("INSERT INTO chests (Location, Player) VALUES (?, ?)");

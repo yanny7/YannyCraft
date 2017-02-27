@@ -1,6 +1,5 @@
 package me.noip.yanny.essentials;
 
-import me.noip.yanny.PlayerConfiguration;
 import me.noip.yanny.auth.Auth;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
@@ -22,29 +21,28 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Essentials implements PartPlugin {
+public class Essentials implements PartPlugin, SpawnLocationProvider {
 
     private JavaPlugin plugin;
-    private PlayerConfiguration playerConfiguration;
     private Auth auth;
 
     private Map<UUID, PermissionAttachment> permissionAttachment;
     private Map<Player, Player> teleportRequest;
     private EssentialsConfiguration essentialsConfiguration;
 
-    public Essentials(JavaPlugin plugin, PlayerConfiguration playerConfiguration, Auth auth) {
+    public Essentials(JavaPlugin plugin, Auth auth, Connection connection) {
         this.plugin = plugin;
-        this.playerConfiguration = playerConfiguration;
         this.auth = auth;
 
         permissionAttachment = new HashMap<>();
         teleportRequest = new HashMap<>();
-        essentialsConfiguration = new EssentialsConfiguration(plugin);
+        essentialsConfiguration = new EssentialsConfiguration(plugin, connection);
     }
 
     @Override
@@ -81,6 +79,7 @@ public class Essentials implements PartPlugin {
         teleportRequest.clear();
     }
 
+    @Override
     public Location getSpawnLocation() {
         return essentialsConfiguration.getSpawnLocation();
     }
@@ -293,7 +292,7 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
-            player.teleport(playerConfiguration.getBackLocation(player));
+            player.teleport(essentialsConfiguration.getBackLocation(player));
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_back"));
             return true;
         }
@@ -307,7 +306,7 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
-            player.teleport(playerConfiguration.getHomeLocation(player));
+            player.teleport(essentialsConfiguration.getHomeLocation(player));
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home"));
             return true;
         }
@@ -321,7 +320,7 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
-            playerConfiguration.setHomeLocation(player, player.getLocation());
+            essentialsConfiguration.setHomeLocation(player, player.getLocation());
             player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home_created"));
             return true;
         }
@@ -350,7 +349,7 @@ public class Essentials implements PartPlugin {
         @EventHandler
         void onPlayerDeath(PlayerDeathEvent event) {
             Player player = event.getEntity();
-            playerConfiguration.setBackLocation(player, player.getLocation());
+            essentialsConfiguration.setBackLocation(player, player.getLocation());
         }
 
         @EventHandler
@@ -374,7 +373,7 @@ public class Essentials implements PartPlugin {
                 return;
             }
 
-            playerConfiguration.setBackLocation(player, from);
+            essentialsConfiguration.setBackLocation(player, from);
         }
 
         @EventHandler(priority = EventPriority.LOWEST)

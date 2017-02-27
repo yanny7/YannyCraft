@@ -1,8 +1,8 @@
 package me.noip.yanny.auth;
 
+import me.noip.yanny.essentials.SpawnLocationProvider;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,7 +27,7 @@ public class Auth implements PartPlugin {
     private ChangePasswordExecutor changePasswordExecutor;
     private AuthListener authListener;
     private AuthConfiguration authConfiguration;
-    private Location spawnLocation;
+    private SpawnLocationProvider spawnLocation;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class Auth implements PartPlugin {
         loggedPlayers.clear();
     }
 
-    public void setSpawnLocation(Location location) {
+    public void setSpawnLocationProvider(SpawnLocationProvider location) {
         this.spawnLocation = location;
     }
 

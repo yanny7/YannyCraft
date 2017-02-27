@@ -40,13 +40,6 @@ class ResidenceConfiguration {
         this.plugin = plugin;
 
         try {
-            Statement statement = connection.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS residence ("
-                    + "Location1 VARCHAR(64) NOT NULL,"
-                    + "Location2 VARCHAR(64) NOT NULL,"
-                    + "Player VARCHAR(64) NOT NULL)");
-            statement.execute("CREATE INDEX IF NOT EXISTS PlayerIndex ON residence( Player )");
-
             addResidenceStatement = connection.prepareStatement("INSERT INTO residence (Player, Location1, Location2) VALUES (?, ?, ?)");
             getResidenceStatement = connection.prepareStatement("SELECT Location1, Location2 FROM residence WHERE Player = ?");
             getAllResidenceStatement = connection.prepareStatement("SELECT Player, Location1, Location2 FROM residence");

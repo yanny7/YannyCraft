@@ -1,5 +1,7 @@
 package me.noip.yanny.auth;
 
+import me.noip.yanny.essentials.SpawnLocationProvider;
+import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,7 +19,6 @@ import org.bukkit.potion.PotionEffect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Map;
 
 class AuthPlayerWrapper {
@@ -33,23 +34,18 @@ class AuthPlayerWrapper {
     private Location loginLocation;
     private GameMode loginGameMode;
     private AuthConfiguration authConfiguration;
+    private SpawnLocationProvider locationProvider;
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(JavaPlugin plugin, Player player, Connection connection, AuthConfiguration authConfiguration, Location spawnLocation) {
+    AuthPlayerWrapper(JavaPlugin plugin, Player player, Connection connection, AuthConfiguration authConfiguration, SpawnLocationProvider locationProvider) {
         this.plugin = plugin;
         this.player = player;
         this.authConfiguration = authConfiguration;
+        this.locationProvider = locationProvider;
 
         try {
-            Statement statement = connection.createStatement();
-            statement.execute("CREATE TABLE IF NOT EXISTS users ("
-                    + "ID VARCHAR(64) PRIMARY KEY NOT NULL,"
-                    + "Password VARCHAR(64) NOT NULL,"
-                    + "Inventory TEXT NOT NULL,"
-                    + "LastUpdated DATETIME NOT NULL)");
-
-            registerStatement = connection.prepareStatement("INSERT INTO users (ID, Password, Inventory, LastUpdated) VALUES (?, ?, ?, DATETIME('now'))");
+            registerStatement = connection.prepareStatement("INSERT INTO users (ID, Password, Inventory, HomeLocation, BackLocation, LastUpdated) VALUES (?, ?, ?, ?, ?, DATETIME('now'))");
             changePasswordStatement = connection.prepareStatement("UPDATE users SET Password = ? WHERE ID = ?");
             getPasswordStatement = connection.prepareStatement("SELECT Password FROM users WHERE ID = ?");
             setInventoryStatement = connection.prepareStatement("UPDATE users SET Inventory = ?, LastUpdated = DATETIME('now') where ID = ?");
@@ -58,14 +54,13 @@ class AuthPlayerWrapper {
             e.printStackTrace();
         }
 
-
         if (restoreData(player)) {
             loginLocation = player.getLocation();
             loginGameMode = player.getGameMode();
             registered = true;
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
         } else {
-            loginLocation = spawnLocation;
+            loginLocation = locationProvider.getSpawnLocation();
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
             resetPlayer(player);
@@ -74,7 +69,7 @@ class AuthPlayerWrapper {
 
         logged = false;
 
-        Location location = spawnLocation;
+        Location location = locationProvider.getSpawnLocation();
         if (location == null) {
             location = player.getWorld().getSpawnLocation();
         }
@@ -110,9 +105,12 @@ class AuthPlayerWrapper {
 
         try {
             String goodPassword = PasswordHash.createHash(password);
+            String spawnLocation = Utils.locationToString(locationProvider.getSpawnLocation());
             registerStatement.setString(1, player.getUniqueId().toString());
             registerStatement.setString(2, goodPassword);
             registerStatement.setString(3, playerToString(player));
+            registerStatement.setString(4, spawnLocation);
+            registerStatement.setString(5, spawnLocation);
             registerStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();

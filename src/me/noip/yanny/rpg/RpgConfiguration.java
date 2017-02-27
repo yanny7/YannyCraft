@@ -1,6 +1,5 @@
 package me.noip.yanny.rpg;
 
-import me.noip.yanny.PlayerConfiguration;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,11 +22,9 @@ class RpgConfiguration {
     private Map<String, String> translationMap = new HashMap<>();
 
     private Plugin plugin;
-    private PlayerConfiguration playerConfiguration;
 
-    RpgConfiguration(Plugin plugin, PlayerConfiguration playerConfiguration) {
+    RpgConfiguration(Plugin plugin, Connection connection) {
         this.plugin = plugin;
-        this.playerConfiguration = playerConfiguration;
 
         translationMap.put("msg_reward", "Dostal si odmenu!");
         translationMap.put("msg_stats", "Hodnotenie");
@@ -90,7 +88,7 @@ class RpgConfiguration {
     }
 
     void checkForReward(Player player) {
-        for (RewardWrapper.RewardType type : RewardWrapper.RewardType.values()) {
+        /*for (RewardWrapper.RewardType type : RewardWrapper.RewardType.values()) {
             ItemStack reward = rewardWrapper.getReward(type, playerConfiguration.getStatistic(player, type));
 
             if (reward != null) {
@@ -98,6 +96,6 @@ class RpgConfiguration {
                 player.sendMessage(ChatColor.GREEN + translationMap.get("msg_reward"));
                 playerConfiguration.incrementStatistic(player, type);
             }
-        }
+        }*/
     }
 }
