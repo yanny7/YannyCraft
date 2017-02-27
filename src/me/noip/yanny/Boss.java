@@ -32,18 +32,6 @@ class Boss {
     class BossListener implements Listener {
 
         @EventHandler
-        void onMobDamaged(EntityDamageEvent event) {
-            if (event.getEntity() instanceof Monster) {
-                Monster monster = (Monster)event.getEntity();
-
-                if ((monster.getHealth() - event.getFinalDamage()) < monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-                    monster.setCustomName(ChatColor.YELLOW + "" + (int)Math.ceil(monster.getHealth() - event.getFinalDamage()) + "/" + (int)monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-                    monster.setCustomNameVisible(true);
-                }
-            }
-        }
-
-        @EventHandler
         void OnMobDeath(EntityDeathEvent event) {
             bossConfiguration.bossDeathDrop(event);
         }
