@@ -1,5 +1,8 @@
-package me.noip.yanny;
+package me.noip.yanny.residence;
 
+import me.noip.yanny.utils.ServerConfigurationWrapper;
+import me.noip.yanny.utils.Area;
+import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

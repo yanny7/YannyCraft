@@ -1,5 +1,8 @@
-package me.noip.yanny;
+package me.noip.yanny.essentials;
 
+import me.noip.yanny.PlayerConfiguration;
+import me.noip.yanny.auth.Auth;
+import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -24,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-class Essentials {
+public class Essentials implements PartPlugin {
 
     private JavaPlugin plugin;
     private PlayerConfiguration playerConfiguration;
@@ -34,7 +37,7 @@ class Essentials {
     private Map<Player, Player> teleportRequest;
     private EssentialsConfiguration essentialsConfiguration;
 
-    Essentials(JavaPlugin plugin, PlayerConfiguration playerConfiguration, Auth auth) {
+    public Essentials(JavaPlugin plugin, PlayerConfiguration playerConfiguration, Auth auth) {
         this.plugin = plugin;
         this.playerConfiguration = playerConfiguration;
         this.auth = auth;
@@ -44,7 +47,8 @@ class Essentials {
         essentialsConfiguration = new EssentialsConfiguration(plugin);
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         essentialsConfiguration.load();
 
         plugin.getServer().getPluginManager().registerEvents(new EssentialsListener(), plugin);
@@ -66,7 +70,8 @@ class Essentials {
         }
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             PermissionAttachment attachment = permissionAttachment.remove(player.getUniqueId());
             player.removeAttachment(attachment);
@@ -76,8 +81,8 @@ class Essentials {
         teleportRequest.clear();
     }
 
-    EssentialsConfiguration getEssentialsConfiguration() {
-        return essentialsConfiguration;
+    public Location getSpawnLocation() {
+        return essentialsConfiguration.getSpawnLocation();
     }
 
     class SpawnExecutor implements CommandExecutor {
@@ -96,13 +101,13 @@ class Essentials {
             }
 
             if (args.length == 0) {
-                player.teleport(essentialsConfiguration.getSpawnLocation(player));
+                player.teleport(essentialsConfiguration.getSpawnLocation());
             } else {
                 if (player.hasPermission("yannycraft.spawn.other")) {
                     Player target = plugin.getServer().getPlayer(args[0]);
 
                     if (target != null) {
-                        target.teleport(essentialsConfiguration.getSpawnLocation(player));
+                        target.teleport(essentialsConfiguration.getSpawnLocation());
                     } else {
                         player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
                     }

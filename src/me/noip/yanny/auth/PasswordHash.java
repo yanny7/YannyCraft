@@ -1,4 +1,4 @@
-package me.noip.yanny;
+package me.noip.yanny.auth;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -37,7 +37,7 @@ class PasswordHash {
      * @param   password    the password to hash
      * @return              a salted PBKDF2 hash of the password
      */
-    static String createHash(char[] password)
+    private static String createHash(char[] password)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         // Generate a random salt
@@ -71,7 +71,7 @@ class PasswordHash {
      * @param   goodHash    the hash of the valid password
      * @return              true if the password is correct, false if not
      */
-    static boolean validatePassword(char[] password, String goodHash)
+    private static boolean validatePassword(char[] password, String goodHash)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         // Decode the hash into its parameters

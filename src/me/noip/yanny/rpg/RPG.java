@@ -1,5 +1,7 @@
-package me.noip.yanny;
+package me.noip.yanny.rpg;
 
+import me.noip.yanny.PlayerConfiguration;
+import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -11,14 +13,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-class RPG {
+public class RPG implements PartPlugin {
 
     private JavaPlugin plugin;
     private PlayerConfiguration playerConfiguration;
     private RpgConfiguration rpgConfiguration;
     private RpgBoard rpgBoard;
 
-    RPG(JavaPlugin plugin, PlayerConfiguration playerConfiguration) {
+    public RPG(JavaPlugin plugin, PlayerConfiguration playerConfiguration) {
         this.plugin = plugin;
         this.playerConfiguration = playerConfiguration;
 
@@ -26,13 +28,15 @@ class RPG {
         rpgBoard = new RpgBoard(plugin, playerConfiguration, rpgConfiguration);
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         rpgConfiguration.load();
         rpgBoard.onEnable();
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
         rpgBoard.onDisable();
     }
 

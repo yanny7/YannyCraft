@@ -1,5 +1,7 @@
-package me.noip.yanny;
+package me.noip.yanny.rpg;
 
+import me.noip.yanny.PlayerConfiguration;
+import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

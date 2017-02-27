@@ -1,6 +1,8 @@
-package me.noip.yanny;
+package me.noip.yanny.auth;
 
+import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-class Auth {
+public class Auth implements PartPlugin {
 
     private JavaPlugin plugin;
     private Connection connection;
@@ -25,11 +27,11 @@ class Auth {
     private ChangePasswordExecutor changePasswordExecutor;
     private AuthListener authListener;
     private AuthConfiguration authConfiguration;
-    private EssentialsConfiguration essentialsConfiguration;
+    private Location spawnLocation;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
 
-    Auth(JavaPlugin plugin, Connection connection) {
+    public Auth(JavaPlugin plugin, Connection connection) {
         this.plugin = plugin;
         this.connection = connection;
         authConfiguration = new AuthConfiguration(plugin);
@@ -39,7 +41,8 @@ class Auth {
         changePasswordExecutor = new ChangePasswordExecutor();
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         authConfiguration.load();
 
         plugin.getServer().getPluginManager().registerEvents(authListener, plugin);
@@ -48,13 +51,14 @@ class Auth {
         plugin.getCommand("changepassword").setExecutor(changePasswordExecutor);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, essentialsConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, spawnLocation);
             authPlayerWrapper.loginAfterReload();
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
         }
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.remove(player.getUniqueId());
 
@@ -69,11 +73,11 @@ class Auth {
         loggedPlayers.clear();
     }
 
-    void setEssentialsConfiguration(EssentialsConfiguration essentialsConfiguration) {
-        this.essentialsConfiguration = essentialsConfiguration;
+    public void setSpawnLocation(Location location) {
+        this.spawnLocation = location;
     }
 
-    boolean isLogged(Player player) {
+    public boolean isLogged(Player player) {
         AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
         return (authPlayerWrapper != null) && (authPlayerWrapper.isLogged());
     }
@@ -149,7 +153,7 @@ class Auth {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, essentialsConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, spawnLocation);
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);

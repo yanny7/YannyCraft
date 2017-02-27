@@ -1,5 +1,6 @@
-package me.noip.yanny;
+package me.noip.yanny.rpg;
 
+import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -9,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-class RewardWrapper {
+public class RewardWrapper {
 
     private static final String MATERIAL = "reward";
     private static final String LORE = "lore";
@@ -176,7 +177,7 @@ class RewardWrapper {
         return itemStack;
     }
 
-    enum RewardType {
+    public enum RewardType {
         PICKAXE("Vykopanych blokov:"),
         SPADE("Vytazenych blokov:"),
         AXE("Narubaneho dreva:"),

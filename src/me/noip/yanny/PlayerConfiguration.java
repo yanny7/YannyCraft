@@ -1,5 +1,8 @@
 package me.noip.yanny;
 
+import me.noip.yanny.rpg.RewardWrapper;
+import me.noip.yanny.utils.PartPlugin;
+import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -11,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-class PlayerConfiguration {
+public class PlayerConfiguration implements PartPlugin {
 
     private JavaPlugin plugin;
     private Map<UUID, PlayerConfigurationData> playerConfiguration = new HashMap<>();
@@ -22,7 +25,8 @@ class PlayerConfiguration {
         listener = new ConfigurationListener();
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -34,14 +38,15 @@ class PlayerConfiguration {
         }
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
             data.save();
         }
     }
 
-    Location getHomeLocation(Player player) {
+    public Location getHomeLocation(Player player) {
         PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
 
         if (data != null) {
@@ -51,7 +56,7 @@ class PlayerConfiguration {
         }
     }
 
-    void setHomeLocation(Player player, Location location) {
+    public void setHomeLocation(Player player, Location location) {
         PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
 
         if (data != null) {
@@ -59,7 +64,7 @@ class PlayerConfiguration {
         }
     }
 
-    Location getBackLocation(Player player) {
+    public Location getBackLocation(Player player) {
         PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
 
         if (data != null) {
@@ -69,7 +74,7 @@ class PlayerConfiguration {
         }
     }
 
-    void setBackLocation(Player player, Location location) {
+    public void setBackLocation(Player player, Location location) {
         PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
 
         if (data != null) {
@@ -77,7 +82,7 @@ class PlayerConfiguration {
         }
     }
 
-    void incrementStatistic(Player player, RewardWrapper.RewardType type) {
+    public void incrementStatistic(Player player, RewardWrapper.RewardType type) {
         PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
 
         if (data != null) {
@@ -85,7 +90,7 @@ class PlayerConfiguration {
         }
     }
 
-    int getStatistic(Player player, RewardWrapper.RewardType type) {
+    public int getStatistic(Player player, RewardWrapper.RewardType type) {
         PlayerConfigurationData data = playerConfiguration.get(player.getUniqueId());
 
         if (data != null) {

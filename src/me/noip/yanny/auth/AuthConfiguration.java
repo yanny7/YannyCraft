@@ -1,5 +1,6 @@
-package me.noip.yanny;
+package me.noip.yanny.auth;
 
+import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 

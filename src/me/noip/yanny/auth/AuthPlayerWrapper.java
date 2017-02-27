@@ -1,8 +1,9 @@
-package me.noip.yanny;
+package me.noip.yanny.auth;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,7 +36,7 @@ class AuthPlayerWrapper {
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(JavaPlugin plugin, Player player, Connection connection, AuthConfiguration authConfiguration, EssentialsConfiguration essentialsConfiguration) {
+    AuthPlayerWrapper(JavaPlugin plugin, Player player, Connection connection, AuthConfiguration authConfiguration, Location spawnLocation) {
         this.plugin = plugin;
         this.player = player;
         this.authConfiguration = authConfiguration;
@@ -64,7 +65,7 @@ class AuthPlayerWrapper {
             registered = true;
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
         } else {
-            loginLocation = essentialsConfiguration.getSpawnLocation(player);
+            loginLocation = spawnLocation;
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
             resetPlayer(player);
@@ -73,7 +74,7 @@ class AuthPlayerWrapper {
 
         logged = false;
 
-        Location location = essentialsConfiguration.getSpawnLocation(player);
+        Location location = spawnLocation;
         if (location == null) {
             location = player.getWorld().getSpawnLocation();
         }
@@ -246,6 +247,14 @@ class AuthPlayerWrapper {
     }
 
     private void resetPlayer(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.getSize(); i++) {
+            inventory.setItem(i, new ItemStack(Material.AIR));
+        }
+        Inventory endInventory = player.getEnderChest();
+        for (int i = 0; i < endInventory.getSize(); i++) {
+            endInventory.setItem(i, new ItemStack(Material.AIR));
+        }
         player.setHealth(20);
         player.setFoodLevel(20);
         player.setExp(0);

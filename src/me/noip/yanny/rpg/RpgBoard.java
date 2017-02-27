@@ -1,5 +1,7 @@
-package me.noip.yanny;
+package me.noip.yanny.rpg;
 
+import me.noip.yanny.PlayerConfiguration;
+import me.noip.yanny.auth.PlayerAuthEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

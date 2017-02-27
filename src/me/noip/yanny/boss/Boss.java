@@ -1,5 +1,6 @@
-package me.noip.yanny;
+package me.noip.yanny.boss;
 
+import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -7,22 +8,24 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.Plugin;
 
-class Boss {
+public class Boss implements PartPlugin {
 
     private Plugin plugin;
     private BossConfiguration bossConfiguration;
 
-    Boss(Plugin plugin) {
+    public Boss(Plugin plugin) {
         this.plugin = plugin;
         bossConfiguration = new BossConfiguration(plugin);
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         bossConfiguration.load();
         plugin.getServer().getPluginManager().registerEvents(new BossListener(), plugin);
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
 
     }
 

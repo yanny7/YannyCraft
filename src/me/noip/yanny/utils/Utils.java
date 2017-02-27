@@ -1,4 +1,4 @@
-package me.noip.yanny;
+package me.noip.yanny.utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -12,13 +12,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-class Utils {
+public class Utils {
 
-    static String locationToString(Location location) {
+    private Utils() {
+    }
+
+    public static String locationToString(Location location) {
         return location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + " " + location.getWorld().getName();
     }
 
-    static Location parseLocation(String location, Plugin plugin) {
+    public static Location parseLocation(String location, Plugin plugin) {
         String[] tokens = location.split(" ");
 
         if (tokens.length != 4) {
@@ -46,7 +49,7 @@ class Utils {
         return new Location(world, x, y, z);
     }
 
-    public ItemStack book(String title, String author, String... pages) {
+    public static ItemStack book(String title, String author, String... pages) {
         ItemStack is = new ItemStack(Material.WRITTEN_BOOK, 1);
         net.minecraft.server.v1_11_R1.ItemStack nmsis = CraftItemStack.asNMSCopy(is);
         NBTTagCompound bd = new NBTTagCompound();
@@ -64,7 +67,7 @@ class Utils {
         return is;
     }
 
-    public void openBook(ItemStack book, Player p) {
+    public static void openBook(ItemStack book, Player p) {
         int slot = p.getInventory().getHeldItemSlot();
         ItemStack old = p.getInventory().getItem(slot);
         p.getInventory().setItem(slot, book);

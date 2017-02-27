@@ -1,5 +1,6 @@
-package me.noip.yanny;
+package me.noip.yanny.essentials;
 
+import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -124,11 +125,7 @@ class EssentialsConfiguration {
         save();
     }
 
-    Location getSpawnLocation(Player player) {
-        /*if (spawnLocation == null) {
-            spawnLocation = player.getWorld().getSpawnLocation();
-        }*/
-
+    Location getSpawnLocation() {
         return spawnLocation;
     }
 

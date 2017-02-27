@@ -1,5 +1,7 @@
-package me.noip.yanny;
+package me.noip.yanny.residence;
 
+import me.noip.yanny.utils.Area;
+import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,23 +19,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.Connection;
 import java.util.*;
 
-class Residence {
+public class Residence implements PartPlugin {
 
     private JavaPlugin plugin;
     private ResidenceConfiguration residenceConfiguration;
 
-    Residence(JavaPlugin plugin, Connection connection) {
+    public Residence(JavaPlugin plugin, Connection connection) {
         this.plugin = plugin;
         residenceConfiguration = new ResidenceConfiguration(plugin, connection);
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new ResidenceListener(), plugin);
         plugin.getCommand("res").setExecutor(new ResExecutor());
         residenceConfiguration.load();
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
 
     }
 

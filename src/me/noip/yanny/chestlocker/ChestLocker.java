@@ -1,5 +1,7 @@
-package me.noip.yanny;
+package me.noip.yanny.chestlocker;
 
+import me.noip.yanny.utils.PartPlugin;
+import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,24 +27,26 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-class ChestLocker {
+public class ChestLocker implements PartPlugin {
 
     private JavaPlugin plugin;
     private ChestConfiguration chestConfiguration;
     private Random random = new Random();
 
-    ChestLocker(JavaPlugin plugin, Connection connection) {
+    public ChestLocker(JavaPlugin plugin, Connection connection) {
         this.plugin = plugin;
         chestConfiguration = new ChestConfiguration(plugin, connection);
     }
 
-    void onEnable() {
+    @Override
+    public void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new ChestLockerListener(), plugin);
         plugin.getCommand("unlock").setExecutor(new UnlockExecutor());
         chestConfiguration.load();
     }
 
-    void onDisable() {
+    @Override
+    public void onDisable() {
     }
 
     private class UnlockExecutor implements CommandExecutor {

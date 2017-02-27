@@ -1,5 +1,6 @@
-package me.noip.yanny;
+package me.noip.yanny.boss;
 
+import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;

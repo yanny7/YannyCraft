@@ -1,5 +1,11 @@
 package me.noip.yanny;
 
+import me.noip.yanny.auth.Auth;
+import me.noip.yanny.boss.Boss;
+import me.noip.yanny.chestlocker.ChestLocker;
+import me.noip.yanny.essentials.Essentials;
+import me.noip.yanny.residence.Residence;
+import me.noip.yanny.rpg.RPG;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -45,7 +51,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        auth.setEssentialsConfiguration(essentials.getEssentialsConfiguration());
+        auth.setSpawnLocation(essentials.getSpawnLocation());
 
         auth.onEnable();
         playerConfiguration.onEnable();
