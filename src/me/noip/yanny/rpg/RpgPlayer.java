@@ -107,12 +107,20 @@ class RpgPlayer {
     }
 
     ItemStack getStatsBook() {
-        String stringBuilder =
+        String overview =
                 ChatColor.BLUE + "Mining: " + ChatColor.RED + ChatColor.BOLD + getLevelFromXp(stats.mining) + '\n' +
                 ChatColor.BLUE + "Excavation: " + ChatColor.RED + ChatColor.BOLD + getLevelFromXp(stats.excavation) + '\n' +
                 ChatColor.BLUE + "Woodcutting: " + ChatColor.RED + ChatColor.BOLD + getLevelFromXp(stats.woodcutting) + '\n';
 
-        return Utils.book("RPG STATS", "rpg plugin", stringBuilder);
+        String mining =
+                ChatColor.BOLD + "Mining\n\n" +
+                ChatColor.RESET + "Level: " + getLevelFromXp(stats.mining) + '\n' +
+                ChatColor.RESET + "XP: " + stats.mining + '\n' +
+                ChatColor.RESET + "Next lvl XP: " + (getXpForLevel(getLevelFromXp(stats.mining) + 2) - stats.mining) + '\n' +
+                ChatColor.RESET + "\n" +
+                ChatColor.RESET + ChatColor.BOLD +"Active abilities:\n";
+
+        return Utils.book("RPG STATS", "rpg plugin", overview, mining);
     }
 
     static void registerPlayer(Connection connection, Player player) {
@@ -126,7 +134,11 @@ class RpgPlayer {
     }
 
     private static int getLevelFromXp(int xp) {
-        return (int) Math.ceil((Math.sqrt(625 + 100 * xp) - 25) / 50.0);
+        return (int) Math.floor((Math.sqrt(625 + 100 * xp) - 25) / 50.0);
+    }
+
+    private static int getXpForLevel(int lvl) {
+        return 25 * lvl * lvl - 25 * lvl;
     }
 
     class Stats {
