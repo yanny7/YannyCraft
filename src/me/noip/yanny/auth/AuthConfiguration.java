@@ -1,6 +1,7 @@
 package me.noip.yanny.auth;
 
 import me.noip.yanny.utils.ServerConfigurationWrapper;
+import me.noip.yanny.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
@@ -48,7 +49,7 @@ class AuthConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
 
         save(); // save defaults
     }

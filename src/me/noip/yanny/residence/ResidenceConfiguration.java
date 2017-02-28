@@ -68,7 +68,7 @@ class ResidenceConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
 
         residenceMaterial = Material.getMaterial(serverConfigurationWrapper.getString(RESIDENCE_MATERIAL, residenceMaterial.name()));
 

@@ -78,6 +78,11 @@ commands:
     description: Vytvori/odstrani rezidenciu
     permission: yannycraft.res
     usage: /res [create|remove|info]
+# RPG commands
+  stats:
+    description: Zobrazi RPG statistiky
+    permission: yannycraft.rpg
+    usage: /stats
 
 permissions:
   yannycraft.spawn:
@@ -103,4 +108,6 @@ permissions:
   yannycraft.chest:
     default: true
   yannycraft.res:
+    default: true
+  yannycraft:rpg:
     default: true

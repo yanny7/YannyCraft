@@ -52,6 +52,11 @@ public class Main extends JavaPlugin {
                     + "Location2 VARCHAR(64) NOT NULL,"
                     + "Player VARCHAR(64) NOT NULL)");
             statement.execute("CREATE INDEX IF NOT EXISTS PlayerIndex ON residence( Player )");
+            statement.execute("CREATE TABLE IF NOT EXISTS rpg ("
+                    + "Player VARCHAR(64) PRIMARY KEY NOT NULL,"
+                    + "Mining INTEGER DEFAULT(0),"
+                    + "Excavation INTEGER DEFAULT(0),"
+                    + "Woodcutting INTEGER DEFAULT(0))");
         } catch (Exception e) {
             e.printStackTrace();
         }

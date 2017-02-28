@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public class RewardWrapper {
+class RewardWrapper {
 
     private static final String MATERIAL = "reward";
     private static final String LORE = "lore";

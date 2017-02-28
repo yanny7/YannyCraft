@@ -1,6 +1,7 @@
 package me.noip.yanny.chestlocker;
 
 import me.noip.yanny.utils.ServerConfigurationWrapper;
+import me.noip.yanny.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.Plugin;
 
@@ -55,7 +56,7 @@ class ChestConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(ServerConfigurationWrapper.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
 
         lockpickingChance = serverConfigurationWrapper.getDouble(LOCKPICKING_CHANCE, lockpickingChance);
 

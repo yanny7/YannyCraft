@@ -12,6 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Utils {
 
     private Utils() {
@@ -83,6 +86,40 @@ public class Utils {
         PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("MC|BOpen", new PacketDataSerializer(buf));
         ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
         p.getInventory().setItem(slot, old);
+    }
+
+    public static Map<String,String> convertMapString(Map<String, Object> map) {
+        Map<String,String> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if(entry.getValue() instanceof String){
+                newMap.put(entry.getKey(), (String) entry.getValue());
+            }
+        }
+        return newMap;
+    }
+
+    public static Map<String, Integer> convertMapInteger(Map<String, Object> map) {
+        Map<String, Integer> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if(entry.getValue() instanceof Integer){
+                newMap.put(entry.getKey(), (Integer) entry.getValue());
+            }
+        }
+        return newMap;
+    }
+
+    public static Map<Material, Integer> convertMapMaterialInteger(Map<String, Object> map) {
+        Map<Material, Integer> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Integer) {
+                Material material = Material.getMaterial(entry.getKey());
+
+                if (material != null) {
+                    newMap.put(material, (Integer) entry.getValue());
+                }
+            }
+        }
+        return newMap;
     }
 
 }
