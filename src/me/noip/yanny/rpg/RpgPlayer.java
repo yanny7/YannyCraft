@@ -112,15 +112,11 @@ class RpgPlayer {
                 ChatColor.BLUE + "Excavation: " + ChatColor.RED + ChatColor.BOLD + getLevelFromXp(stats.excavation) + '\n' +
                 ChatColor.BLUE + "Woodcutting: " + ChatColor.RED + ChatColor.BOLD + getLevelFromXp(stats.woodcutting) + '\n';
 
-        String mining =
-                ChatColor.BOLD + "Mining\n\n" +
-                ChatColor.RESET + "Level: " + getLevelFromXp(stats.mining) + '\n' +
-                ChatColor.RESET + "XP: " + stats.mining + '\n' +
-                ChatColor.RESET + "Next lvl XP: " + (getXpForLevel(getLevelFromXp(stats.mining) + 2) - stats.mining) + '\n' +
-                ChatColor.RESET + "\n" +
-                ChatColor.RESET + ChatColor.BOLD +"Active abilities:\n";
+        String mining = buildSkillPage("Mining", stats.mining);
+        String excavation = buildSkillPage("Excavation", stats.excavation);
+        String woodcutting = buildSkillPage("Woodcutting", stats.woodcutting);
 
-        return Utils.book("RPG STATS", "rpg plugin", overview, mining);
+        return Utils.book("RPG STATS", "rpg plugin", overview, mining, excavation, woodcutting);
     }
 
     static void registerPlayer(Connection connection, Player player) {
@@ -133,11 +129,27 @@ class RpgPlayer {
         }
     }
 
+    private static String buildSkillPage(String name, int xp) {
+        StringBuilder out = new StringBuilder();
+        int curLevel = getLevelFromXp(xp);
+        int nextLevelXp = getXpForLevel(curLevel + 1) - xp;
+
+        out.append(ChatColor.BOLD).append(name).append('\n');
+        out.append(ChatColor.RESET).append('\n');
+        out.append(ChatColor.RESET).append("Level: ").append(ChatColor.BOLD).append(curLevel).append('\n');
+        out.append(ChatColor.RESET).append("Xp: ").append(ChatColor.BOLD).append(xp).append('\n');
+        out.append(ChatColor.RESET).append("Next lvl xp: ").append(ChatColor.BOLD).append(nextLevelXp).append('\n');
+        out.append(ChatColor.RESET).append('\n');
+
+        return out.toString();
+    }
+
     private static int getLevelFromXp(int xp) {
         return (int) Math.floor((Math.sqrt(625 + 100 * xp) - 25) / 50.0);
     }
 
     private static int getXpForLevel(int lvl) {
+        lvl += 1;
         return 25 * lvl * lvl - 25 * lvl;
     }
 
