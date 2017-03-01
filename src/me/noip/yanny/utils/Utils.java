@@ -2,6 +2,7 @@ package me.noip.yanny.utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import me.noip.yanny.rpg.Rarity;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -117,6 +118,17 @@ public class Utils {
                 if (material != null) {
                     newMap.put(material, (Integer) entry.getValue());
                 }
+            }
+        }
+        return newMap;
+    }
+
+    public static Map<Rarity, Integer> convertMapRarityInteger(Map<String, Object> map) {
+        Map<Rarity, Integer> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Integer) {
+                Rarity rarity = Rarity.valueOf(entry.getKey());
+                newMap.put(rarity, (Integer) entry.getValue());
             }
         }
         return newMap;

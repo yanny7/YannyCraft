@@ -1,11 +1,15 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.utils.Utils;
+import net.minecraft.server.v1_11_R1.ItemFish;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -14,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 class RpgPlayer {
@@ -26,6 +31,7 @@ class RpgPlayer {
     private final RpgBoard rpgBoard;
     private final Stats stats;
     private final Plugin plugin;
+    private final Random random = new Random();
 
     RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard) {
         this.plugin = plugin;
@@ -106,8 +112,6 @@ class RpgPlayer {
         ItemStack handMaterial = player.getInventory().getItemInMainHand();
         Block destMaterial = event.getBlock();
 
-        player.sendMessage(destMaterial.toString());
-
         switch (handMaterial.getType()) {
             case WOOD_PICKAXE:
             case STONE_PICKAXE:
@@ -148,10 +152,16 @@ class RpgPlayer {
         }
 
         switch (destMaterial.getType()) {
+            case MELON_BLOCK:
+            case PUMPKIN: {
+                int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
+                if (exp > 0) {
+                    stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
+                    return;
+                }
+            }
             case POTATO:
             case CARROT:
-            case MELON_STEM:
-            case PUMPKIN_STEM:
             case BEETROOT_BLOCK:
             case CROPS:
             case NETHER_WARTS: {
@@ -183,6 +193,56 @@ class RpgPlayer {
                     }
                 }
                 break;
+            }
+        }
+    }
+
+    void catchFish(PlayerFishEvent event) {
+        Entity entity = event.getCaught();
+
+        if (entity != null) {
+            switch (event.getState()) {
+                case CAUGHT_ENTITY: {
+                    Rarity[] values = Rarity.values();
+                    for (int i = values.length - 1; i >= 0; i--) {
+                        Rarity next = values[i];
+                        double rand = random.nextDouble();
+
+                        if (rand <= next.getProbability()) {
+                            int exp = rpgConfiguration.getFishingExp(next);
+                            if (exp > 0) {
+                                stats.addValue(RpgPlayerStatsType.FISHING, exp);
+                                return;
+                            }
+                            return;
+                        }
+                    }
+                }
+                case CAUGHT_FISH: {
+                    ItemStack fish = ((Item) event.getCaught()).getItemStack();
+                    int exp = -1;
+
+                    switch (fish.getData().getData()) {
+                        case 0:
+                            exp = rpgConfiguration.getFishingExp(Rarity.SCRAP);
+                            break;
+                        case 1:
+                            exp = rpgConfiguration.getFishingExp(Rarity.UNCOMMON);
+                            break;
+                        case 2:
+                            exp = rpgConfiguration.getFishingExp(Rarity.EXOTIC);
+                            break;
+                        case 3:
+                            exp = rpgConfiguration.getFishingExp(Rarity.EPIC);
+                            break;
+                    }
+
+                    if (exp > 0) {
+                        stats.addValue(RpgPlayerStatsType.FISHING, exp);
+                        return;
+                    }
+                    break;
+                }
             }
         }
     }

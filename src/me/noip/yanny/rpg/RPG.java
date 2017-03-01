@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -57,6 +58,17 @@ public class RPG implements PartPlugin {
         RpgPlayerStatsType.ALCHEMY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ALCHEMY));
         RpgPlayerStatsType.SALVAGE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SALVAGE));
         RpgPlayerStatsType.SMELTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SMELTING));
+
+        Rarity.SCRAP.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_SCRAP));
+        Rarity.COMMON.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_COMMON));
+        Rarity.UNCOMMON.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_UNCOMMON));
+        Rarity.RARE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_RARE));
+        Rarity.EXOTIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_EXOTIC));
+        Rarity.HEROIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_HEROIC));
+        Rarity.EPIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_EPIC));
+        Rarity.LEGENDARY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_LEGENDARY));
+        Rarity.MYTHIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_MYTHIC));
+        Rarity.GODLIKE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_GODLIKE));
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard));
@@ -143,6 +155,19 @@ public class RPG implements PartPlugin {
             }
 
             rpgPlayer.blockBreak(event);
+        }
+
+        @EventHandler
+        void onCatchFish(PlayerFishEvent event) {
+            Player player = event.getPlayer();
+            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+            if (rpgPlayer == null) {
+                plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
+                return;
+            }
+
+            rpgPlayer.catchFish(event);
         }
 
         @EventHandler

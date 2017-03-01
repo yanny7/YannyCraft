@@ -16,6 +16,7 @@ class RpgConfiguration {
     static final String T_MSG_XP = "msg_xp";
     static final String T_MSG_NEXT_LEVEL_XP = "msg_next_lvl_xp";
     static final String T_MSG_LEVELUP = "msg_levelup";
+
     static final String T_RPG_MINING = "rpg_mining";
     static final String T_RPG_EXCAVATION = "rpg_excavation";
     static final String T_RPG_WOODCUTTING = "rpg_woodcutting";
@@ -32,12 +33,25 @@ class RpgConfiguration {
     static final String T_RPG_SALVAGE = "rpg_salvage";
     static final String T_RPG_SMELTING = "rpg_smelting";
 
+    static final String T_RAR_SCRAP = "rar_scrap";
+    static final String T_RAR_COMMON = "rar_common";
+    static final String T_RAR_UNCOMMON = "rar_uncommon";
+    static final String T_RAR_RARE = "rar_rare";
+    static final String T_RAR_EXOTIC = "rar_exotic";
+    static final String T_RAR_HEROIC = "rar_heroic";
+    static final String T_RAR_EPIC = "rar_epic";
+    static final String T_RAR_LEGENDARY = "rar_legendary";
+    static final String T_RAR_MYTHIC = "rar_mythic";
+    static final String T_RAR_GODLIKE = "rar_godlike";
+
     private static final String CONFIGURATION_NAME = "rpg";
     private static final String TRANSLATION_SECTION = "translation";
 
     private static final String EXP_MINING_SECTION = "mining";
     private static final String EXP_EXCAVATION_SECTION = "excavation";
     private static final String EXP_WOODCUTTING_SECTION = "woodcutting";
+    private static final String EXP_HERBALISM_SECTION = "herbalism";
+    private static final String EXP_FISHING_SECTION = "fishing";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
@@ -45,6 +59,7 @@ class RpgConfiguration {
     private Map<Material, Integer> excavationExp = new HashMap<>();
     private Map<Material, Integer> woodcuttingExp = new HashMap<>();
     private Map<Material, Integer> herbalismExp = new HashMap<>();
+    private Map<Rarity, Integer> fishingExp = new HashMap<>();
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -84,30 +99,53 @@ class RpgConfiguration {
         herbalismExp.put(Material.CARROT, 50);
         herbalismExp.put(Material.MELON_STEM, 60);
         herbalismExp.put(Material.BEETROOT_BLOCK, 60);
-        herbalismExp.put(Material.PUMPKIN_STEM, 70);
+        herbalismExp.put(Material.PUMPKIN, 70);
         herbalismExp.put(Material.NETHER_WARTS, 100);
         herbalismExp.put(Material.CHORUS_FLOWER, 150);
+
+        fishingExp.put(Rarity.SCRAP, 20);
+        fishingExp.put(Rarity.COMMON, 30);
+        fishingExp.put(Rarity.UNCOMMON, 50);
+        fishingExp.put(Rarity.RARE, 100);
+        fishingExp.put(Rarity.EXOTIC, 200);
+        fishingExp.put(Rarity.HEROIC, 400);
+        fishingExp.put(Rarity.EPIC, 600);
+        fishingExp.put(Rarity.LEGENDARY, 1000);
+        fishingExp.put(Rarity.MYTHIC, 5000);
+        fishingExp.put(Rarity.GODLIKE, 10000);
 
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
         translationMap.put(T_MSG_NEXT_LEVEL_XP, "Xp na dalsi lvl");
         translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
-        translationMap.put(T_RPG_MINING, "Tazenie");
-        translationMap.put(T_RPG_EXCAVATION, "Kopanie");
-        translationMap.put(T_RPG_WOODCUTTING, "Rubanie");
-        translationMap.put(T_RPG_HERBALISM, "Pestovanie");
-        translationMap.put(T_RPG_FISHING, "Rybarenie");
-        translationMap.put(T_RPG_UNARMED, "Pestny boj");
-        translationMap.put(T_RPG_ARCHERY, "Lukostrelba");
-        translationMap.put(T_RPG_SWORDS, "Boj mecom");
-        translationMap.put(T_RPG_AXES, "Boj sekerou");
-        translationMap.put(T_RPG_TAMING, "Krotenie zvierat");
-        translationMap.put(T_RPG_REPAIR, "Opravovanie");
-        translationMap.put(T_RPG_ACROBATICS, "Akrobacia");
-        translationMap.put(T_RPG_ALCHEMY, "Alchymia");
-        translationMap.put(T_RPG_SALVAGE, "Rozoberanie");
-        translationMap.put(T_RPG_SMELTING, "Tavenie");
+
+        translationMap.put(T_RPG_MINING, RpgPlayerStatsType.MINING.getDisplayName());
+        translationMap.put(T_RPG_EXCAVATION, RpgPlayerStatsType.EXCAVATION.getDisplayName());
+        translationMap.put(T_RPG_WOODCUTTING, RpgPlayerStatsType.WOODCUTTING.getDisplayName());
+        translationMap.put(T_RPG_HERBALISM, RpgPlayerStatsType.HERBALISM.getDisplayName());
+        translationMap.put(T_RPG_FISHING, RpgPlayerStatsType.FISHING.getDisplayName());
+        translationMap.put(T_RPG_UNARMED, RpgPlayerStatsType.UNARMED.getDisplayName());
+        translationMap.put(T_RPG_ARCHERY, RpgPlayerStatsType.ARCHERY.getDisplayName());
+        translationMap.put(T_RPG_SWORDS, RpgPlayerStatsType.SWORDS.getDisplayName());
+        translationMap.put(T_RPG_AXES, RpgPlayerStatsType.AXES.getDisplayName());
+        translationMap.put(T_RPG_TAMING, RpgPlayerStatsType.TAMING.getDisplayName());
+        translationMap.put(T_RPG_REPAIR, RpgPlayerStatsType.REPAIR.getDisplayName());
+        translationMap.put(T_RPG_ACROBATICS, RpgPlayerStatsType.ACROBATICS.getDisplayName());
+        translationMap.put(T_RPG_ALCHEMY, RpgPlayerStatsType.ALCHEMY.getDisplayName());
+        translationMap.put(T_RPG_SALVAGE, RpgPlayerStatsType.SALVAGE.getDisplayName());
+        translationMap.put(T_RPG_SMELTING, RpgPlayerStatsType.SMELTING.getDisplayName());
+
+        translationMap.put(T_RAR_SCRAP, Rarity.SCRAP.getDisplayName());
+        translationMap.put(T_RAR_COMMON, Rarity.COMMON.getDisplayName());
+        translationMap.put(T_RAR_UNCOMMON, Rarity.UNCOMMON.getDisplayName());
+        translationMap.put(T_RAR_RARE, Rarity.RARE.getDisplayName());
+        translationMap.put(T_RAR_EXOTIC, Rarity.EXOTIC.getDisplayName());
+        translationMap.put(T_RAR_HEROIC, Rarity.HEROIC.getDisplayName());
+        translationMap.put(T_RAR_EPIC, Rarity.EPIC.getDisplayName());
+        translationMap.put(T_RAR_LEGENDARY, Rarity.LEGENDARY.getDisplayName());
+        translationMap.put(T_RAR_MYTHIC, Rarity.MYTHIC.getDisplayName());
+        translationMap.put(T_RAR_GODLIKE, Rarity.GODLIKE.getDisplayName());
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }
@@ -133,6 +171,18 @@ class RpgConfiguration {
         }
         woodcuttingExp.putAll(Utils.convertMapMaterialInteger(woodcuttingSection.getValues(false)));
 
+        ConfigurationSection herbalismSection = serverConfigurationWrapper.getConfigurationSection(EXP_HERBALISM_SECTION);
+        if (herbalismSection == null) {
+            herbalismSection = serverConfigurationWrapper.createSection(EXP_HERBALISM_SECTION);
+        }
+        herbalismExp.putAll(Utils.convertMapMaterialInteger(herbalismSection.getValues(false)));
+
+        ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
+        if (fishingSection == null) {
+            fishingSection = serverConfigurationWrapper.createSection(EXP_FISHING_SECTION);
+        }
+        fishingExp.putAll(Utils.convertMapRarityInteger(fishingSection.getValues(false)));
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -156,6 +206,16 @@ class RpgConfiguration {
         ConfigurationSection woodcuttingSection = serverConfigurationWrapper.getConfigurationSection(EXP_WOODCUTTING_SECTION);
         for (Map.Entry<Material, Integer> pair : woodcuttingExp.entrySet()) {
             woodcuttingSection.set(pair.getKey().name(), pair.getValue());
+        }
+
+        ConfigurationSection herbalismSection = serverConfigurationWrapper.getConfigurationSection(EXP_HERBALISM_SECTION);
+        for (Map.Entry<Material, Integer> pair : herbalismExp.entrySet()) {
+            herbalismSection.set(pair.getKey().name(), pair.getValue());
+        }
+
+        ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
+        for (Map.Entry<Rarity, Integer> pair : fishingExp.entrySet()) {
+            fishingSection.set(pair.getKey().name(), pair.getValue());
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
@@ -202,6 +262,16 @@ class RpgConfiguration {
 
     int getHerbalismExp(Material material) {
         Integer result = herbalismExp.get(material);
+
+        if (result != null) {
+            return result;
+        } else {
+            return -1;
+        }
+    }
+
+    int getFishingExp(Rarity rarity) {
+        Integer result = fishingExp.get(rarity);
 
         if (result != null) {
             return result;
