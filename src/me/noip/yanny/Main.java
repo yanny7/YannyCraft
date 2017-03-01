@@ -56,7 +56,19 @@ public class Main extends JavaPlugin {
                     + "Player VARCHAR(64) PRIMARY KEY NOT NULL,"
                     + "Mining INTEGER DEFAULT(0),"
                     + "Excavation INTEGER DEFAULT(0),"
-                    + "Woodcutting INTEGER DEFAULT(0))");
+                    + "Woodcutting INTEGER DEFAULT(0),"
+                    + "Herbalism INTEGER DEFAULT(0),"
+                    + "Fishing INTEGER DEFAULT(0),"
+                    + "Unarmed INTEGER DEFAULT(0),"
+                    + "Archery INTEGER DEFAULT(0),"
+                    + "Swords INTEGER DEFAULT(0),"
+                    + "Axes INTEGER DEFAULT(0),"
+                    + "Taming INTEGER DEFAULT(0),"
+                    + "Repair INTEGER DEFAULT(0),"
+                    + "Acrobatics INTEGER DEFAULT(0),"
+                    + "Alchemy INTEGER DEFAULT(0),"
+                    + "Salvage INTEGER DEFAULT(0),"
+                    + "Smelting INTEGER DEFAULT(0))");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.auth.PlayerAuthEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,16 +10,19 @@ import org.bukkit.scoreboard.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 class RpgBoard {
 
     private Plugin plugin;
     private RpgConfiguration rpgConfiguration;
+    private Map<UUID, RpgPlayer> playerMap;
     private Map<Player, Objective> objectiveMap = new HashMap<>();
 
-    RpgBoard(Plugin plugin, RpgConfiguration rpgConfiguration) {
+    RpgBoard(Plugin plugin, RpgConfiguration rpgConfiguration, Map<UUID, RpgPlayer> playerMap) {
         this.plugin = plugin;
         this.rpgConfiguration = rpgConfiguration;
+        this.playerMap = playerMap;
     }
 
     void onEnable() {
@@ -38,9 +42,9 @@ class RpgBoard {
         objectiveMap.clear();
     }
 
-    void updateObjective(RewardWrapper.RewardType rewardType, Player player, int value) {
+    void updateObjective(RpgPlayerStatsType statsType, Player player, int value) {
         Objective objective = objectiveMap.get(player);
-        Score score = objective.getScore(rewardType.getDisplayName());
+        Score score = objective.getScore(ChatColor.GOLD + statsType.getDisplayName());
         score.setScore(value);
     }
 
@@ -48,12 +52,12 @@ class RpgBoard {
         Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("test", "test");
 
-        for (RewardWrapper.RewardType rewardType : RewardWrapper.RewardType.values()) {
-            Score score = objective.getScore(rewardType.getDisplayName());
-            //score.setScore(playerConfiguration.getStatistic(player, rewardType));
+        for (RpgPlayerStatsType statsType : RpgPlayerStatsType.values()) {
+            Score score = objective.getScore(ChatColor.GOLD + statsType.getDisplayName());
+            score.setScore(playerMap.get(player.getUniqueId()).getStatsLevel(statsType));
         }
 
-        objective.setDisplayName(rpgConfiguration.getTranslation("msg_stats"));
+        objective.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_STATS));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         player.setScoreboard(scoreboard);
         return objective;

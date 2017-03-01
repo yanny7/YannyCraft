@@ -37,19 +37,35 @@ public class RPG implements PartPlugin {
         this.connection = connection;
 
         rpgConfiguration = new RpgConfiguration(plugin);
-        rpgBoard = new RpgBoard(plugin, rpgConfiguration);
+        rpgBoard = new RpgBoard(plugin, rpgConfiguration, rpgPlayerMap);
     }
 
     @Override
     public void onEnable() {
+        RpgPlayerStatsType.MINING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_MINING));
+        RpgPlayerStatsType.EXCAVATION.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_EXCAVATION));
+        RpgPlayerStatsType.WOODCUTTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_WOODCUTTING));
+        RpgPlayerStatsType.HERBALISM.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_HERBALISM));
+        RpgPlayerStatsType.FISHING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_FISHING));
+        RpgPlayerStatsType.UNARMED.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_UNARMED));
+        RpgPlayerStatsType.ARCHERY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ARCHERY));
+        RpgPlayerStatsType.SWORDS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SWORDS));
+        RpgPlayerStatsType.AXES.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_AXES));
+        RpgPlayerStatsType.TAMING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_TAMING));
+        RpgPlayerStatsType.REPAIR.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_REPAIR));
+        RpgPlayerStatsType.ACROBATICS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ACROBATICS));
+        RpgPlayerStatsType.ALCHEMY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ALCHEMY));
+        RpgPlayerStatsType.SALVAGE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SALVAGE));
+        RpgPlayerStatsType.SMELTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SMELTING));
+
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard));
+        }
+
         rpgConfiguration.load();
         rpgBoard.onEnable();
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
-
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, connection, rpgConfiguration));
-        }
     }
 
     @Override
@@ -93,7 +109,7 @@ public class RPG implements PartPlugin {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, connection, rpgConfiguration);
+            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard);
             rpgPlayerMap.put(player.getUniqueId(), rpgPlayer);
         }
 

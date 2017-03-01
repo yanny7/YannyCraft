@@ -4,7 +4,6 @@ import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -12,16 +11,34 @@ import java.util.Map;
 
 class RpgConfiguration {
 
+    static final String T_MSG_STATS = "msg_stats";
+    static final String T_MSG_LEVEL = "msg_level";
+    static final String T_MSG_XP = "msg_xp";
+    static final String T_MSG_NEXT_LEVEL_XP = "msg_next_lvl_xp";
+    static final String T_RPG_MINING = "rpg_mining";
+    static final String T_RPG_EXCAVATION = "rpg_excavation";
+    static final String T_RPG_WOODCUTTING = "rpg_woodcutting";
+    static final String T_RPG_HERBALISM = "rpg_herbalism";
+    static final String T_RPG_FISHING = "rpg_fishing";
+    static final String T_RPG_UNARMED = "rpg_unarmed";
+    static final String T_RPG_ARCHERY = "rpg_archery";
+    static final String T_RPG_SWORDS = "rpg_swords";
+    static final String T_RPG_AXES = "rpg_axes";
+    static final String T_RPG_TAMING = "rpg_taming";
+    static final String T_RPG_REPAIR = "rpg_repair";
+    static final String T_RPG_ACROBATICS = "rpg_acrobatics";
+    static final String T_RPG_ALCHEMY = "rpg_alchemy";
+    static final String T_RPG_SALVAGE = "rpg_salvage";
+    static final String T_RPG_SMELTING = "rpg_smelting";
+
     private static final String CONFIGURATION_NAME = "rpg";
     private static final String TRANSLATION_SECTION = "translation";
-    private static final String STAT_SECTION = "stat_names";
 
     private static final String EXP_MINING_SECTION = "mining";
     private static final String EXP_EXCAVATION_SECTION = "excavation";
     private static final String EXP_WOODCUTTING_SECTION = "woodcutting";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private RewardWrapper rewardWrapper;
     private Map<String, String> translationMap = new HashMap<>();
     private Map<Material, Integer> miningExp = new HashMap<>();
     private Map<Material, Integer> excavationExp = new HashMap<>();
@@ -61,11 +78,27 @@ class RpgConfiguration {
         excavationExp.put(Material.SOUL_SAND, 20);
         woodcuttingExp.put(Material.LOG, 30);
 
-        translationMap.put("msg_reward", "Dostal si odmenu!");
-        translationMap.put("msg_stats", "Hodnotenie");
+        translationMap.put(T_MSG_STATS, "RPG Statistiky");
+        translationMap.put(T_MSG_LEVEL, "Level");
+        translationMap.put(T_MSG_XP, "Xp");
+        translationMap.put(T_MSG_NEXT_LEVEL_XP, "Xp na dalsi lvl");
+        translationMap.put(T_RPG_MINING, "Tazenie");
+        translationMap.put(T_RPG_EXCAVATION, "Kopanie");
+        translationMap.put(T_RPG_WOODCUTTING, "Rubanie");
+        translationMap.put(T_RPG_HERBALISM, "Pestovanie");
+        translationMap.put(T_RPG_FISHING, "Rybarenie");
+        translationMap.put(T_RPG_UNARMED, "Pestny boj");
+        translationMap.put(T_RPG_ARCHERY, "Lukostrelba");
+        translationMap.put(T_RPG_SWORDS, "Boj mecom");
+        translationMap.put(T_RPG_AXES, "Boj sekerou");
+        translationMap.put(T_RPG_TAMING, "Krotenie zvierat");
+        translationMap.put(T_RPG_REPAIR, "Opravovanie");
+        translationMap.put(T_RPG_ACROBATICS, "Akrobacia");
+        translationMap.put(T_RPG_ALCHEMY, "Alchymia");
+        translationMap.put(T_RPG_SALVAGE, "Rozoberanie");
+        translationMap.put(T_RPG_SMELTING, "Tavenie");
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
-        rewardWrapper = new RewardWrapper(serverConfigurationWrapper, plugin);
     }
 
     void load() {
@@ -95,29 +128,6 @@ class RpgConfiguration {
         }
         translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
 
-        ConfigurationSection statsSection = serverConfigurationWrapper.getConfigurationSection(STAT_SECTION);
-        if (statsSection == null) {
-            statsSection = serverConfigurationWrapper.createSection(STAT_SECTION);
-        }
-        for (Map.Entry<String, Object> pair : statsSection.getValues(false).entrySet()) {
-            RewardWrapper.RewardType rewardType;
-
-            try {
-                rewardType = RewardWrapper.RewardType.valueOf(pair.getKey());
-            } catch (Exception e) {
-                plugin.getLogger().warning("RpgConfiguration.load: cant cast to RewardType: " + pair.getKey());
-                continue;
-            }
-
-            if (!(pair.getValue() instanceof String)) {
-                plugin.getLogger().warning("RpgConfiguration.load: value is not a String: " + pair.getValue());
-                continue;
-            }
-
-            rewardType.setDisplayName((String)pair.getValue());
-        }
-
-        rewardWrapper.load();
         save(); // save defaults
     }
 
@@ -142,12 +152,6 @@ class RpgConfiguration {
             translationSection.set(pair.getKey(), pair.getValue());
         }
 
-        ConfigurationSection statsSection = serverConfigurationWrapper.getConfigurationSection(STAT_SECTION);
-        for (RewardWrapper.RewardType rewardType : RewardWrapper.RewardType.values()) {
-            statsSection.set(rewardType.name(), rewardType.getDisplayName());
-        }
-
-        rewardWrapper.save();
         serverConfigurationWrapper.save();
     }
 
