@@ -123,8 +123,9 @@ public class Auth implements PartPlugin {
                 return false;
             }
 
-            authPlayerWrapper.login(args[0]);
-            plugin.getServer().getPluginManager().callEvent(new PlayerAuthEvent(player));
+            if (authPlayerWrapper.login(args[0])) {
+                plugin.getServer().getPluginManager().callEvent(new PlayerAuthEvent(player));
+            }
             return true;
         }
     }

@@ -125,24 +125,24 @@ class AuthPlayerWrapper {
         player.setGameMode(GameMode.SURVIVAL);
     }
 
-    void login(String password) {
+    boolean login(String password) {
         if (!registered) {
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_not_registered"));
-            return;
+            return false;
         }
         if (logged) {
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_logged"));
-            return;
+            return false;
         }
 
         try {
             if (!checkPassword(password)) {
                 player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_wrong_password"));
-                return;
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            return false;
         }
 
         logged = true;
@@ -150,6 +150,7 @@ class AuthPlayerWrapper {
         player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
+        return true;
     }
 
     void loginAfterReload() {
