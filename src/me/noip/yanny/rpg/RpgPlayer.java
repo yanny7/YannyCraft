@@ -1,7 +1,6 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.utils.Utils;
-import net.minecraft.server.v1_11_R1.ItemFish;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -9,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -243,6 +243,37 @@ class RpgPlayer {
                     }
                     break;
                 }
+            }
+        }
+    }
+
+    void entityDamaged(EntityDamageByEntityEvent event) {
+        int exp = rpgConfiguration.getDamageExp(event.getEntityType());
+        if (exp > 0) {
+            switch (event.getCause()) {
+                case PROJECTILE:
+                    stats.addValue(RpgPlayerStatsType.ARCHERY, exp);
+                    return;
+                case ENTITY_ATTACK:
+                    switch (player.getInventory().getItemInMainHand().getType()) {
+                        case AIR:
+                            stats.addValue(RpgPlayerStatsType.UNARMED, exp);
+                            break;
+                        case STONE_SWORD:
+                        case DIAMOND_SWORD:
+                        case GOLD_SWORD:
+                        case IRON_SWORD:
+                        case WOOD_SWORD:
+                            stats.addValue(RpgPlayerStatsType.SWORDS, exp);
+                            break;
+                        case DIAMOND_AXE:
+                        case GOLD_AXE:
+                        case IRON_AXE:
+                        case STONE_AXE:
+                        case WOOD_AXE:
+                            stats.addValue(RpgPlayerStatsType.AXES, exp);
+                            break;
+                    }
             }
         }
     }

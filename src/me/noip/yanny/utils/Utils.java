@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -129,6 +130,17 @@ public class Utils {
             if (entry.getValue() instanceof Integer) {
                 Rarity rarity = Rarity.valueOf(entry.getKey());
                 newMap.put(rarity, (Integer) entry.getValue());
+            }
+        }
+        return newMap;
+    }
+
+    public static Map<EntityType, Integer> convertMapEntityTypeInteger(Map<String, Object> map) {
+        Map<EntityType, Integer> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Integer) {
+                EntityType entityType = EntityType.valueOf(entry.getKey());
+                newMap.put(entityType, (Integer) entry.getValue());
             }
         }
         return newMap;

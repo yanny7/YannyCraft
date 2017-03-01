@@ -4,9 +4,10 @@ import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 class RpgConfiguration {
@@ -52,14 +53,16 @@ class RpgConfiguration {
     private static final String EXP_WOODCUTTING_SECTION = "woodcutting";
     private static final String EXP_HERBALISM_SECTION = "herbalism";
     private static final String EXP_FISHING_SECTION = "fishing";
+    private static final String EXP_DAMAGE_SECTION = "damage";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new HashMap<>();
-    private Map<Material, Integer> miningExp = new HashMap<>();
-    private Map<Material, Integer> excavationExp = new HashMap<>();
-    private Map<Material, Integer> woodcuttingExp = new HashMap<>();
-    private Map<Material, Integer> herbalismExp = new HashMap<>();
-    private Map<Rarity, Integer> fishingExp = new HashMap<>();
+    private Map<String, String> translationMap = new LinkedHashMap<>();
+    private Map<Material, Integer> miningExp = new LinkedHashMap<>();
+    private Map<Material, Integer> excavationExp = new LinkedHashMap<>();
+    private Map<Material, Integer> woodcuttingExp = new LinkedHashMap<>();
+    private Map<Material, Integer> herbalismExp = new LinkedHashMap<>();
+    private Map<Rarity, Integer> fishingExp = new LinkedHashMap<>();
+    private Map<EntityType, Integer> damageExp = new LinkedHashMap<>();
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -113,6 +116,58 @@ class RpgConfiguration {
         fishingExp.put(Rarity.LEGENDARY, 1000);
         fishingExp.put(Rarity.MYTHIC, 5000);
         fishingExp.put(Rarity.GODLIKE, 10000);
+
+        // passive mobs
+        damageExp.put(EntityType.VILLAGER, 10);
+        damageExp.put(EntityType.BAT, 20);
+        damageExp.put(EntityType.CHICKEN, 20);
+        damageExp.put(EntityType.COW, 20);
+        damageExp.put(EntityType.PIG, 20);
+        damageExp.put(EntityType.RABBIT, 20);
+        damageExp.put(EntityType.SHEEP, 20);
+        damageExp.put(EntityType.SQUID, 20);
+        damageExp.put(EntityType.SKELETON_HORSE, 100);
+        // neutral mobs
+        damageExp.put(EntityType.CAVE_SPIDER, 50);
+        damageExp.put(EntityType.POLAR_BEAR, 50);
+        damageExp.put(EntityType.SPIDER, 50);
+        damageExp.put(EntityType.ENDERMAN, 60);
+        damageExp.put(EntityType.PIG_ZOMBIE, 100);
+        // hostile mobs
+        damageExp.put(EntityType.ZOMBIE, 50);
+        damageExp.put(EntityType.SLIME, 50);
+        damageExp.put(EntityType.HUSK, 50);
+        damageExp.put(EntityType.CREEPER, 50);
+        damageExp.put(EntityType.SILVERFISH, 50);
+        damageExp.put(EntityType.SKELETON, 50);
+        damageExp.put(EntityType.WITCH, 50);
+        damageExp.put(EntityType.ZOMBIE_HORSE, 50);
+        damageExp.put(EntityType.ZOMBIE_VILLAGER, 50);
+        damageExp.put(EntityType.MAGMA_CUBE, 100);
+        damageExp.put(EntityType.BLAZE, 100);
+        damageExp.put(EntityType.ENDERMITE, 100);
+        damageExp.put(EntityType.GHAST, 100);
+        damageExp.put(EntityType.STRAY, 100);
+        damageExp.put(EntityType.GUARDIAN, 100);
+        damageExp.put(EntityType.VEX, 100);
+        damageExp.put(EntityType.VINDICATOR, 100);
+        damageExp.put(EntityType.EVOKER, 150);
+        damageExp.put(EntityType.WITHER_SKELETON, 150);
+        damageExp.put(EntityType.SHULKER, 150);
+        damageExp.put(EntityType.ELDER_GUARDIAN, 200);
+        // tameable mobs
+        damageExp.put(EntityType.DONKEY, 20);
+        damageExp.put(EntityType.HORSE, 20);
+        damageExp.put(EntityType.MULE, 20);
+        damageExp.put(EntityType.OCELOT, 20);
+        damageExp.put(EntityType.LLAMA, 30);
+        damageExp.put(EntityType.WOLF, 50);
+        // boss mobs
+        damageExp.put(EntityType.ENDER_DRAGON, 450);
+        damageExp.put(EntityType.WITHER, 500);
+        // utility mobs
+        damageExp.put(EntityType.IRON_GOLEM, 30);
+        damageExp.put(EntityType.SNOWMAN, 30);
 
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
@@ -183,6 +238,12 @@ class RpgConfiguration {
         }
         fishingExp.putAll(Utils.convertMapRarityInteger(fishingSection.getValues(false)));
 
+        ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
+        if (damageSection == null) {
+            damageSection = serverConfigurationWrapper.createSection(EXP_DAMAGE_SECTION);
+        }
+        damageExp.putAll(Utils.convertMapEntityTypeInteger(damageSection.getValues(false)));
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -216,6 +277,11 @@ class RpgConfiguration {
         ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
         for (Map.Entry<Rarity, Integer> pair : fishingExp.entrySet()) {
             fishingSection.set(pair.getKey().name(), pair.getValue());
+        }
+
+        ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
+        for (Map.Entry<EntityType, Integer> pair : damageExp.entrySet()) {
+            damageSection.set(pair.getKey().name(), pair.getValue());
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
@@ -272,6 +338,16 @@ class RpgConfiguration {
 
     int getFishingExp(Rarity rarity) {
         Integer result = fishingExp.get(rarity);
+
+        if (result != null) {
+            return result;
+        } else {
+            return -1;
+        }
+    }
+
+    int getDamageExp(EntityType entityType) {
+        Integer result = damageExp.get(entityType);
 
         if (result != null) {
             return result;

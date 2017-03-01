@@ -172,21 +172,32 @@ public class RPG implements PartPlugin {
 
         @EventHandler
         void onMobDamagedByEntity(EntityDamageByEntityEvent event) {
-            if (!(event.getDamager() instanceof Player)) {
+            if (!(event.getDamager() instanceof Player) && !((event.getDamager() instanceof Arrow)) && !(((Arrow) event.getDamager()).getShooter() instanceof Player)) {
                 return;
             }
 
-            Player player = (Player)event.getDamager();
+            Entity damager = event.getDamager();
+            Player player = null;
 
-            if (event.getEntity() instanceof Monster) {
-                Monster monster = (Monster)event.getEntity();
-
-                if (monster.getHealth() - event.getFinalDamage() <= 0) {
-                    //playerConfiguration.incrementStatistic(player, RewardWrapper.RewardType.SWORD);
-                    //rpgBoard.updateObjective(RewardWrapper.RewardType.SWORD, player, playerConfiguration.getStatistic(player, RewardWrapper.RewardType.SWORD));
-                    //rpgConfiguration.checkForReward(player);
-                }
+            if (damager instanceof Player) {
+                player = (Player) damager;
+            } else if (damager instanceof Arrow) {
+                player = (Player) ((Arrow) damager).getShooter();
             }
+
+            if (player == null) {
+                plugin.getLogger().warning("RPG.onMobDamagedByEntity: Entity is not a player");
+                return;
+            }
+
+            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+            if (rpgPlayer == null) {
+                plugin.getLogger().warning("RPG.onMobDamagedByEntity: Player not found!" + player.getDisplayName());
+                return;
+            }
+
+            rpgPlayer.entityDamaged(event);
         }
 
         @EventHandler
