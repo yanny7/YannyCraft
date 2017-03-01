@@ -3,7 +3,7 @@ package me.noip.yanny.rpg;
 import me.noip.yanny.utils.Utils;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,8 +25,10 @@ class RpgPlayer {
     private final RpgConfiguration rpgConfiguration;
     private final RpgBoard rpgBoard;
     private final Stats stats;
+    private final Plugin plugin;
 
     RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard) {
+        this.plugin = plugin;
         this.player = player;
         this.rpgConfiguration = rpgConfiguration;
         this.rpgBoard = rpgBoard;
@@ -101,18 +103,21 @@ class RpgPlayer {
     }
 
     void blockBreak(BlockBreakEvent event) {
-        Material material = player.getInventory().getItemInMainHand().getType();
-        Material blockMaterial = event.getBlock().getType();
+        ItemStack handMaterial = player.getInventory().getItemInMainHand();
+        Block destMaterial = event.getBlock();
 
-        switch (material) {
+        player.sendMessage(destMaterial.toString());
+
+        switch (handMaterial.getType()) {
             case WOOD_PICKAXE:
             case STONE_PICKAXE:
             case IRON_PICKAXE:
             case GOLD_PICKAXE:
             case DIAMOND_PICKAXE: {
-                int exp = rpgConfiguration.getMiningExp(blockMaterial);
+                int exp = rpgConfiguration.getMiningExp(destMaterial.getType());
                 if (exp > 0) {
                     stats.addValue(RpgPlayerStatsType.MINING, exp);
+                    return;
                 }
                 break;
             }
@@ -121,9 +126,10 @@ class RpgPlayer {
             case IRON_SPADE:
             case GOLD_SPADE:
             case DIAMOND_SPADE: {
-                int exp = rpgConfiguration.getExcavationExp(blockMaterial);
+                int exp = rpgConfiguration.getExcavationExp(destMaterial.getType());
                 if (exp > 0) {
                     stats.addValue(RpgPlayerStatsType.EXCAVATION, exp);
+                    return;
                 }
                 break;
             }
@@ -132,9 +138,49 @@ class RpgPlayer {
             case IRON_AXE:
             case GOLD_AXE:
             case DIAMOND_AXE: {
-                int exp = rpgConfiguration.getWoodcuttingExp(blockMaterial);
+                int exp = rpgConfiguration.getWoodcuttingExp(destMaterial.getType());
                 if (exp > 0) {
                     stats.addValue(RpgPlayerStatsType.WOODCUTTING, exp);
+                    return;
+                }
+                break;
+            }
+        }
+
+        switch (destMaterial.getType()) {
+            case POTATO:
+            case CARROT:
+            case MELON_STEM:
+            case PUMPKIN_STEM:
+            case BEETROOT_BLOCK:
+            case CROPS:
+            case NETHER_WARTS: {
+                if ((destMaterial.getData() == 7)) { // fullyGrown
+                    int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
+                    if (exp > 0) {
+                        stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
+                        return;
+                    }
+                }
+                break;
+            }
+            case COCOA: {
+                if (((destMaterial.getData() & 0x8) == 8)) { // fullyGrown
+                    int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
+                    if (exp > 0) {
+                        stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
+                        return;
+                    }
+                }
+                break;
+            }
+            case CHORUS_FLOWER: {
+                if ((destMaterial.getData() == 5)) { // fullyGrown
+                    int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
+                    if (exp > 0) {
+                        stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
+                        return;
+                    }
                 }
                 break;
             }
@@ -224,6 +270,7 @@ class RpgPlayer {
         }
 
         void addValue(RpgPlayerStatsType type, int value) {
+            plugin.getLogger().info(type.name() + " " + value);
             MutableInt mutableInt = stats.get(type);
             int oldLevel = getLevelFromXp(mutableInt.intValue());
 
@@ -232,6 +279,10 @@ class RpgPlayer {
             int newLevel = getLevelFromXp(mutableInt.intValue());
             if (newLevel != oldLevel) {
                 rpgBoard.updateObjective(type, player, newLevel);
+                player.sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_LEVELUP)
+                        .replace("{STATS_TYPE}", ChatColor.GREEN + type.getDisplayName() + ChatColor.GOLD)
+                        .replace("{LEVEL}", ChatColor.GREEN + Integer.toString(newLevel) + ChatColor.GOLD)
+                        .replace("{LEVEL_DIFF}", ChatColor.GREEN + "+" + Integer.toString(newLevel - oldLevel) + ChatColor.GOLD));
             }
         }
 

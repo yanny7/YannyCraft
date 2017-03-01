@@ -15,6 +15,7 @@ class RpgConfiguration {
     static final String T_MSG_LEVEL = "msg_level";
     static final String T_MSG_XP = "msg_xp";
     static final String T_MSG_NEXT_LEVEL_XP = "msg_next_lvl_xp";
+    static final String T_MSG_LEVELUP = "msg_levelup";
     static final String T_RPG_MINING = "rpg_mining";
     static final String T_RPG_EXCAVATION = "rpg_excavation";
     static final String T_RPG_WOODCUTTING = "rpg_woodcutting";
@@ -43,45 +44,55 @@ class RpgConfiguration {
     private Map<Material, Integer> miningExp = new HashMap<>();
     private Map<Material, Integer> excavationExp = new HashMap<>();
     private Map<Material, Integer> woodcuttingExp = new HashMap<>();
-
-    private Plugin plugin;
+    private Map<Material, Integer> herbalismExp = new HashMap<>();
 
     RpgConfiguration(Plugin plugin) {
-        this.plugin = plugin;
-
-        miningExp.put(Material.SANDSTONE, 30);
-        miningExp.put(Material.PRISMARINE, 30);
-        miningExp.put(Material.RED_SANDSTONE, 30);
-        miningExp.put(Material.ENDER_STONE, 30);
-        miningExp.put(Material.OBSIDIAN, 30);
-        miningExp.put(Material.GLOWSTONE, 30);
-        miningExp.put(Material.STAINED_CLAY, 30);
-        miningExp.put(Material.HARD_CLAY, 30);
-        miningExp.put(Material.MOSSY_COBBLESTONE, 30);
-        miningExp.put(Material.NETHERRACK, 50);
+        miningExp.put(Material.SANDSTONE, 20);
+        miningExp.put(Material.NETHERRACK, 20);
         miningExp.put(Material.STONE, 30);
-        miningExp.put(Material.PURPUR_BLOCK, 50);
-        miningExp.put(Material.COAL_ORE, 50);
-        miningExp.put(Material.IRON_ORE, 50);
-        miningExp.put(Material.GOLD_ORE, 60);
-        miningExp.put(Material.DIAMOND_ORE, 70);
-        miningExp.put(Material.EMERALD_ORE, 80);
-        miningExp.put(Material.LAPIS_ORE, 80);
-        miningExp.put(Material.QUARTZ_ORE, 80);
-        miningExp.put(Material.REDSTONE_ORE, 80);
-        excavationExp.put(Material.SAND, 20);
-        excavationExp.put(Material.CLAY, 20);
-        excavationExp.put(Material.DIRT, 20);
-        excavationExp.put(Material.GRASS, 20);
-        excavationExp.put(Material.GRAVEL, 20);
-        excavationExp.put(Material.MYCEL, 20);
-        excavationExp.put(Material.SOUL_SAND, 20);
+        miningExp.put(Material.RED_SANDSTONE, 30);
+        miningExp.put(Material.PRISMARINE, 30);
+        miningExp.put(Material.HARD_CLAY, 40);
+        miningExp.put(Material.STAINED_CLAY, 40);
+        miningExp.put(Material.ENDER_STONE, 50);
+        miningExp.put(Material.MOSSY_COBBLESTONE, 60);
+        miningExp.put(Material.OBSIDIAN, 80);
+        miningExp.put(Material.GLOWSTONE, 80);
+        miningExp.put(Material.QUARTZ_ORE, 100);
+        miningExp.put(Material.PURPUR_BLOCK, 100);
+        miningExp.put(Material.COAL_ORE, 100);
+        miningExp.put(Material.REDSTONE_ORE, 150);
+        miningExp.put(Material.IRON_ORE, 200);
+        miningExp.put(Material.LAPIS_ORE, 300);
+        miningExp.put(Material.GOLD_ORE, 400);
+        miningExp.put(Material.DIAMOND_ORE, 500);
+        miningExp.put(Material.EMERALD_ORE, 1000);
+
+        excavationExp.put(Material.SAND, 30);
+        excavationExp.put(Material.DIRT, 30);
+        excavationExp.put(Material.GRASS, 30);
+        excavationExp.put(Material.GRAVEL, 50);
+        excavationExp.put(Material.SOUL_SAND, 80);
+        excavationExp.put(Material.CLAY, 100);
+        excavationExp.put(Material.MYCEL, 200);
+
         woodcuttingExp.put(Material.LOG, 30);
+
+        herbalismExp.put(Material.CROPS, 30);
+        herbalismExp.put(Material.COCOA, 40);
+        herbalismExp.put(Material.POTATO, 50);
+        herbalismExp.put(Material.CARROT, 50);
+        herbalismExp.put(Material.MELON_STEM, 60);
+        herbalismExp.put(Material.BEETROOT_BLOCK, 60);
+        herbalismExp.put(Material.PUMPKIN_STEM, 70);
+        herbalismExp.put(Material.NETHER_WARTS, 100);
+        herbalismExp.put(Material.CHORUS_FLOWER, 150);
 
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
         translationMap.put(T_MSG_NEXT_LEVEL_XP, "Xp na dalsi lvl");
+        translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
         translationMap.put(T_RPG_MINING, "Tazenie");
         translationMap.put(T_RPG_EXCAVATION, "Kopanie");
         translationMap.put(T_RPG_WOODCUTTING, "Rubanie");
@@ -181,6 +192,16 @@ class RpgConfiguration {
 
     int getWoodcuttingExp(Material material) {
         Integer result = woodcuttingExp.get(material);
+
+        if (result != null) {
+            return result;
+        } else {
+            return -1;
+        }
+    }
+
+    int getHerbalismExp(Material material) {
+        Integer result = herbalismExp.get(material);
 
         if (result != null) {
             return result;
