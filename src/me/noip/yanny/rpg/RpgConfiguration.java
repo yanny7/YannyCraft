@@ -55,6 +55,9 @@ class RpgConfiguration {
     private static final String EXP_FISHING_SECTION = "fishing";
     private static final String EXP_DAMAGE_SECTION = "damage";
     private static final String EXP_TAME_SECTION = "tame";
+    private static final String EXP_REPAIR_SECTION = "repair";
+
+    private static final String REPAIR_XP = "repair_xp";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new LinkedHashMap<>();
@@ -65,6 +68,7 @@ class RpgConfiguration {
     private Map<Rarity, Integer> fishingExp = new LinkedHashMap<>();
     private Map<EntityType, Integer> damageExp = new LinkedHashMap<>();
     private Map<EntityType, Integer> tameExp = new LinkedHashMap<>();
+    private int repairExp;
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -178,6 +182,8 @@ class RpgConfiguration {
         tameExp.put(EntityType.OCELOT, 500);
         tameExp.put(EntityType.WOLF, 100);
 
+        repairExp = 50;
+
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
@@ -259,6 +265,12 @@ class RpgConfiguration {
         }
         tameExp.putAll(Utils.convertMapEntityTypeInteger(tameSection.getValues(false)));
 
+        ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
+        if (repairSection == null) {
+            repairSection = serverConfigurationWrapper.createSection(EXP_REPAIR_SECTION);
+        }
+        repairExp = repairSection.getInt(REPAIR_XP, repairExp);
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -303,6 +315,9 @@ class RpgConfiguration {
         for (Map.Entry<EntityType, Integer> pair : tameExp.entrySet()) {
             tameSection.set(pair.getKey().name(), pair.getValue());
         }
+
+        ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
+        repairSection.set(REPAIR_XP, repairExp);
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         for (Map.Entry<String, String> pair : translationMap.entrySet()) {
@@ -384,5 +399,9 @@ class RpgConfiguration {
         } else {
             return -1;
         }
+    }
+
+    int getRepairExp(int cost) {
+        return repairExp * cost;
     }
 }

@@ -15,10 +15,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -223,6 +228,42 @@ public class RPG implements PartPlugin {
             }
 
             rpgPlayer.entityTame(event);
+        }
+
+        @EventHandler
+        void onItemRepair(InventoryClickEvent event) {
+            InventoryView inventoryView = event.getView();
+            int rawSlot = event.getRawSlot();
+
+            if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot != 2)) {
+                return;
+            }
+
+            AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
+            ItemStack[] items = anvilInventory.getContents();
+
+            if (items[0] == null) {
+                return;
+            }
+
+            ItemMeta itemMeta = items[0].getItemMeta();
+
+            if (itemMeta instanceof Repairable) {
+                Repairable repairable = (Repairable) itemMeta;
+                int repairCost = repairable.getRepairCost();
+
+                Player player = (Player) event.getWhoClicked();
+                if (player.getLevel() >= repairCost + 1) {
+                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                    if (rpgPlayer == null) {
+                        plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
+                        return;
+                    }
+
+                    rpgPlayer.itemRepair(repairCost + 1);
+                }
+            }
         }
 
         @EventHandler

@@ -286,6 +286,13 @@ class RpgPlayer {
         }
     }
 
+    void itemRepair(int cost) {
+        int exp = rpgConfiguration.getRepairExp(cost);
+        if (exp > 0) {
+            stats.addValue(RpgPlayerStatsType.REPAIR, exp);
+        }
+    }
+
     ItemStack getStatsBook() {
         Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet = stats.entrySet();
         StringBuilder stringBuilder = new StringBuilder();
