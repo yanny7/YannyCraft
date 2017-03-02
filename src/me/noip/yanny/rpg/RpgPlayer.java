@@ -9,6 +9,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -275,6 +276,13 @@ class RpgPlayer {
                             break;
                     }
             }
+        }
+    }
+
+    void entityTame(EntityTameEvent event) {
+        int exp = rpgConfiguration.getTameExp(event.getEntityType());
+        if (exp > 0) {
+            stats.addValue(RpgPlayerStatsType.TAMING, exp);
         }
     }
 

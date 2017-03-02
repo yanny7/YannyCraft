@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -172,8 +173,15 @@ public class RPG implements PartPlugin {
 
         @EventHandler
         void onMobDamagedByEntity(EntityDamageByEntityEvent event) {
-            if (!(event.getDamager() instanceof Player) && !((event.getDamager() instanceof Arrow)) && !(((Arrow) event.getDamager()).getShooter() instanceof Player)) {
-                return;
+            if (!(event.getDamager() instanceof Player)) {
+                if (event.getDamager() instanceof Arrow) {
+                    Arrow arrow = (Arrow) event.getDamager();
+                    if (!(arrow.getShooter() instanceof Player)) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
             }
 
             Entity damager = event.getDamager();
@@ -198,6 +206,23 @@ public class RPG implements PartPlugin {
             }
 
             rpgPlayer.entityDamaged(event);
+        }
+
+        @EventHandler
+        void onEntityTame(EntityTameEvent event) {
+            if (!(event.getOwner() instanceof Player)) {
+                return;
+            }
+
+            Player player = (Player) event.getOwner();
+            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+            if (rpgPlayer == null) {
+                plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
+                return;
+            }
+
+            rpgPlayer.entityTame(event);
         }
 
         @EventHandler

@@ -54,6 +54,7 @@ class RpgConfiguration {
     private static final String EXP_HERBALISM_SECTION = "herbalism";
     private static final String EXP_FISHING_SECTION = "fishing";
     private static final String EXP_DAMAGE_SECTION = "damage";
+    private static final String EXP_TAME_SECTION = "tame";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new LinkedHashMap<>();
@@ -63,6 +64,7 @@ class RpgConfiguration {
     private Map<Material, Integer> herbalismExp = new LinkedHashMap<>();
     private Map<Rarity, Integer> fishingExp = new LinkedHashMap<>();
     private Map<EntityType, Integer> damageExp = new LinkedHashMap<>();
+    private Map<EntityType, Integer> tameExp = new LinkedHashMap<>();
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -169,6 +171,13 @@ class RpgConfiguration {
         damageExp.put(EntityType.IRON_GOLEM, 30);
         damageExp.put(EntityType.SNOWMAN, 30);
 
+        tameExp.put(EntityType.HORSE, 100);
+        tameExp.put(EntityType.DONKEY, 200);
+        tameExp.put(EntityType.MULE, 300);
+        tameExp.put(EntityType.LLAMA, 250);
+        tameExp.put(EntityType.OCELOT, 500);
+        tameExp.put(EntityType.WOLF, 100);
+
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
@@ -244,6 +253,12 @@ class RpgConfiguration {
         }
         damageExp.putAll(Utils.convertMapEntityTypeInteger(damageSection.getValues(false)));
 
+        ConfigurationSection tameSection = serverConfigurationWrapper.getConfigurationSection(EXP_TAME_SECTION);
+        if (tameSection == null) {
+            tameSection = serverConfigurationWrapper.createSection(EXP_TAME_SECTION);
+        }
+        tameExp.putAll(Utils.convertMapEntityTypeInteger(tameSection.getValues(false)));
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -282,6 +297,11 @@ class RpgConfiguration {
         ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
         for (Map.Entry<EntityType, Integer> pair : damageExp.entrySet()) {
             damageSection.set(pair.getKey().name(), pair.getValue());
+        }
+
+        ConfigurationSection tameSection = serverConfigurationWrapper.getConfigurationSection(EXP_TAME_SECTION);
+        for (Map.Entry<EntityType, Integer> pair : tameExp.entrySet()) {
+            tameSection.set(pair.getKey().name(), pair.getValue());
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
@@ -348,6 +368,16 @@ class RpgConfiguration {
 
     int getDamageExp(EntityType entityType) {
         Integer result = damageExp.get(entityType);
+
+        if (result != null) {
+            return result;
+        } else {
+            return -1;
+        }
+    }
+
+    int getTameExp(EntityType entityType) {
+        Integer result = tameExp.get(entityType);
 
         if (result != null) {
             return result;
