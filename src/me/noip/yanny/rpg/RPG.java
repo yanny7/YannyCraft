@@ -268,6 +268,21 @@ public class RPG implements PartPlugin {
 
         @EventHandler
         void onMobDamaged(EntityDamageEvent event) {
+            if ((event.getEntityType() == EntityType.PLAYER) && (event.getCause() == EntityDamageEvent.DamageCause.FALL)) {
+                Player player = (Player) event.getEntity();
+                RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                if (rpgPlayer == null) {
+                    plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
+                    return;
+                }
+
+                rpgPlayer.fallDamage(event.getDamage());
+                return;
+            }
+
+
+
             if (event.getEntity() instanceof Monster) {
                 Monster monster = (Monster)event.getEntity();
 

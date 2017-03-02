@@ -56,8 +56,10 @@ class RpgConfiguration {
     private static final String EXP_DAMAGE_SECTION = "damage";
     private static final String EXP_TAME_SECTION = "tame";
     private static final String EXP_REPAIR_SECTION = "repair";
+    private static final String EXP_ACROBATICS_SECTION = "acrobatics";
 
     private static final String REPAIR_XP = "repair_xp";
+    private static final String ACROBATICS_XP = "acrobatics_xp";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new LinkedHashMap<>();
@@ -69,6 +71,7 @@ class RpgConfiguration {
     private Map<EntityType, Integer> damageExp = new LinkedHashMap<>();
     private Map<EntityType, Integer> tameExp = new LinkedHashMap<>();
     private int repairExp;
+    private int acrobaticsExp;
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -184,6 +187,8 @@ class RpgConfiguration {
 
         repairExp = 50;
 
+        acrobaticsExp = 50; // per hearth
+
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
@@ -271,6 +276,12 @@ class RpgConfiguration {
         }
         repairExp = repairSection.getInt(REPAIR_XP, repairExp);
 
+        ConfigurationSection acrobaticsSection = serverConfigurationWrapper.getConfigurationSection(EXP_ACROBATICS_SECTION);
+        if (acrobaticsSection == null) {
+            acrobaticsSection = serverConfigurationWrapper.createSection(EXP_ACROBATICS_SECTION);
+        }
+        acrobaticsExp = acrobaticsSection.getInt(ACROBATICS_XP, acrobaticsExp);
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -318,6 +329,9 @@ class RpgConfiguration {
 
         ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
         repairSection.set(REPAIR_XP, repairExp);
+
+        ConfigurationSection acrobaticsSection = serverConfigurationWrapper.getConfigurationSection(EXP_ACROBATICS_SECTION);
+        acrobaticsSection.set(ACROBATICS_XP, acrobaticsExp);
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         for (Map.Entry<String, String> pair : translationMap.entrySet()) {
@@ -403,5 +417,9 @@ class RpgConfiguration {
 
     int getRepairExp(int cost) {
         return repairExp * cost;
+    }
+
+    int getAcrobaticExp(double damage) {
+        return (int)(Math.floor((acrobaticsExp * damage) / 10) * 10); // round to ten`s
     }
 }

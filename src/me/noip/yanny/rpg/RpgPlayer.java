@@ -293,6 +293,13 @@ class RpgPlayer {
         }
     }
 
+    void fallDamage(double damage) {
+        int exp = rpgConfiguration.getAcrobaticExp(damage);
+        if (exp > 0) {
+            stats.addValue(RpgPlayerStatsType.ACROBATICS, exp);
+        }
+    }
+
     ItemStack getStatsBook() {
         Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet = stats.entrySet();
         StringBuilder stringBuilder = new StringBuilder();
