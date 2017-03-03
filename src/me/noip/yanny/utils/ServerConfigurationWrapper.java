@@ -4,8 +4,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServerConfigurationWrapper extends YamlConfiguration {
 

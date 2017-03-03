@@ -329,6 +329,7 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
     class EssentialsListener implements Listener {
         private EnumSet<PlayerTeleportEvent.TeleportCause> teleportCauses = EnumSet.of(PlayerTeleportEvent.TeleportCause.COMMAND, PlayerTeleportEvent.TeleportCause.PLUGIN, PlayerTeleportEvent.TeleportCause.UNKNOWN);
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
@@ -337,6 +338,7 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
             permissionAttachment.put(player.getUniqueId(), attachment);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerQuit(PlayerQuitEvent event) {
             Player player = event.getPlayer();
@@ -346,12 +348,14 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
             permissionAttachment.remove(player.getUniqueId());
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerDeath(PlayerDeathEvent event) {
             Player player = event.getEntity();
             essentialsConfiguration.setBackLocation(player, player.getLocation());
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onWorldLoad(WorldLoadEvent event) {
             String spawnWorld = essentialsConfiguration.getSpawnWorld();
@@ -360,6 +364,7 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerTeleport(PlayerTeleportEvent event) {
             Player player = event.getPlayer();
@@ -376,6 +381,7 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
             essentialsConfiguration.setBackLocation(player, from);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler(priority = EventPriority.LOWEST)
         void onPlayerChat(AsyncPlayerChatEvent event) {
             Player player = event.getPlayer();

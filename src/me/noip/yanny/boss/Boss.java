@@ -30,12 +30,13 @@ public class Boss implements PartPlugin {
     }
 
     class BossListener implements Listener {
-
+        @SuppressWarnings("unused")
         @EventHandler
         void OnMobDeath(EntityDeathEvent event) {
             bossConfiguration.bossDeathDrop(event);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onMobSpawned(CreatureSpawnEvent event) {
             if (!(event.getEntity() instanceof Monster)) {

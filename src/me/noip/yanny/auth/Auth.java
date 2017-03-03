@@ -151,6 +151,7 @@ public class Auth implements PartPlugin {
     }
 
     class AuthListener implements Listener {
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
@@ -161,6 +162,7 @@ public class Auth implements PartPlugin {
             plugin.getLogger().info("Player joined: " + player.getDisplayName());
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerQuit(PlayerQuitEvent event) {
             Player player = event.getPlayer();
@@ -175,6 +177,7 @@ public class Auth implements PartPlugin {
             authPlayerWrapper.onQuit();
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         public void OnPlayerMove(PlayerMoveEvent event) {
             Player player = event.getPlayer();
@@ -190,6 +193,7 @@ public class Auth implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onChatCommand(PlayerCommandPreprocessEvent event){
             Player player = event.getPlayer();
@@ -211,6 +215,7 @@ public class Auth implements PartPlugin {
 
         }
 
+        @SuppressWarnings("unused")
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onChat(AsyncPlayerChatEvent event){
             Player player = event.getPlayer();

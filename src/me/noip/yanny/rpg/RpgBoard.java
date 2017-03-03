@@ -64,6 +64,7 @@ class RpgBoard {
     }
 
     private class RpgBoardListener implements Listener {
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerLogin(PlayerAuthEvent event) {
             Player player = event.getPlayer();

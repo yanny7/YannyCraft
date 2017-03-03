@@ -124,6 +124,7 @@ public class RPG implements PartPlugin {
     }
 
     class RpgListener implements Listener {
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
@@ -131,6 +132,7 @@ public class RPG implements PartPlugin {
             rpgPlayerMap.put(player.getUniqueId(), rpgPlayer);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerQuit(PlayerQuitEvent event) {
             Player player = event.getPlayer();
@@ -144,12 +146,14 @@ public class RPG implements PartPlugin {
             rpgPlayer.onQuit();
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onPlayerRegister(PlayerRegisterEvent event) {
             Player player = event.getPlayer();
             RpgPlayer.registerPlayer(connection, player);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onBlockBreak(BlockBreakEvent event) {
             Player player = event.getPlayer();
@@ -163,6 +167,7 @@ public class RPG implements PartPlugin {
             rpgPlayer.blockBreak(event);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onCatchFish(PlayerFishEvent event) {
             Player player = event.getPlayer();
@@ -176,6 +181,7 @@ public class RPG implements PartPlugin {
             rpgPlayer.catchFish(event);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onMobDamagedByEntity(EntityDamageByEntityEvent event) {
             if (!(event.getDamager() instanceof Player)) {
@@ -213,6 +219,7 @@ public class RPG implements PartPlugin {
             rpgPlayer.entityDamaged(event);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onEntityTame(EntityTameEvent event) {
             if (!(event.getOwner() instanceof Player)) {
@@ -230,6 +237,7 @@ public class RPG implements PartPlugin {
             rpgPlayer.entityTame(event);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onInventoryClick(InventoryClickEvent event) {
             if (event.getInventory() instanceof AnvilInventory) {
@@ -302,6 +310,7 @@ public class RPG implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onBrewPotion(BrewEvent event) {
             BrewerInventory brewerInventory = event.getContents();
@@ -316,6 +325,7 @@ public class RPG implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onMobDamaged(EntityDamageEvent event) {
             if ((event.getEntityType() == EntityType.PLAYER) && (event.getCause() == EntityDamageEvent.DamageCause.FALL)) {

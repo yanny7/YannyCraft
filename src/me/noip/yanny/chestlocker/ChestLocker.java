@@ -98,7 +98,7 @@ public class ChestLocker implements PartPlugin {
     }
 
     private class ChestLockerListener implements Listener {
-
+        @SuppressWarnings("unused")
         @EventHandler
         void onEntityExplode(EntityExplodeEvent event) {
             List<Block> removed = new ArrayList<>(event.blockList().size());
@@ -117,6 +117,7 @@ public class ChestLocker implements PartPlugin {
             event.blockList().removeAll(removed);
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onChestBroken(BlockBreakEvent event) {
             if (event.getBlock().getType() == Material.CHEST) {
@@ -138,6 +139,7 @@ public class ChestLocker implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onChestCreated(BlockPlaceEvent event) {
             Block block = event.getBlockPlaced();
@@ -174,6 +176,7 @@ public class ChestLocker implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onChestClick(PlayerInteractEvent event) {
             Player player = event.getPlayer();

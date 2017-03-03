@@ -193,6 +193,7 @@ public class Residence implements PartPlugin {
     }
 
     private class ResidenceListener implements Listener {
+        @SuppressWarnings("unused")
         @EventHandler
         void onBlockBreak(BlockBreakEvent event) {
             Area area = inArea(event.getBlock().getLocation());
@@ -208,6 +209,7 @@ public class Residence implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onBlockPlace(BlockPlaceEvent event) {
             Area area = inArea(event.getBlock().getLocation());
@@ -223,6 +225,7 @@ public class Residence implements PartPlugin {
             }
         }
 
+        @SuppressWarnings("unused")
         @EventHandler
         void onEntityExplode(EntityExplodeEvent event) {
             List<Block> removed = new ArrayList<>(event.blockList().size());
