@@ -3,6 +3,7 @@ package me.noip.yanny.rpg;
 import me.noip.yanny.utils.Utils;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -13,6 +14,7 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -300,6 +302,23 @@ class RpgPlayer {
         }
     }
 
+    void potionCreated(PotionType potion, Material material) {
+        int exp = rpgConfiguration.getPotionExp(potion);
+        if (exp > 0) {
+            switch (material) {
+                case POTION:
+                    stats.addValue(RpgPlayerStatsType.ALCHEMY, exp);
+                    break;
+                case SPLASH_POTION:
+                    stats.addValue(RpgPlayerStatsType.ALCHEMY, exp * 2);
+                    break;
+                case LINGERING_POTION:
+                    stats.addValue(RpgPlayerStatsType.ALCHEMY, exp * 10);
+                    break;
+            }
+        }
+    }
+
     ItemStack getStatsBook() {
         Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet = stats.entrySet();
         StringBuilder stringBuilder = new StringBuilder();
@@ -383,7 +402,7 @@ class RpgPlayer {
         }
 
         void addValue(RpgPlayerStatsType type, int value) {
-            plugin.getLogger().info(type.name() + " " + value);
+            plugin.getLogger().info(type.getDisplayName() + " " + value);
             MutableInt mutableInt = stats.get(type);
             int oldLevel = getLevelFromXp(mutableInt.intValue());
 
@@ -396,6 +415,7 @@ class RpgPlayer {
                         .replace("{STATS_TYPE}", ChatColor.GREEN + type.getDisplayName() + ChatColor.GOLD)
                         .replace("{LEVEL}", ChatColor.GREEN + Integer.toString(newLevel) + ChatColor.GOLD)
                         .replace("{LEVEL_DIFF}", ChatColor.GREEN + "+" + Integer.toString(newLevel - oldLevel) + ChatColor.GOLD));
+                plugin.getLogger().info("LevelUp: " + player.getDisplayName() + " " + type.name() + " : " + newLevel);
             }
         }
 

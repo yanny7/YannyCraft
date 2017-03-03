@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -57,6 +58,7 @@ class RpgConfiguration {
     private static final String EXP_TAME_SECTION = "tame";
     private static final String EXP_REPAIR_SECTION = "repair";
     private static final String EXP_ACROBATICS_SECTION = "acrobatics";
+    private static final String EXP_ALCHEMY_SECTION = "alchemy";
 
     private static final String REPAIR_XP = "repair_xp";
     private static final String ACROBATICS_XP = "acrobatics_xp";
@@ -72,6 +74,7 @@ class RpgConfiguration {
     private Map<EntityType, Integer> tameExp = new LinkedHashMap<>();
     private int repairExp;
     private int acrobaticsExp;
+    private Map<PotionType, Integer> alchemyExp = new LinkedHashMap<>();
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -189,6 +192,24 @@ class RpgConfiguration {
 
         acrobaticsExp = 50; // per hearth
 
+        alchemyExp.put(PotionType.MUNDANE, 10);
+        alchemyExp.put(PotionType.THICK, 10);
+        alchemyExp.put(PotionType.AWKWARD, 10);
+        alchemyExp.put(PotionType.NIGHT_VISION, 50);
+        alchemyExp.put(PotionType.INVISIBILITY, 50);
+        alchemyExp.put(PotionType.JUMP, 50);
+        alchemyExp.put(PotionType.FIRE_RESISTANCE, 100);
+        alchemyExp.put(PotionType.SPEED, 50);
+        alchemyExp.put(PotionType.SLOWNESS, 50);
+        alchemyExp.put(PotionType.WATER_BREATHING, 50);
+        alchemyExp.put(PotionType.INSTANT_HEAL, 50);
+        alchemyExp.put(PotionType.INSTANT_DAMAGE, 50);
+        alchemyExp.put(PotionType.POISON, 50);
+        alchemyExp.put(PotionType.REGEN, 100);
+        alchemyExp.put(PotionType.STRENGTH, 50);
+        alchemyExp.put(PotionType.WEAKNESS, 50);
+        alchemyExp.put(PotionType.LUCK, 50);
+
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
@@ -282,6 +303,12 @@ class RpgConfiguration {
         }
         acrobaticsExp = acrobaticsSection.getInt(ACROBATICS_XP, acrobaticsExp);
 
+        ConfigurationSection alchemySection = serverConfigurationWrapper.getConfigurationSection(EXP_ALCHEMY_SECTION);
+        if (alchemySection == null) {
+            alchemySection = serverConfigurationWrapper.createSection(EXP_ALCHEMY_SECTION);
+        }
+        alchemyExp.putAll(Utils.convertMapPotionTypeInteger(alchemySection.getValues(false)));
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -332,6 +359,11 @@ class RpgConfiguration {
 
         ConfigurationSection acrobaticsSection = serverConfigurationWrapper.getConfigurationSection(EXP_ACROBATICS_SECTION);
         acrobaticsSection.set(ACROBATICS_XP, acrobaticsExp);
+
+        ConfigurationSection alchemySection = serverConfigurationWrapper.getConfigurationSection(EXP_ALCHEMY_SECTION);
+        for (Map.Entry<PotionType, Integer> pair : alchemyExp.entrySet()) {
+            alchemySection.set(pair.getKey().name(), pair.getValue());
+        }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         for (Map.Entry<String, String> pair : translationMap.entrySet()) {
@@ -421,5 +453,15 @@ class RpgConfiguration {
 
     int getAcrobaticExp(double damage) {
         return (int)(Math.floor((acrobaticsExp * damage) / 10) * 10); // round to ten`s
+    }
+
+    int getPotionExp(PotionType potionType) {
+        Integer result = alchemyExp.get(potionType);
+
+        if (result != null) {
+            return result;
+        } else {
+            return -1;
+        }
     }
 }

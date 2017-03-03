@@ -13,6 +13,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -141,6 +142,17 @@ public class Utils {
             if (entry.getValue() instanceof Integer) {
                 EntityType entityType = EntityType.valueOf(entry.getKey());
                 newMap.put(entityType, (Integer) entry.getValue());
+            }
+        }
+        return newMap;
+    }
+
+    public static Map<PotionType, Integer> convertMapPotionTypeInteger(Map<String, Object> map) {
+        Map<PotionType, Integer> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Integer) {
+                PotionType potionType = PotionType.valueOf(entry.getKey());
+                newMap.put(potionType, (Integer) entry.getValue());
             }
         }
         return newMap;

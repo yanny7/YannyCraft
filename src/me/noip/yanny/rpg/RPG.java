@@ -15,14 +15,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.AnvilInventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -231,37 +231,87 @@ public class RPG implements PartPlugin {
         }
 
         @EventHandler
-        void onItemRepair(InventoryClickEvent event) {
-            InventoryView inventoryView = event.getView();
-            int rawSlot = event.getRawSlot();
+        void onInventoryClick(InventoryClickEvent event) {
+            if (event.getInventory() instanceof AnvilInventory) {
+                InventoryView inventoryView = event.getView();
+                int rawSlot = event.getRawSlot();
 
-            if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot != 2)) {
-                return;
-            }
+                if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot != 2)) {
+                    return;
+                }
 
-            AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
-            ItemStack[] items = anvilInventory.getContents();
+                AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
+                ItemStack[] items = anvilInventory.getContents();
 
-            if (items[0] == null) {
-                return;
-            }
+                if (items[0] == null) {
+                    return;
+                }
 
-            ItemMeta itemMeta = items[0].getItemMeta();
+                ItemMeta itemMeta = items[0].getItemMeta();
 
-            if (itemMeta instanceof Repairable) {
-                Repairable repairable = (Repairable) itemMeta;
-                int repairCost = repairable.getRepairCost();
+                if (itemMeta instanceof Repairable) {
+                    Repairable repairable = (Repairable) itemMeta;
+                    int repairCost = repairable.getRepairCost();
 
-                Player player = (Player) event.getWhoClicked();
-                if (player.getLevel() >= repairCost + 1) {
-                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+                    Player player = (Player) event.getWhoClicked();
+                    if (player.getLevel() >= repairCost + 1) {
+                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
-                    if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
-                        return;
+                        if (rpgPlayer == null) {
+                            plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
+                            return;
+                        }
+
+                        rpgPlayer.itemRepair(repairCost + 1);
                     }
+                }
+            } else if (event.getInventory() instanceof BrewerInventory) {
+                InventoryView inventoryView = event.getView();
+                int rawSlot = event.getRawSlot();
 
-                    rpgPlayer.itemRepair(repairCost + 1);
+                if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot > 2)) {
+                    return;
+                }
+
+                switch (event.getCurrentItem().getType()) {
+                    case POTION:
+                    case SPLASH_POTION:
+                    case LINGERING_POTION: {
+                        ItemStack potion = event.getCurrentItem();
+                        PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
+
+                        if (potionMeta.isUnbreakable()) { // disable gaining XP for every take of potion
+                            return;
+                        }
+
+                        Player player = (Player) event.getWhoClicked();
+                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                        if (rpgPlayer == null) {
+                            plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
+                            return;
+                        }
+
+                        potionMeta.setUnbreakable(true);
+                        potionMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                        potion.setItemMeta(potionMeta);
+                        rpgPlayer.potionCreated(potionMeta.getBasePotionData().getType(), event.getCurrentItem().getType());
+                        break;
+                    }
+                }
+            }
+        }
+
+        @EventHandler
+        void onBrewPotion(BrewEvent event) {
+            BrewerInventory brewerInventory = event.getContents();
+            ItemStack[] items = brewerInventory.getContents();
+
+            for (int i = 0; i < 3; i++) { // allow again get XP for alchemy
+                if (items[i] != null) {
+                    PotionMeta potionMeta = (PotionMeta) items[i].getItemMeta();
+                    potionMeta.setUnbreakable(false);
+                    items[i].setItemMeta(potionMeta);
                 }
             }
         }
@@ -273,15 +323,13 @@ public class RPG implements PartPlugin {
                 RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                 if (rpgPlayer == null) {
-                    plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
+                    plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
                     return;
                 }
 
                 rpgPlayer.fallDamage(event.getDamage());
                 return;
             }
-
-
 
             if (event.getEntity() instanceof Monster) {
                 Monster monster = (Monster)event.getEntity();
