@@ -317,6 +317,13 @@ class RpgPlayer {
         }
     }
 
+    void itemSmelted(ItemStack itemStack) {
+        int exp = rpgConfiguration.getSmeltingExp(itemStack.getType(), itemStack.getAmount());
+        if (exp > 0) {
+            stats.addValue(RpgPlayerStatsType.SMELTING, exp);
+        }
+    }
+
     ItemStack getStatsBook() {
         Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet = stats.entrySet();
         StringBuilder stringBuilder = new StringBuilder();

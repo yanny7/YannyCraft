@@ -4,6 +4,7 @@ import me.noip.yanny.auth.PlayerRegisterEvent;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -305,6 +306,27 @@ public class RPG implements PartPlugin {
                         rpgPlayer.potionCreated(potionMeta.getBasePotionData().getType(), event.getCurrentItem().getType());
                         break;
                     }
+                }
+            } else if (event.getInventory() instanceof FurnaceInventory) {
+                InventoryView inventoryView = event.getView();
+                int rawSlot = event.getRawSlot();
+
+                if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot != 2)) {
+                    return;
+                }
+
+                ItemStack itemStack = event.getCurrentItem();
+
+                if (itemStack.getType() != Material.AIR) {
+                    Player player = (Player) event.getWhoClicked();
+                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                    if (rpgPlayer == null) {
+                        plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
+                        return;
+                    }
+
+                    rpgPlayer.itemSmelted(itemStack);
                 }
             }
         }

@@ -74,6 +74,7 @@ class RpgConfiguration {
     private int repairExp;
     private int acrobaticsExp;
     private Map<PotionType, Integer> alchemyExp = new LinkedHashMap<>();
+    private Map<Material, Integer> smeltingExp = new LinkedHashMap<>();
 
     RpgConfiguration(Plugin plugin) {
         miningExp.put(Material.SANDSTONE, 20);
@@ -208,6 +209,37 @@ class RpgConfiguration {
         alchemyExp.put(PotionType.STRENGTH, 50);
         alchemyExp.put(PotionType.WEAKNESS, 50);
         alchemyExp.put(PotionType.LUCK, 50);
+
+        // food
+        smeltingExp.put(Material.GRILLED_PORK, 30);
+        smeltingExp.put(Material.COOKED_BEEF, 30);
+        smeltingExp.put(Material.COOKED_CHICKEN, 30);
+        smeltingExp.put(Material.COOKED_FISH, 30);
+        smeltingExp.put(Material.BAKED_POTATO, 30);
+        smeltingExp.put(Material.COOKED_MUTTON, 30);
+        smeltingExp.put(Material.COOKED_RABBIT, 30);
+        // ore and material
+        smeltingExp.put(Material.STONE, 30);
+        smeltingExp.put(Material.GLASS, 40);
+        smeltingExp.put(Material.NETHER_BRICK_ITEM, 40);
+        smeltingExp.put(Material.CLAY_BRICK, 50);
+        smeltingExp.put(Material.IRON_INGOT, 50);
+        smeltingExp.put(Material.GOLD_INGOT, 70);
+        smeltingExp.put(Material.SMOOTH_BRICK, 80);
+        smeltingExp.put(Material.HARD_CLAY, 100);
+        // wasting ores
+        smeltingExp.put(Material.COAL, 30);
+        smeltingExp.put(Material.DIAMOND, 200);
+        smeltingExp.put(Material.INK_SACK, 200); //LAPIS LAZULI
+        smeltingExp.put(Material.REDSTONE, 200);
+        smeltingExp.put(Material.EMERALD, 200);
+        smeltingExp.put(Material.QUARTZ, 200);
+        // tools
+        smeltingExp.put(Material.IRON_NUGGET, 100);
+        smeltingExp.put(Material.GOLD_NUGGET, 100);
+        // other
+        smeltingExp.put(Material.SPONGE, 100);
+        smeltingExp.put(Material.CHORUS_FRUIT_POPPED, 150);
 
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
@@ -458,6 +490,16 @@ class RpgConfiguration {
 
         if (result != null) {
             return result;
+        } else {
+            return -1;
+        }
+    }
+
+    int getSmeltingExp(Material material, int count) {
+        Integer result = smeltingExp.get(material);
+
+        if (result != null) {
+            return result * count;
         } else {
             return -1;
         }
