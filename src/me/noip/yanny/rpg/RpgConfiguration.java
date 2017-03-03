@@ -58,6 +58,7 @@ class RpgConfiguration {
     private static final String EXP_REPAIR_SECTION = "repair";
     private static final String EXP_ACROBATICS_SECTION = "acrobatics";
     private static final String EXP_ALCHEMY_SECTION = "alchemy";
+    private static final String EXP_SMELTING_SECTION = "smelting";
 
     private static final String REPAIR_XP = "repair_xp";
     private static final String ACROBATICS_XP = "acrobatics_xp";
@@ -339,6 +340,12 @@ class RpgConfiguration {
         }
         alchemyExp.putAll(Utils.convertMapPotionTypeInteger(alchemySection.getValues(false)));
 
+        ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
+        if (smeltingSection == null) {
+            smeltingSection = serverConfigurationWrapper.createSection(EXP_SMELTING_SECTION);
+        }
+        smeltingExp.putAll(Utils.convertMapMaterialInteger(smeltingSection.getValues(false)));
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -393,6 +400,11 @@ class RpgConfiguration {
         ConfigurationSection alchemySection = serverConfigurationWrapper.getConfigurationSection(EXP_ALCHEMY_SECTION);
         for (Map.Entry<PotionType, Integer> pair : alchemyExp.entrySet()) {
             alchemySection.set(pair.getKey().name(), pair.getValue());
+        }
+
+        ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
+        for (Map.Entry<Material, Integer> pair : smeltingExp.entrySet()) {
+            smeltingSection.set(pair.getKey().name(), pair.getValue());
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
