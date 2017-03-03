@@ -44,11 +44,11 @@ class RpgPlayer {
 
         try {
             loadStatsStatement = connection.prepareStatement("SELECT Mining, Excavation, Woodcutting, Herbalism, " +
-                    "Fishing, Unarmed, Archery, Swords, Axes, Taming, Repair, Acrobatics, Alchemy, Salvage, Smelting " +
+                    "Fishing, Unarmed, Archery, Swords, Axes, Taming, Repair, Acrobatics, Alchemy, Smelting " +
                     "FROM rpg WHERE Player = ?");
             saveStatsStatement = connection.prepareStatement("UPDATE rpg SET Mining = ?, Excavation = ?, " +
                     "Woodcutting = ?, Herbalism = ?, Fishing = ?, Unarmed = ?, Archery = ?, Swords = ?, Axes = ?, " +
-                    "Taming = ?, Repair = ?, Acrobatics = ?, Alchemy = ?, Salvage = ?, Smelting = ? WHERE Player = ?");
+                    "Taming = ?, Repair = ?, Acrobatics = ?, Alchemy = ?, Smelting = ? WHERE Player = ?");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,7 +66,6 @@ class RpgPlayer {
         int repair = 0;
         int acrobatics = 0;
         int alchemy = 0;
-        int salvage = 0;
         int smelting = 0;
 
         try {
@@ -86,15 +85,14 @@ class RpgPlayer {
                 repair = resultSet.getInt(11);
                 acrobatics = resultSet.getInt(12);
                 alchemy = resultSet.getInt(13);
-                salvage = resultSet.getInt(14);
-                smelting = resultSet.getInt(15);
+                smelting = resultSet.getInt(14);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         stats = new Stats(mining, excavation, woodcutting, herbalism, fishing, unarmed, archery, swords, axes, taming,
-                repair, acrobatics, alchemy, salvage, smelting);
+                repair, acrobatics, alchemy, smelting);
     }
 
     void onQuit() {
@@ -379,7 +377,7 @@ class RpgPlayer {
         private final Map<RpgPlayerStatsType, MutableInt> stats = new LinkedHashMap<>();
 
         Stats(int mining, int excavation, int woodcutting, int herbalism, int fishing, int unarmed, int archery, int swords,
-              int axes, int taming, int repair, int acrobatics, int alchemy, int salvage, int smelting) {
+              int axes, int taming, int repair, int acrobatics, int alchemy, int smelting) {
             stats.put(RpgPlayerStatsType.MINING, new MutableInt(mining));
             stats.put(RpgPlayerStatsType.EXCAVATION, new MutableInt(excavation));
             stats.put(RpgPlayerStatsType.WOODCUTTING, new MutableInt(woodcutting));
@@ -393,7 +391,6 @@ class RpgPlayer {
             stats.put(RpgPlayerStatsType.REPAIR, new MutableInt(repair));
             stats.put(RpgPlayerStatsType.ACROBATICS, new MutableInt(acrobatics));
             stats.put(RpgPlayerStatsType.ALCHEMY, new MutableInt(alchemy));
-            stats.put(RpgPlayerStatsType.SALVAGE, new MutableInt(salvage));
             stats.put(RpgPlayerStatsType.SMELTING, new MutableInt(smelting));
         }
 

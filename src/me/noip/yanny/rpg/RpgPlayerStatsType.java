@@ -14,7 +14,6 @@ public enum RpgPlayerStatsType {
     REPAIR("Repair"),
     ACROBATICS("Acrobatics"),
     ALCHEMY("Alchemy"),
-    SALVAGE("Salvage"),
     SMELTING("Smelting"),
     ;
 

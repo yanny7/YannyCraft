@@ -32,7 +32,6 @@ class RpgConfiguration {
     static final String T_RPG_REPAIR = "rpg_repair";
     static final String T_RPG_ACROBATICS = "rpg_acrobatics";
     static final String T_RPG_ALCHEMY = "rpg_alchemy";
-    static final String T_RPG_SALVAGE = "rpg_salvage";
     static final String T_RPG_SMELTING = "rpg_smelting";
 
     static final String T_RAR_SCRAP = "rar_scrap";
@@ -229,7 +228,6 @@ class RpgConfiguration {
         translationMap.put(T_RPG_REPAIR, RpgPlayerStatsType.REPAIR.getDisplayName());
         translationMap.put(T_RPG_ACROBATICS, RpgPlayerStatsType.ACROBATICS.getDisplayName());
         translationMap.put(T_RPG_ALCHEMY, RpgPlayerStatsType.ALCHEMY.getDisplayName());
-        translationMap.put(T_RPG_SALVAGE, RpgPlayerStatsType.SALVAGE.getDisplayName());
         translationMap.put(T_RPG_SMELTING, RpgPlayerStatsType.SMELTING.getDisplayName());
 
         translationMap.put(T_RAR_SCRAP, Rarity.SCRAP.getDisplayName());

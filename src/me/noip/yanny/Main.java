@@ -67,7 +67,6 @@ public class Main extends JavaPlugin {
                     + "Repair INTEGER DEFAULT(0),"
                     + "Acrobatics INTEGER DEFAULT(0),"
                     + "Alchemy INTEGER DEFAULT(0),"
-                    + "Salvage INTEGER DEFAULT(0),"
                     + "Smelting INTEGER DEFAULT(0))");
         } catch (Exception e) {
             e.printStackTrace();
