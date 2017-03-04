@@ -8,15 +8,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class HerbalismSkill extends Skill {
 
+    private final Map<AbilityType, Ability> abilities = new HashMap<>();
+
     HerbalismSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.HERBALISM));
     }
 
     @Override
@@ -26,19 +27,22 @@ class HerbalismSkill extends Skill {
 
     @Override
     Collection<Ability> getAbilities() {
-        return new ArrayList<>();
+        return abilities.values();
     }
 
-    private void setExp(Player player, Material material) {
-        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+    private void setExp(Player player, Block block) {
 
-        if (rpgPlayer == null) {
-            plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
-            return;
-        }
-
-        int exp = rpgConfiguration.getHerbalismExp(material);
+        int exp = rpgConfiguration.getHerbalismExp(block.getType());
         if (exp > 0) {
+            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+            if (rpgPlayer == null) {
+                plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                return;
+            }
+
+            ((DoubleDropAbility) abilities.get(AbilityType.DOUBLE_DROP)).execute(rpgPlayer, block);
+
             rpgPlayer.set(SkillType.HERBALISM, exp);
         }
     }
@@ -72,7 +76,7 @@ class HerbalismSkill extends Skill {
                 case BROWN_MUSHROOM:
                 case RED_MUSHROOM:
                 case PUMPKIN: {
-                    setExp(event.getPlayer(), destMaterial.getType());
+                    setExp(event.getPlayer(), destMaterial);
                     break;
                 }
                 case POTATO:
@@ -81,19 +85,19 @@ class HerbalismSkill extends Skill {
                 case CROPS:
                 case NETHER_WARTS: {
                     if ((destMaterial.getData() == 7)) { // fullyGrown
-                        setExp(event.getPlayer(), destMaterial.getType());
+                        setExp(event.getPlayer(), destMaterial);
                     }
                     break;
                 }
                 case COCOA: {
                     if (((destMaterial.getData() & 0x8) == 8)) { // fullyGrown
-                        setExp(event.getPlayer(), destMaterial.getType());
+                        setExp(event.getPlayer(), destMaterial);
                     }
                     break;
                 }
                 case CHORUS_FLOWER: {
                     if ((destMaterial.getData() == 5)) { // fullyGrown
-                        setExp(event.getPlayer(), destMaterial.getType());
+                        setExp(event.getPlayer(), destMaterial);
                     }
                     break;
 

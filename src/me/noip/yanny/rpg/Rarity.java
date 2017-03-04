@@ -34,10 +34,6 @@ public enum Rarity {
         return probability;
     }
 
-    public void setProbability(double probability) {
-        this.probability = probability;
-    }
-
     public String getDisplayName() {
         return displayName;
     }

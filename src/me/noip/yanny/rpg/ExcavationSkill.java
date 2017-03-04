@@ -1,8 +1,5 @@
 package me.noip.yanny.rpg;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -21,7 +18,7 @@ class ExcavationSkill extends Skill {
     ExcavationSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility());
+        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(plugin, SkillType.EXCAVATION, rpgConfiguration));
     }
 
     @Override
@@ -73,67 +70,6 @@ class ExcavationSkill extends Skill {
                         return;
                     }
                     break;
-                }
-            }
-        }
-    }
-
-    private class TreasureHunterAbility extends Ability {
-
-        TreasureHunterAbility() {
-            super(AbilityType.TREASURE_HUNTER.getDisplayName());
-        }
-
-        @Override
-        String toString(RpgPlayer rpgPlayer) {
-            return String.format("%2.1f%%", (0.01 + rpgPlayer.getStatsLevel(SkillType.EXCAVATION) / 1000.0 * 0.24) * 100.0);
-        }
-
-        @Override
-        int fromLevel() {
-            return 0;
-        }
-
-        void execute(RpgPlayer rpgPlayer, Block block) {
-            if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(SkillType.EXCAVATION) / 1000.0 * 0.24) {
-                Rarity[] values = Rarity.values();
-
-                for (int i = values.length - 1; i >= 0; i--) {
-                    Rarity next = values[i];
-                    double rand = random.nextDouble();
-
-                    if (rand <= next.getProbability()) {
-                        List<Material> treasure = rpgConfiguration.getTreasure(next);
-
-                        if (treasure.size() > 0) {
-                            Material material = treasure.get(random.nextInt(treasure.size()));
-
-                            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(material));
-
-                            switch (next) {
-                                case SCRAP:
-                                case COMMON:
-                                case UNCOMMON:
-                                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.SMOKE, 4));
-                                    break;
-                                case RARE:
-                                case EXOTIC:
-                                case HEROIC:
-                                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.MOBSPAWNER_FLAMES, 4));
-                                    break;
-                                case EPIC:
-                                case LEGENDARY:
-                                case MYTHIC:
-                                case GODLIKE:
-                                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.DRAGON_BREATH, 4));
-                                    break;
-                            }
-
-                            rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + "Nasiel si poklad: [" + next.getChatColor() + material.name() + ChatColor.GOLD + "]");
-                        }
-
-                        return;
-                    }
                 }
             }
         }

@@ -1,7 +1,5 @@
 package me.noip.yanny.rpg;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,7 +18,7 @@ class MiningSkill extends Skill {
     MiningSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility());
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.MINING));
     }
 
     @Override
@@ -87,41 +85,6 @@ class MiningSkill extends Skill {
                     }
                     break;
                 }
-            }
-        }
-    }
-
-    private class DoubleDropAbility extends Ability {
-
-        DoubleDropAbility() {
-            super(AbilityType.DOUBLE_DROP.getDisplayName());
-        }
-
-        @Override
-        public String toString(RpgPlayer rpgPlayer) {
-            return String.format("%2.1f%%", (rpgPlayer.getStatsLevel(SkillType.MINING) / 1000.0 * 0.5) * 100.0);
-        }
-
-        @Override
-        int fromLevel() {
-            return 0;
-        }
-
-        void execute(RpgPlayer rpgPlayer, Block block) {
-            int level = rpgPlayer.getStatsLevel(SkillType.MINING);
-
-            if (level < fromLevel()) {
-                return;
-            }
-
-            if (random.nextDouble() <= (rpgPlayer.getStatsLevel(SkillType.MINING) / 1000.0 * 0.5)) { // 0.05% per level
-                Collection<ItemStack> drops = block.getDrops();
-
-                for (ItemStack itemStack : drops) {
-                    block.getWorld().dropItemNaturally(block.getLocation(), itemStack);
-                }
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.SMOKE, 4));
             }
         }
     }

@@ -18,6 +18,7 @@ class RpgConfiguration {
     static final String T_MSG_NEXT_LEVEL_XP = "msg_next_lvl_xp";
     static final String T_MSG_LEVELUP = "msg_levelup";
     static final String T_MSG_ABILITIES = "msg_abilities";
+    static final String T_MSG_TREASURE_FOUND = "msg_treasure_found";
 
     static final String T_RPG_MINING = "rpg_mining";
     static final String T_RPG_EXCAVATION = "rpg_excavation";
@@ -100,6 +101,7 @@ class RpgConfiguration {
         translationMap.put(T_MSG_NEXT_LEVEL_XP, "Xp na dalsi lvl");
         translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
         translationMap.put(T_MSG_ABILITIES, "Schopnosti");
+        translationMap.put(T_MSG_TREASURE_FOUND, "Nasiel si poklad");
 
         translationMap.put(T_RPG_MINING, SkillType.MINING.getDisplayName());
         translationMap.put(T_RPG_EXCAVATION, SkillType.EXCAVATION.getDisplayName());

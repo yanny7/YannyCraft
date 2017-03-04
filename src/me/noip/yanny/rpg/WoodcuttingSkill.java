@@ -9,15 +9,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class WoodcuttingSkill extends Skill {
 
+    private final Map<AbilityType, Ability> abilities = new HashMap<>();
+
     WoodcuttingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.WOODCUTTING));
     }
 
     @Override
@@ -27,7 +28,7 @@ class WoodcuttingSkill extends Skill {
 
     @Override
     Collection<Ability> getAbilities() {
-        return new ArrayList<>();
+        return abilities.values();
     }
 
     static void loadDefaults(Map<Material, Integer> exp) {
@@ -57,6 +58,8 @@ class WoodcuttingSkill extends Skill {
                     Block destMaterial = event.getBlock();
                     int exp = rpgConfiguration.getWoodcuttingExp(destMaterial.getType());
                     if (exp > 0) {
+                        ((DoubleDropAbility) abilities.get(AbilityType.DOUBLE_DROP)).execute(rpgPlayer, event.getBlock());
+
                         rpgPlayer.set(SkillType.WOODCUTTING, exp);
                         return;
                     }
