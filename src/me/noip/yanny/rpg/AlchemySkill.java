@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,26 @@ class AlchemySkill extends Skill {
     @Override
     Collection<Ability> getAbilities() {
         return new ArrayList<>();
+    }
+
+    static void loadDefaults(Map<PotionType, Integer> exp) {
+        exp.put(PotionType.MUNDANE, 10);
+        exp.put(PotionType.THICK, 10);
+        exp.put(PotionType.AWKWARD, 10);
+        exp.put(PotionType.NIGHT_VISION, 50);
+        exp.put(PotionType.INVISIBILITY, 50);
+        exp.put(PotionType.JUMP, 50);
+        exp.put(PotionType.SPEED, 50);
+        exp.put(PotionType.SLOWNESS, 50);
+        exp.put(PotionType.WATER_BREATHING, 50);
+        exp.put(PotionType.INSTANT_HEAL, 50);
+        exp.put(PotionType.INSTANT_DAMAGE, 50);
+        exp.put(PotionType.POISON, 50);
+        exp.put(PotionType.STRENGTH, 50);
+        exp.put(PotionType.WEAKNESS, 50);
+        exp.put(PotionType.LUCK, 50);
+        exp.put(PotionType.REGEN, 100);
+        exp.put(PotionType.FIRE_RESISTANCE, 100);
     }
 
     private class AlchemySkillListener implements Listener {

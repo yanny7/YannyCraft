@@ -8,8 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionType;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 class RpgConfiguration {
 
@@ -18,6 +17,7 @@ class RpgConfiguration {
     static final String T_MSG_XP = "msg_xp";
     static final String T_MSG_NEXT_LEVEL_XP = "msg_next_lvl_xp";
     static final String T_MSG_LEVELUP = "msg_levelup";
+    static final String T_MSG_ABILITIES = "msg_abilities";
 
     static final String T_RPG_MINING = "rpg_mining";
     static final String T_RPG_EXCAVATION = "rpg_excavation";
@@ -47,6 +47,7 @@ class RpgConfiguration {
 
     private static final String CONFIGURATION_NAME = "rpg";
     private static final String TRANSLATION_SECTION = "translation";
+    private static final String TREASURE_SECTION = "treasure";
 
     private static final String EXP_MINING_SECTION = "mining";
     private static final String EXP_EXCAVATION_SECTION = "excavation";
@@ -76,181 +77,29 @@ class RpgConfiguration {
     private int acrobaticsExp;
     private Map<PotionType, Integer> alchemyExp = new LinkedHashMap<>();
     private Map<Material, Integer> smeltingExp = new LinkedHashMap<>();
+    private Map<Rarity, List<Material>> treasureItems = new LinkedHashMap<>();
 
     RpgConfiguration(Plugin plugin) {
-        miningExp.put(Material.SANDSTONE, 20);
-        miningExp.put(Material.NETHERRACK, 20);
-        miningExp.put(Material.STONE, 30);
-        miningExp.put(Material.RED_SANDSTONE, 30);
-        miningExp.put(Material.PRISMARINE, 30);
-        miningExp.put(Material.HARD_CLAY, 40);
-        miningExp.put(Material.STAINED_CLAY, 40);
-        miningExp.put(Material.ENDER_STONE, 50);
-        miningExp.put(Material.MOSSY_COBBLESTONE, 60);
-        miningExp.put(Material.OBSIDIAN, 80);
-        miningExp.put(Material.GLOWSTONE, 80);
-        miningExp.put(Material.QUARTZ_ORE, 100);
-        miningExp.put(Material.PURPUR_BLOCK, 100);
-        miningExp.put(Material.COAL_ORE, 100);
-        miningExp.put(Material.REDSTONE_ORE, 150);
-        miningExp.put(Material.IRON_ORE, 200);
-        miningExp.put(Material.LAPIS_ORE, 300);
-        miningExp.put(Material.GOLD_ORE, 400);
-        miningExp.put(Material.DIAMOND_ORE, 500);
-        miningExp.put(Material.EMERALD_ORE, 1000);
-
-        excavationExp.put(Material.SAND, 30);
-        excavationExp.put(Material.DIRT, 30);
-        excavationExp.put(Material.GRASS, 30);
-        excavationExp.put(Material.GRAVEL, 50);
-        excavationExp.put(Material.SOUL_SAND, 80);
-        excavationExp.put(Material.CLAY, 100);
-        excavationExp.put(Material.MYCEL, 200);
-
-        woodcuttingExp.put(Material.LOG, 30);
-
-        herbalismExp.put(Material.CROPS, 30);
-        herbalismExp.put(Material.YELLOW_FLOWER, 30);
-        herbalismExp.put(Material.RED_ROSE, 30);
-        herbalismExp.put(Material.COCOA, 40);
-        herbalismExp.put(Material.POTATO, 50);
-        herbalismExp.put(Material.CARROT, 50);
-        herbalismExp.put(Material.BROWN_MUSHROOM, 50);
-        herbalismExp.put(Material.RED_MUSHROOM, 50);
-        herbalismExp.put(Material.MELON_STEM, 60);
-        herbalismExp.put(Material.BEETROOT_BLOCK, 60);
-        herbalismExp.put(Material.PUMPKIN, 70);
-        herbalismExp.put(Material.NETHER_WARTS, 100);
-        herbalismExp.put(Material.CHORUS_FLOWER, 150);
-
-        fishingExp.put(Rarity.SCRAP, 20);
-        fishingExp.put(Rarity.COMMON, 30);
-        fishingExp.put(Rarity.UNCOMMON, 50);
-        fishingExp.put(Rarity.RARE, 100);
-        fishingExp.put(Rarity.EXOTIC, 200);
-        fishingExp.put(Rarity.HEROIC, 400);
-        fishingExp.put(Rarity.EPIC, 600);
-        fishingExp.put(Rarity.LEGENDARY, 1000);
-        fishingExp.put(Rarity.MYTHIC, 5000);
-        fishingExp.put(Rarity.GODLIKE, 10000);
-
-        // passive mobs
-        damageExp.put(EntityType.VILLAGER, 10);
-        damageExp.put(EntityType.BAT, 20);
-        damageExp.put(EntityType.CHICKEN, 20);
-        damageExp.put(EntityType.COW, 20);
-        damageExp.put(EntityType.PIG, 20);
-        damageExp.put(EntityType.RABBIT, 20);
-        damageExp.put(EntityType.SHEEP, 20);
-        damageExp.put(EntityType.SQUID, 20);
-        damageExp.put(EntityType.SKELETON_HORSE, 100);
-        // neutral mobs
-        damageExp.put(EntityType.CAVE_SPIDER, 50);
-        damageExp.put(EntityType.POLAR_BEAR, 50);
-        damageExp.put(EntityType.SPIDER, 50);
-        damageExp.put(EntityType.ENDERMAN, 60);
-        damageExp.put(EntityType.PIG_ZOMBIE, 100);
-        // hostile mobs
-        damageExp.put(EntityType.ZOMBIE, 50);
-        damageExp.put(EntityType.SLIME, 50);
-        damageExp.put(EntityType.HUSK, 50);
-        damageExp.put(EntityType.CREEPER, 50);
-        damageExp.put(EntityType.SILVERFISH, 50);
-        damageExp.put(EntityType.SKELETON, 50);
-        damageExp.put(EntityType.WITCH, 50);
-        damageExp.put(EntityType.ZOMBIE_HORSE, 50);
-        damageExp.put(EntityType.ZOMBIE_VILLAGER, 50);
-        damageExp.put(EntityType.MAGMA_CUBE, 100);
-        damageExp.put(EntityType.BLAZE, 100);
-        damageExp.put(EntityType.ENDERMITE, 100);
-        damageExp.put(EntityType.GHAST, 100);
-        damageExp.put(EntityType.STRAY, 100);
-        damageExp.put(EntityType.GUARDIAN, 100);
-        damageExp.put(EntityType.VEX, 100);
-        damageExp.put(EntityType.VINDICATOR, 100);
-        damageExp.put(EntityType.EVOKER, 150);
-        damageExp.put(EntityType.WITHER_SKELETON, 150);
-        damageExp.put(EntityType.SHULKER, 150);
-        damageExp.put(EntityType.ELDER_GUARDIAN, 200);
-        // tameable mobs
-        damageExp.put(EntityType.DONKEY, 20);
-        damageExp.put(EntityType.HORSE, 20);
-        damageExp.put(EntityType.MULE, 20);
-        damageExp.put(EntityType.OCELOT, 20);
-        damageExp.put(EntityType.LLAMA, 30);
-        damageExp.put(EntityType.WOLF, 50);
-        // boss mobs
-        damageExp.put(EntityType.ENDER_DRAGON, 450);
-        damageExp.put(EntityType.WITHER, 500);
-        // utility mobs
-        damageExp.put(EntityType.IRON_GOLEM, 30);
-        damageExp.put(EntityType.SNOWMAN, 30);
-
-        tameExp.put(EntityType.HORSE, 100);
-        tameExp.put(EntityType.DONKEY, 200);
-        tameExp.put(EntityType.MULE, 300);
-        tameExp.put(EntityType.LLAMA, 250);
-        tameExp.put(EntityType.OCELOT, 500);
-        tameExp.put(EntityType.WOLF, 100);
+        MiningSkill.loadDefaults(miningExp);
+        ExcavationSkill.loadDefaults(excavationExp);
+        WoodcuttingSkill.loadDefaults(woodcuttingExp);
+        HerbalismSkill.loadDefaults(herbalismExp);
+        FishingSkill.loadDefaults(fishingExp);
+        SwordsSkill.loadDefaults(damageExp);
+        TamingSkill.loadDefaults(tameExp);
+        AlchemySkill.loadDefaults(alchemyExp);
+        SmeltingSkill.loadDefaults(smeltingExp);
+        Rarity.loadDefaults(treasureItems);
 
         repairExp = 50;
-
         acrobaticsExp = 50; // per hearth
-
-        alchemyExp.put(PotionType.MUNDANE, 10);
-        alchemyExp.put(PotionType.THICK, 10);
-        alchemyExp.put(PotionType.AWKWARD, 10);
-        alchemyExp.put(PotionType.NIGHT_VISION, 50);
-        alchemyExp.put(PotionType.INVISIBILITY, 50);
-        alchemyExp.put(PotionType.JUMP, 50);
-        alchemyExp.put(PotionType.FIRE_RESISTANCE, 100);
-        alchemyExp.put(PotionType.SPEED, 50);
-        alchemyExp.put(PotionType.SLOWNESS, 50);
-        alchemyExp.put(PotionType.WATER_BREATHING, 50);
-        alchemyExp.put(PotionType.INSTANT_HEAL, 50);
-        alchemyExp.put(PotionType.INSTANT_DAMAGE, 50);
-        alchemyExp.put(PotionType.POISON, 50);
-        alchemyExp.put(PotionType.REGEN, 100);
-        alchemyExp.put(PotionType.STRENGTH, 50);
-        alchemyExp.put(PotionType.WEAKNESS, 50);
-        alchemyExp.put(PotionType.LUCK, 50);
-
-        // food
-        smeltingExp.put(Material.GRILLED_PORK, 30);
-        smeltingExp.put(Material.COOKED_BEEF, 30);
-        smeltingExp.put(Material.COOKED_CHICKEN, 30);
-        smeltingExp.put(Material.COOKED_FISH, 30);
-        smeltingExp.put(Material.BAKED_POTATO, 30);
-        smeltingExp.put(Material.COOKED_MUTTON, 30);
-        smeltingExp.put(Material.COOKED_RABBIT, 30);
-        // ore and material
-        smeltingExp.put(Material.STONE, 30);
-        smeltingExp.put(Material.GLASS, 40);
-        smeltingExp.put(Material.NETHER_BRICK_ITEM, 40);
-        smeltingExp.put(Material.CLAY_BRICK, 50);
-        smeltingExp.put(Material.IRON_INGOT, 50);
-        smeltingExp.put(Material.GOLD_INGOT, 70);
-        smeltingExp.put(Material.SMOOTH_BRICK, 80);
-        smeltingExp.put(Material.HARD_CLAY, 100);
-        // wasting ores
-        smeltingExp.put(Material.COAL, 30);
-        smeltingExp.put(Material.DIAMOND, 200);
-        smeltingExp.put(Material.INK_SACK, 200); //LAPIS LAZULI
-        smeltingExp.put(Material.REDSTONE, 200);
-        smeltingExp.put(Material.EMERALD, 200);
-        smeltingExp.put(Material.QUARTZ, 200);
-        // tools
-        smeltingExp.put(Material.IRON_NUGGET, 100);
-        smeltingExp.put(Material.GOLD_NUGGET, 100);
-        // other
-        smeltingExp.put(Material.SPONGE, 100);
-        smeltingExp.put(Material.CHORUS_FRUIT_POPPED, 150);
 
         translationMap.put(T_MSG_STATS, "RPG Statistiky");
         translationMap.put(T_MSG_LEVEL, "Level");
         translationMap.put(T_MSG_XP, "Xp");
         translationMap.put(T_MSG_NEXT_LEVEL_XP, "Xp na dalsi lvl");
         translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
+        translationMap.put(T_MSG_ABILITIES, "Schopnosti");
 
         translationMap.put(T_RPG_MINING, RpgPlayerStatsType.MINING.getDisplayName());
         translationMap.put(T_RPG_EXCAVATION, RpgPlayerStatsType.EXCAVATION.getDisplayName());
@@ -350,6 +199,22 @@ class RpgConfiguration {
         }
         smeltingExp.putAll(Utils.convertMapMaterialInteger(smeltingSection.getValues(false)));
 
+        ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
+        if (treasureSection == null) {
+            treasureSection = serverConfigurationWrapper.createSection(TREASURE_SECTION);
+        }
+        for (Rarity rarity : Rarity.values()) {
+            List<String> items = treasureSection.getStringList(rarity.name());
+            for (String item : items) {
+                Material material = Material.valueOf(item);
+                List<Material> rarityItems = treasureItems.get(rarity);
+
+                if (!rarityItems.contains(material)) {
+                    rarityItems.add(material);
+                }
+            }
+        }
+
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
@@ -409,6 +274,15 @@ class RpgConfiguration {
         ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
         for (Map.Entry<Material, Integer> pair : smeltingExp.entrySet()) {
             smeltingSection.set(pair.getKey().name(), pair.getValue());
+        }
+
+        ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
+        for (Map.Entry<Rarity, List<Material>> entry : treasureItems.entrySet()) {
+            List<String> items = new LinkedList<>();
+            for (Material material : entry.getValue()) {
+                items.add(material.name());
+            }
+            treasureSection.set(entry.getKey().name(), items);
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
@@ -520,4 +394,15 @@ class RpgConfiguration {
             return -1;
         }
     }
+
+    List<Material> getTreasure(Rarity rarity) {
+        List<Material> result = treasureItems.get(rarity);
+
+        if (result != null) {
+            return result;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 }

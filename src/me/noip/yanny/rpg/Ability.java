@@ -13,4 +13,6 @@ abstract class Ability {
     }
 
     abstract String toString(RpgPlayer rpgPlayer);
+
+    abstract int fromLevel();
 }

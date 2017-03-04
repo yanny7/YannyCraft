@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,15 @@ class TamingSkill extends Skill {
     @Override
     Collection<Ability> getAbilities() {
         return new ArrayList<>();
+    }
+
+    static void loadDefaults(Map<EntityType, Integer> exp) {
+        exp.put(EntityType.WOLF, 100);
+        exp.put(EntityType.HORSE, 100);
+        exp.put(EntityType.DONKEY, 200);
+        exp.put(EntityType.LLAMA, 250);
+        exp.put(EntityType.MULE, 300);
+        exp.put(EntityType.OCELOT, 500);
     }
 
     private class TamingSkillListener implements Listener {

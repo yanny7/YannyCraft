@@ -125,6 +125,10 @@ class RpgPlayer {
         return getLevelFromXp(stats.getValue(type));
     }
 
+    Player getPlayer() {
+        return player;
+    }
+
     static void registerPlayer(Connection connection, Player player) {
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO rpg (Player) VALUES (?)");
@@ -150,10 +154,17 @@ class RpgPlayer {
         Collection<Ability> abilities = skill.getAbilities();
 
         if (abilities.size() > 0) {
-            out.append(ChatColor.RESET).append(ChatColor.BOLD).append("Abilities").append('\n');
+            out.append(ChatColor.RESET).append(ChatColor.BOLD).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_ABILITIES)).append('\n');
+            out.append(ChatColor.RESET).append('\n');
 
             for (Ability ability : abilities) {
-                out.append(ChatColor.RESET).append(ability.getName()).append(": ").append(ChatColor.BOLD).append(ability.toString(this));
+                out.append(ChatColor.RESET).append(ability.getName()).append(": ");
+
+                if (ability.fromLevel() <= curLevel) {
+                    out.append(ChatColor.BOLD).append(ability.toString(this));
+                } else {
+                    out.append(ChatColor.GRAY).append("LVL ").append(ability.fromLevel()).append("+");
+                }
             }
         }
 

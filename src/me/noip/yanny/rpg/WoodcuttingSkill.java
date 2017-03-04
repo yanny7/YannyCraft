@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +28,10 @@ class WoodcuttingSkill extends Skill {
     @Override
     Collection<Ability> getAbilities() {
         return new ArrayList<>();
+    }
+
+    static void loadDefaults(Map<Material, Integer> exp) {
+        exp.put(Material.LOG, 30);
     }
 
     private class WoodcuttingSkillListener implements Listener {

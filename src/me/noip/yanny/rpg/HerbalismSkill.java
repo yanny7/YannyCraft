@@ -43,6 +43,22 @@ class HerbalismSkill extends Skill {
         }
     }
 
+    static void loadDefaults(Map<Material, Integer> exp) {
+        exp.put(Material.CROPS, 30);
+        exp.put(Material.YELLOW_FLOWER, 30);
+        exp.put(Material.RED_ROSE, 30);
+        exp.put(Material.COCOA, 40);
+        exp.put(Material.POTATO, 50);
+        exp.put(Material.CARROT, 50);
+        exp.put(Material.BROWN_MUSHROOM, 50);
+        exp.put(Material.RED_MUSHROOM, 50);
+        exp.put(Material.MELON_STEM, 60);
+        exp.put(Material.BEETROOT_BLOCK, 60);
+        exp.put(Material.PUMPKIN, 70);
+        exp.put(Material.NETHER_WARTS, 100);
+        exp.put(Material.CHORUS_FLOWER, 150);
+    }
+
     private class HerbalismSkillListener implements Listener {
         @SuppressWarnings("unused")
         @EventHandler
