@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 class RepairSkill extends Skill {
+
     RepairSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
     }
@@ -24,11 +25,6 @@ class RepairSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new RepairSkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
     }
 
     private class RepairSkillListener implements Listener {

@@ -26,11 +26,6 @@ class SmeltingSkill extends Skill {
         plugin.getServer().getPluginManager().registerEvents(new SmeltingSkillListener(), plugin);
     }
 
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
-    }
-
     static void loadDefaults(Map<Material, Integer> exp) {
         // food
         exp.put(Material.GRILLED_PORK, 30);

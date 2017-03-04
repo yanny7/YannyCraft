@@ -24,11 +24,6 @@ class UnarmedSkill extends Skill {
         plugin.getServer().getPluginManager().registerEvents(new UnarmedSkillListener(), plugin);
     }
 
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
-    }
-
     private class UnarmedSkillListener implements Listener {
         @SuppressWarnings("unused")
         @EventHandler

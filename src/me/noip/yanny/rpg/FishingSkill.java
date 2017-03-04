@@ -23,11 +23,6 @@ class FishingSkill extends Skill {
         plugin.getServer().getPluginManager().registerEvents(new FishingSkillListener(), plugin);
     }
 
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
-    }
-
     static void loadDefaults(Map<Rarity, Integer> exp) {
         exp.put(Rarity.SCRAP, 20);
         exp.put(Rarity.COMMON, 30);

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 class TamingSkill extends Skill {
+
     TamingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
     }
@@ -20,11 +21,6 @@ class TamingSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new TamingSkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
     }
 
     static void loadDefaults(Map<EntityType, Integer> exp) {

@@ -12,8 +12,6 @@ import java.util.*;
 
 class HerbalismSkill extends Skill {
 
-    private final Map<AbilityType, Ability> abilities = new HashMap<>();
-
     HerbalismSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
@@ -23,11 +21,6 @@ class HerbalismSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new HerbalismSkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return abilities.values();
     }
 
     private void setExp(Player player, Block block) {

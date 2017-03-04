@@ -13,10 +13,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class AlchemySkill extends Skill {
 
@@ -27,11 +24,6 @@ class AlchemySkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new AlchemySkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
     }
 
     static void loadDefaults(Map<PotionType, Integer> exp) {

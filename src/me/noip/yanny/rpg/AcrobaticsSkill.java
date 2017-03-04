@@ -20,11 +20,6 @@ class AcrobaticsSkill extends Skill {
         plugin.getServer().getPluginManager().registerEvents(new AcrobaticsSkillListener(), plugin);
     }
 
-    @Override
-    Collection<Ability> getAbilities() {
-        return new ArrayList<>();
-    }
-
     private class AcrobaticsSkillListener implements Listener {
         @SuppressWarnings("unused")
         @EventHandler

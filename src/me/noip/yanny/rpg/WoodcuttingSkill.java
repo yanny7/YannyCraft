@@ -13,8 +13,6 @@ import java.util.*;
 
 class WoodcuttingSkill extends Skill {
 
-    private final Map<AbilityType, Ability> abilities = new HashMap<>();
-
     WoodcuttingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
@@ -24,11 +22,6 @@ class WoodcuttingSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new WoodcuttingSkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return abilities.values();
     }
 
     static void loadDefaults(Map<Material, Integer> exp) {

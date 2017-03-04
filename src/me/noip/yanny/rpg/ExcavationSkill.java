@@ -13,8 +13,6 @@ import java.util.*;
 
 class ExcavationSkill extends Skill {
 
-    private final Map<AbilityType, Ability> abilities = new HashMap<>();
-
     ExcavationSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
@@ -24,11 +22,6 @@ class ExcavationSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new ExcavationSkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return abilities.values();
     }
 
     static void loadDefaults(Map<Material, Integer> exp) {

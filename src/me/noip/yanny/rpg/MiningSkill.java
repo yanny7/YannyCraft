@@ -13,8 +13,6 @@ import java.util.*;
 
 class MiningSkill extends Skill {
 
-    private final Map<AbilityType, Ability> abilities = new HashMap<>();
-
     MiningSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
@@ -24,11 +22,6 @@ class MiningSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new MiningSkillListener(), plugin);
-    }
-
-    @Override
-    Collection<Ability> getAbilities() {
-        return abilities.values();
     }
 
     static void loadDefaults(Map<Material, Integer> exp) {
