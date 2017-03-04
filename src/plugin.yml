@@ -115,5 +115,5 @@ permissions:
     default: true
   yannycraft.res:
     default: true
-  yannycraft:rpg:
+  yannycraft.rpg:
     default: true
