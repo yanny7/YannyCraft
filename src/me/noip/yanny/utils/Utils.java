@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionType;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,6 +90,15 @@ public class Utils {
         PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("MC|BOpen", new PacketDataSerializer(buf));
         ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
         p.getInventory().setItem(slot, old);
+    }
+
+    public static Vector computeThrow(Location from, Location to) {
+        Vector fromVector = from.toVector();
+        Vector toVector = to.toVector();
+        toVector.subtract(fromVector);
+        Vector up = new Vector(0, Math.sqrt(Math.sqrt(toVector.getX() * toVector.getX() + toVector.getY() * toVector.getY() + toVector.getZ() * toVector.getZ())) * 0.08, 0);
+        toVector.multiply(0.1).add(up);
+        return toVector;
     }
 
     public static Map<String,String> convertMapString(Map<String, Object> map) {

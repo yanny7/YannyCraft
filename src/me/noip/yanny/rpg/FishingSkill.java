@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,10 +13,10 @@ import java.util.*;
 
 class FishingSkill extends Skill {
 
-    private final Random random = new Random();
-
     FishingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(plugin, SkillType.FISHING, rpgConfiguration));
     }
 
     @Override
@@ -43,59 +44,68 @@ class FishingSkill extends Skill {
             if (event.getCaught() != null) {
                 switch (event.getState()) {
                     case CAUGHT_ENTITY: {
-                        Rarity[] values = Rarity.values();
-                        for (int i = values.length - 1; i >= 0; i--) {
-                            Rarity next = values[i];
-                            double rand = random.nextDouble();
+                        Player player = event.getPlayer();
+                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
-                            if (rand <= next.getProbability()) {
-                                int exp = rpgConfiguration.getFishingExp(next);
-                                if (exp > 0) {
-                                    Player player = event.getPlayer();
-                                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+                        if (rpgPlayer == null) {
+                            plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
+                            return;
+                        }
 
-                                    if (rpgPlayer == null) {
-                                        plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
-                                        return;
-                                    }
-                                    rpgPlayer.set(SkillType.FISHING, exp);
-                                    return;
-                                }
-                                return;
+                        event.getCaught().remove();
+                        Rarity rarity = ((TreasureHunterAbility) abilities.get(AbilityType.TREASURE_HUNTER)).execute(rpgPlayer, event.getCaught());
+
+                        if (rarity != null) {
+                            int exp = rpgConfiguration.getFishingExp(rarity);
+                            if (exp > 0) {
+                                rpgPlayer.set(SkillType.FISHING, exp);
                             }
                         }
+
                         break;
                     }
                     case CAUGHT_FISH: {
-                        ItemStack fish = ((Item) event.getCaught()).getItemStack();
+                        ItemStack item = ((Item) event.getCaught()).getItemStack();
+                        Player player = event.getPlayer();
+                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
                         int exp = -1;
 
-                        switch (fish.getData().getData()) {
-                            case 0:
-                                exp = rpgConfiguration.getFishingExp(Rarity.SCRAP);
-                                break;
-                            case 1:
-                                exp = rpgConfiguration.getFishingExp(Rarity.UNCOMMON);
-                                break;
-                            case 2:
-                                exp = rpgConfiguration.getFishingExp(Rarity.EXOTIC);
-                                break;
-                            case 3:
-                                exp = rpgConfiguration.getFishingExp(Rarity.EPIC);
-                                break;
+                        if (rpgPlayer == null) {
+                            plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
+                            return;
+                        }
+
+                        if (item.getType() == Material.RAW_FISH) {
+                            switch (item.getData().getData()) {
+                                case 0:
+                                    exp = rpgConfiguration.getFishingExp(Rarity.SCRAP);
+                                    break;
+                                case 1:
+                                    exp = rpgConfiguration.getFishingExp(Rarity.UNCOMMON);
+                                    break;
+                                case 2:
+                                    exp = rpgConfiguration.getFishingExp(Rarity.EXOTIC);
+                                    break;
+                                case 3:
+                                    exp = rpgConfiguration.getFishingExp(Rarity.EPIC);
+                                    break;
+                            }
+                        } else {
+                            exp = rpgConfiguration.getFishingExp(Rarity.UNCOMMON); // default random treasure set as uncommon treasure
+                        }
+
+                        Rarity rarity = ((TreasureHunterAbility) abilities.get(AbilityType.TREASURE_HUNTER)).execute(rpgPlayer, event.getCaught());
+
+                        if (rarity != null) {
+                            exp = rpgConfiguration.getFishingExp(rarity);
+                            event.getCaught().remove(); // override default catch item
                         }
 
                         if (exp > 0) {
-                            Player player = event.getPlayer();
-                            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                            if (rpgPlayer == null) {
-                                plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
-                                return;
-                            }
                             rpgPlayer.set(SkillType.FISHING, exp);
                             return;
                         }
+
                         break;
                     }
                 }
