@@ -8,9 +8,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 class FishingSkill extends Skill {
 
@@ -23,6 +21,11 @@ class FishingSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new FishingSkillListener(), plugin);
+    }
+
+    @Override
+    Collection<Ability> getAbilities() {
+        return new ArrayList<>();
     }
 
     private class FishingSkillListener implements Listener {

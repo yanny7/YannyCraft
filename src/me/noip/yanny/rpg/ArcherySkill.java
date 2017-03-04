@@ -8,6 +8,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +22,11 @@ class ArcherySkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new ArcherySkillListener(), plugin);
+    }
+
+    @Override
+    Collection<Ability> getAbilities() {
+        return new ArrayList<>();
     }
 
     private class ArcherySkillListener implements Listener {

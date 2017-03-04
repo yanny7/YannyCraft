@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,12 +25,14 @@ class RpgPlayer {
     private final RpgBoard rpgBoard;
     private final Stats stats;
     private final Plugin plugin;
+    private final Map<RpgPlayerStatsType, Skill> skills;
 
-    RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard) {
+    RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard, Map<RpgPlayerStatsType, Skill> skills) {
         this.plugin = plugin;
         this.player = player;
         this.rpgConfiguration = rpgConfiguration;
         this.rpgBoard = rpgBoard;
+        this.skills = skills;
 
         try {
             loadStatsStatement = connection.prepareStatement("SELECT Mining, Excavation, Woodcutting, Herbalism, " +
@@ -104,18 +107,16 @@ class RpgPlayer {
 
     ItemStack getStatsBook() {
         Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet = stats.entrySet();
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] data = new String[entrySet.size() + 1];
+        String[] data = new String[entrySet.size()];
 
-        int i = 1;
+        int i = 0;
         for (Map.Entry<RpgPlayerStatsType, MutableInt> entry : entrySet) {
+            RpgPlayerStatsType statsType = entry.getKey();
             int xp = entry.getValue().intValue();
-            String name = entry.getKey().getDisplayName();
-            stringBuilder.append(ChatColor.BLUE).append(name).append(": ").append(ChatColor.RED).append(ChatColor.BOLD).append(getLevelFromXp(xp)).append('\n');
-            data[i] = buildSkillPage(name, xp);
+            String name = statsType.getDisplayName();
+            data[i] = buildSkillPage(skills.get(statsType), name, xp);
             i++;
         }
-        data[0] = stringBuilder.toString();
 
         return Utils.book("RPG STATS", "rpg plugin", data);
     }
@@ -134,7 +135,7 @@ class RpgPlayer {
         }
     }
 
-    private String buildSkillPage(String name, int xp) {
+    private String buildSkillPage(Skill skill, String name, int xp) {
         StringBuilder out = new StringBuilder();
         int curLevel = getLevelFromXp(xp);
         int nextLevelXp = getXpForLevel(curLevel + 1) - xp;
@@ -145,6 +146,16 @@ class RpgPlayer {
         out.append(ChatColor.RESET).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_XP)).append(": ").append(ChatColor.BOLD).append(xp).append('\n');
         out.append(ChatColor.RESET).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_NEXT_LEVEL_XP)).append(": ").append(ChatColor.BOLD).append(nextLevelXp).append('\n');
         out.append(ChatColor.RESET).append('\n');
+
+        Collection<Ability> abilities = skill.getAbilities();
+
+        if (abilities.size() > 0) {
+            out.append(ChatColor.RESET).append(ChatColor.BOLD).append("Abilities").append('\n');
+
+            for (Ability ability : abilities) {
+                out.append(ChatColor.RESET).append(ability.getName()).append(": ").append(ChatColor.BOLD).append(ability.toString(this));
+            }
+        }
 
         return out.toString();
     }

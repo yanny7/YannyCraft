@@ -7,8 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class AcrobaticsSkill extends Skill {
 
@@ -19,6 +18,11 @@ class AcrobaticsSkill extends Skill {
     @Override
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new AcrobaticsSkillListener(), plugin);
+    }
+
+    @Override
+    Collection<Ability> getAbilities() {
+        return new ArrayList<>();
     }
 
     private class AcrobaticsSkillListener implements Listener {

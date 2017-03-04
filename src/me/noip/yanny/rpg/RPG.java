@@ -26,7 +26,7 @@ public class RPG implements PartPlugin {
     private Connection connection;
     private RpgConfiguration rpgConfiguration;
     private Map<UUID, RpgPlayer> rpgPlayerMap = new HashMap<>();
-    private Set<Skill> skills = new LinkedHashSet<>();
+    private Map<RpgPlayerStatsType, Skill> skills = new LinkedHashMap<>();
     private RpgBoard rpgBoard;
 
     public RPG(JavaPlugin plugin, Connection connection) {
@@ -36,20 +36,20 @@ public class RPG implements PartPlugin {
         rpgConfiguration = new RpgConfiguration(plugin);
         rpgBoard = new RpgBoard(plugin, rpgConfiguration, rpgPlayerMap);
 
-        skills.add(new MiningSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new ExcavationSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new WoodcuttingSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new HerbalismSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new FishingSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new UnarmedSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new ArcherySkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new SwordsSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new AxesSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new TamingSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new RepairSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new AcrobaticsSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new AlchemySkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.add(new SmeltingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.MINING, new MiningSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.EXCAVATION, new ExcavationSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.WOODCUTTING, new WoodcuttingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.HERBALISM, new HerbalismSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.FISHING, new FishingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.UNARMED, new UnarmedSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.ARCHERY, new ArcherySkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.SWORDS, new SwordsSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.AXES, new AxesSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.TAMING, new TamingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.REPAIR, new RepairSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.ACROBATICS, new AcrobaticsSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.ALCHEMY, new AlchemySkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(RpgPlayerStatsType.SMELTING, new SmeltingSkill(plugin, rpgPlayerMap, rpgConfiguration));
     }
 
     @Override
@@ -81,7 +81,7 @@ public class RPG implements PartPlugin {
         Rarity.GODLIKE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_GODLIKE));
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard));
+            rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard, skills));
         }
 
         rpgConfiguration.load();
@@ -89,8 +89,8 @@ public class RPG implements PartPlugin {
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
 
-        for (Skill skill : skills) {
-            skill.onEnable();
+        for (Map.Entry<RpgPlayerStatsType, Skill> skill : skills.entrySet()) {
+            skill.getValue().onEnable();
         }
     }
 
@@ -124,6 +124,7 @@ public class RPG implements PartPlugin {
                 return true;
             }
 
+            plugin.getLogger().info("Book opened by: " + player.getDisplayName());
             ItemStack book = rpgPlayer.getStatsBook();
             Utils.openBook(book, player);
 
@@ -136,7 +137,7 @@ public class RPG implements PartPlugin {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard);
+            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard, skills);
             rpgPlayerMap.put(player.getUniqueId(), rpgPlayer);
         }
 
