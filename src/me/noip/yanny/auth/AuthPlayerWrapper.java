@@ -15,11 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
+import java.util.UUID;
 
 class AuthPlayerWrapper {
 
@@ -28,6 +30,8 @@ class AuthPlayerWrapper {
     private PreparedStatement getPasswordStatement;
     private PreparedStatement setInventoryStatement;
     private PreparedStatement getInventoryStatement;
+    private PreparedStatement resetStatement;
+    private PreparedStatement getResetStatement;
 
     private JavaPlugin plugin;
     private Player player;
@@ -46,19 +50,41 @@ class AuthPlayerWrapper {
 
         try {
             registerStatement = connection.prepareStatement("INSERT INTO users (ID, Password, Inventory, HomeLocation, BackLocation, LastUpdated) VALUES (?, ?, ?, ?, ?, DATETIME('now'))");
-            changePasswordStatement = connection.prepareStatement("UPDATE users SET Password = ? WHERE ID = ?");
+            changePasswordStatement = connection.prepareStatement("UPDATE users SET Password = ?, ResetPassword = 0 WHERE ID = ?");
             getPasswordStatement = connection.prepareStatement("SELECT Password FROM users WHERE ID = ?");
             setInventoryStatement = connection.prepareStatement("UPDATE users SET Inventory = ?, LastUpdated = DATETIME('now') where ID = ?");
             getInventoryStatement = connection.prepareStatement("SELECT Inventory FROM users WHERE ID = ?");
+            resetStatement = connection.prepareStatement("UPDATE users SET ResetPassword = 1 WHERE ID = ?");
+            getResetStatement = connection.prepareStatement("SELECT ResetPassword FROM users WHERE ID = ?");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (restoreData(player)) {
+            boolean resetPassword = false;
             loginLocation = player.getLocation();
             loginGameMode = player.getGameMode();
-            registered = true;
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
+
+            try {
+                getResetStatement.setString(1, player.getUniqueId().toString());
+                ResultSet rs = getResetStatement.executeQuery();
+
+                if (rs.next()) {
+                    resetPassword = rs.getBoolean(1);
+                }
+
+                rs.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (resetPassword) {
+                registered = false;
+                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_register"));
+            } else {
+                registered = true;
+                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
+            }
         } else {
             loginLocation = locationProvider.getSpawnLocation();
             loginGameMode = GameMode.SURVIVAL;
@@ -85,37 +111,64 @@ class AuthPlayerWrapper {
         }
     }
 
-    void register(String password, String passwordAgain) {
+    RegisterStatus register(String password, String passwordAgain) {
         if (logged || registered) {
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_registered"));
-            return;
+            return RegisterStatus.FAILED;
         }
         if (!password.equals(passwordAgain)) {
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password_not_same"));
-            return;
+            return RegisterStatus.FAILED;
         }
         if (!password.matches("[A-Za-z0-9]+")) {
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_characters"));
-            return;
+            return RegisterStatus.FAILED;
         }
         if ((password.length() < 6) || (password.length() > 32)) {
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_length"));
-            return;
+            return RegisterStatus.FAILED;
         }
 
+        boolean resetPassword = false;
         try {
-            String goodPassword = PasswordHash.createHash(password);
-            String spawnLocation = Utils.locationToString(locationProvider.getSpawnLocation());
-            registerStatement.setString(1, player.getUniqueId().toString());
-            registerStatement.setString(2, goodPassword);
-            registerStatement.setString(3, playerToString(player));
-            registerStatement.setString(4, spawnLocation);
-            registerStatement.setString(5, spawnLocation);
-            registerStatement.execute();
+            getResetStatement.setString(1, player.getUniqueId().toString());
+            ResultSet rs = getResetStatement.executeQuery();
+
+            if (rs.next()) {
+                resetPassword = rs.getBoolean(1);
+            }
+
+            rs.close();
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_register"));
-            return;
+        }
+
+        if (resetPassword) {
+            try {
+                String goodPassword = PasswordHash.createHash(password);
+                changePasswordStatement.setString(1, goodPassword);
+                changePasswordStatement.setString(2, player.getUniqueId().toString());
+                changePasswordStatement.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password"));
+                return RegisterStatus.FAILED;
+            }
+        } else {
+            try {
+                String goodPassword = PasswordHash.createHash(password);
+                String spawnLocation = Utils.locationToString(locationProvider.getSpawnLocation());
+                registerStatement.setString(1, player.getUniqueId().toString());
+                registerStatement.setString(2, goodPassword);
+                registerStatement.setString(3, playerToString(player));
+                registerStatement.setString(4, spawnLocation);
+                registerStatement.setString(5, spawnLocation);
+                registerStatement.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_register"));
+                return RegisterStatus.FAILED;
+            }
         }
 
         registered = true;
@@ -123,6 +176,12 @@ class AuthPlayerWrapper {
         plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_registered_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
         player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_registered"));
         player.setGameMode(GameMode.SURVIVAL);
+
+        if (resetPassword) {
+            return RegisterStatus.RESET_PASSWORD;
+        } else {
+            return RegisterStatus.REGISTERED;
+        }
     }
 
     boolean login(String password) {
@@ -181,6 +240,7 @@ class AuthPlayerWrapper {
             String goodPassword = PasswordHash.createHash(password);
             changePasswordStatement.setString(1, goodPassword);
             changePasswordStatement.setString(2, player.getUniqueId().toString());
+            changePasswordStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password"));
@@ -188,6 +248,15 @@ class AuthPlayerWrapper {
         }
 
         player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_password_changed"));
+    }
+
+    void resetPassword(UUID uuid) {
+        try {
+            resetStatement.setString(1, uuid.toString());
+            resetStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     boolean isLogged() {

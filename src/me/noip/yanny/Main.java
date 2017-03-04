@@ -39,6 +39,7 @@ public class Main extends JavaPlugin {
             statement.execute("CREATE TABLE IF NOT EXISTS users ("
                     + "ID VARCHAR(64) PRIMARY KEY NOT NULL,"
                     + "Password VARCHAR(64) NOT NULL,"
+                    + "ResetPassword BOOLEAN DEFAULT(0),"
                     + "Inventory TEXT NOT NULL,"
                     + "HomeLocation TEXT NOT NULL,"
                     + "BackLocation TEXT NOT NULL,"

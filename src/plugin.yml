@@ -18,6 +18,10 @@ commands:
     description: Zmena hesla
     usage: /changepassword [nove_heslo] [nove_heslo]
     aliases: [changepasswd, chp]
+  resetpassword:
+    description: Reset hesla
+    permission: yannycraft.resetpassword
+    usage: /resetpassword [player]
 # Essentials commands
   spawn:
     description: Teleport na spawn
@@ -85,6 +89,8 @@ commands:
     usage: /stats
 
 permissions:
+  yannycraft.resetpassword:
+    default: op
   yannycraft.spawn:
     default: true
   yannycraft.spawn.other:

@@ -3,6 +3,7 @@ package me.noip.yanny.auth;
 import me.noip.yanny.essentials.SpawnLocationProvider;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,6 +26,7 @@ public class Auth implements PartPlugin {
     private LoginExecutor loginExecutor;
     private RegisterExecutor registerExecutor;
     private ChangePasswordExecutor changePasswordExecutor;
+    private ResetPasswordExecutor resetPasswordExecutor;
     private AuthListener authListener;
     private AuthConfiguration authConfiguration;
     private SpawnLocationProvider spawnLocation;
@@ -39,6 +41,7 @@ public class Auth implements PartPlugin {
         loginExecutor = new LoginExecutor();
         registerExecutor = new RegisterExecutor();
         changePasswordExecutor = new ChangePasswordExecutor();
+        resetPasswordExecutor = new ResetPasswordExecutor();
     }
 
     @Override
@@ -49,6 +52,7 @@ public class Auth implements PartPlugin {
         plugin.getCommand("login").setExecutor(loginExecutor);
         plugin.getCommand("register").setExecutor(registerExecutor);
         plugin.getCommand("changepassword").setExecutor(changePasswordExecutor);
+        plugin.getCommand("resetpassword").setExecutor(resetPasswordExecutor);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, spawnLocation);
@@ -101,9 +105,15 @@ public class Auth implements PartPlugin {
                 return false;
             }
 
-            authPlayerWrapper.register(args[0], args[1]);
-            plugin.getServer().getPluginManager().callEvent(new PlayerRegisterEvent(player));
-            plugin.getServer().getPluginManager().callEvent(new PlayerAuthEvent(player));
+            RegisterStatus registerStatus = authPlayerWrapper.register(args[0], args[1]);
+
+            if (registerStatus == RegisterStatus.REGISTERED) {
+                plugin.getServer().getPluginManager().callEvent(new PlayerRegisterEvent(player));
+                plugin.getServer().getPluginManager().callEvent(new PlayerAuthEvent(player));
+            } else if (registerStatus == RegisterStatus.RESET_PASSWORD) {
+                plugin.getServer().getPluginManager().callEvent(new PlayerAuthEvent(player));
+            }
+
             return true;
         }
     }
@@ -126,6 +136,7 @@ public class Auth implements PartPlugin {
             if (authPlayerWrapper.login(args[0])) {
                 plugin.getServer().getPluginManager().callEvent(new PlayerAuthEvent(player));
             }
+
             return true;
         }
     }
@@ -146,6 +157,35 @@ public class Auth implements PartPlugin {
             }
 
             authPlayerWrapper.changePassword(args[0], args[1]);
+            return true;
+        }
+    }
+
+    class ResetPasswordExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length != 1)) {
+                return false;
+            }
+
+            Player player = (Player)commandSender;
+            AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
+
+            if (authPlayerWrapper == null) {
+                plugin.getLogger().warning("ChangePasswordExecutor: Player not found!" + player.getDisplayName());
+                return false;
+            }
+
+            for (OfflinePlayer tmp : plugin.getServer().getOfflinePlayers()) {
+                if (tmp.getName().equals(args[0])) {
+                    authPlayerWrapper.resetPassword(tmp.getUniqueId());
+                    if (tmp.getPlayer() != null) {
+                        tmp.getPlayer().kickPlayer("Tvoje heslo bolo resetnute, zaregistruj sa znova");
+                    }
+                    return true;
+                }
+            }
+
             return false;
         }
     }
