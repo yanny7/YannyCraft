@@ -42,7 +42,7 @@ class RpgBoard {
         objectiveMap.clear();
     }
 
-    void updateObjective(RpgPlayerStatsType statsType, Player player, int value) {
+    void updateObjective(SkillType statsType, Player player, int value) {
         Objective objective = objectiveMap.get(player);
         Score score = objective.getScore(ChatColor.GOLD + statsType.getDisplayName());
         score.setScore(value);
@@ -52,7 +52,7 @@ class RpgBoard {
         Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("test", "test");
 
-        for (RpgPlayerStatsType statsType : RpgPlayerStatsType.values()) {
+        for (SkillType statsType : SkillType.values()) {
             Score score = objective.getScore(ChatColor.GOLD + statsType.getDisplayName());
             score.setScore(playerMap.get(player.getUniqueId()).getStatsLevel(statsType));
         }

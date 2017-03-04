@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -83,7 +82,7 @@ class MiningSkill extends Skill {
                     if (exp > 0) {
                         ((DoubleDropAbility) abilities.get(AbilityType.DOUBLE_DROP)).execute(rpgPlayer, event.getBlock());
 
-                        rpgPlayer.set(RpgPlayerStatsType.MINING, exp);
+                        rpgPlayer.set(SkillType.MINING, exp);
                         return;
                     }
                     break;
@@ -100,7 +99,7 @@ class MiningSkill extends Skill {
 
         @Override
         public String toString(RpgPlayer rpgPlayer) {
-            return String.format("%2.1f%%", (rpgPlayer.getStatsLevel(RpgPlayerStatsType.MINING) / 1000.0 * 0.5) * 100.0);
+            return String.format("%2.1f%%", (rpgPlayer.getStatsLevel(SkillType.MINING) / 1000.0 * 0.5) * 100.0);
         }
 
         @Override
@@ -109,13 +108,13 @@ class MiningSkill extends Skill {
         }
 
         void execute(RpgPlayer rpgPlayer, Block block) {
-            int level = rpgPlayer.getStatsLevel(RpgPlayerStatsType.MINING);
+            int level = rpgPlayer.getStatsLevel(SkillType.MINING);
 
             if (level < fromLevel()) {
                 return;
             }
 
-            if (random.nextDouble() <= (rpgPlayer.getStatsLevel(RpgPlayerStatsType.MINING) / 1000.0 * 0.5)) { // 0.05% per level
+            if (random.nextDouble() <= (rpgPlayer.getStatsLevel(SkillType.MINING) / 1000.0 * 0.5)) { // 0.05% per level
                 Collection<ItemStack> drops = block.getDrops();
 
                 for (ItemStack itemStack : drops) {

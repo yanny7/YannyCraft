@@ -54,7 +54,7 @@ class TamingSkill extends Skill {
 
             int exp = rpgConfiguration.getTameExp(event.getEntityType());
             if (exp > 0) {
-                rpgPlayer.set(RpgPlayerStatsType.TAMING, exp);
+                rpgPlayer.set(SkillType.TAMING, exp);
             }
         }
     }

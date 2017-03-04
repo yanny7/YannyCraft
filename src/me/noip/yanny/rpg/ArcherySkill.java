@@ -53,7 +53,7 @@ class ArcherySkill extends Skill {
 
             int exp = rpgConfiguration.getDamageExp(event.getEntityType());
             if (exp > 0) {
-                rpgPlayer.set(RpgPlayerStatsType.ARCHERY, exp);
+                rpgPlayer.set(SkillType.ARCHERY, exp);
             }
         }
     }

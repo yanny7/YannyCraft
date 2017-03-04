@@ -52,7 +52,7 @@ class UnarmedSkill extends Skill {
 
             int exp = rpgConfiguration.getDamageExp(event.getEntityType());
             if (exp > 0) {
-                rpgPlayer.set(RpgPlayerStatsType.UNARMED, exp);
+                rpgPlayer.set(SkillType.UNARMED, exp);
             }
         }
     }

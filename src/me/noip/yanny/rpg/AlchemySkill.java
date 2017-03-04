@@ -93,13 +93,13 @@ class AlchemySkill extends Skill {
                         if (exp > 0) {
                             switch (event.getCurrentItem().getType()) {
                                 case POTION:
-                                    rpgPlayer.set(RpgPlayerStatsType.ALCHEMY, exp);
+                                    rpgPlayer.set(SkillType.ALCHEMY, exp);
                                     break;
                                 case SPLASH_POTION:
-                                    rpgPlayer.set(RpgPlayerStatsType.ALCHEMY, exp * 2);
+                                    rpgPlayer.set(SkillType.ALCHEMY, exp * 2);
                                     break;
                                 case LINGERING_POTION:
-                                    rpgPlayer.set(RpgPlayerStatsType.ALCHEMY, exp * 10);
+                                    rpgPlayer.set(SkillType.ALCHEMY, exp * 10);
                                     break;
                             }
                         }

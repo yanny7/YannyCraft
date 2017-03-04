@@ -52,7 +52,7 @@ class AxesSkill extends Skill {
 
                     int exp = rpgConfiguration.getDamageExp(event.getEntityType());
                     if (exp > 0) {
-                        rpgPlayer.set(RpgPlayerStatsType.SWORDS, exp);
+                        rpgPlayer.set(SkillType.SWORDS, exp);
                     }
                     break;
                 }

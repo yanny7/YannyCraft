@@ -26,7 +26,7 @@ public class RPG implements PartPlugin {
     private Connection connection;
     private RpgConfiguration rpgConfiguration;
     private Map<UUID, RpgPlayer> rpgPlayerMap = new HashMap<>();
-    private Map<RpgPlayerStatsType, Skill> skills = new LinkedHashMap<>();
+    private Map<SkillType, Skill> skills = new LinkedHashMap<>();
     private RpgBoard rpgBoard;
 
     public RPG(JavaPlugin plugin, Connection connection) {
@@ -36,38 +36,38 @@ public class RPG implements PartPlugin {
         rpgConfiguration = new RpgConfiguration(plugin);
         rpgBoard = new RpgBoard(plugin, rpgConfiguration, rpgPlayerMap);
 
-        skills.put(RpgPlayerStatsType.MINING, new MiningSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.EXCAVATION, new ExcavationSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.WOODCUTTING, new WoodcuttingSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.HERBALISM, new HerbalismSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.FISHING, new FishingSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.UNARMED, new UnarmedSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.ARCHERY, new ArcherySkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.SWORDS, new SwordsSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.AXES, new AxesSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.TAMING, new TamingSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.REPAIR, new RepairSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.ACROBATICS, new AcrobaticsSkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.ALCHEMY, new AlchemySkill(plugin, rpgPlayerMap, rpgConfiguration));
-        skills.put(RpgPlayerStatsType.SMELTING, new SmeltingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.MINING, new MiningSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.EXCAVATION, new ExcavationSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.WOODCUTTING, new WoodcuttingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.HERBALISM, new HerbalismSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.FISHING, new FishingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.UNARMED, new UnarmedSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.ARCHERY, new ArcherySkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.SWORDS, new SwordsSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.AXES, new AxesSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.TAMING, new TamingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.REPAIR, new RepairSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.ACROBATICS, new AcrobaticsSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.ALCHEMY, new AlchemySkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.put(SkillType.SMELTING, new SmeltingSkill(plugin, rpgPlayerMap, rpgConfiguration));
     }
 
     @Override
     public void onEnable() {
-        RpgPlayerStatsType.MINING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_MINING));
-        RpgPlayerStatsType.EXCAVATION.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_EXCAVATION));
-        RpgPlayerStatsType.WOODCUTTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_WOODCUTTING));
-        RpgPlayerStatsType.HERBALISM.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_HERBALISM));
-        RpgPlayerStatsType.FISHING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_FISHING));
-        RpgPlayerStatsType.UNARMED.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_UNARMED));
-        RpgPlayerStatsType.ARCHERY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ARCHERY));
-        RpgPlayerStatsType.SWORDS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SWORDS));
-        RpgPlayerStatsType.AXES.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_AXES));
-        RpgPlayerStatsType.TAMING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_TAMING));
-        RpgPlayerStatsType.REPAIR.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_REPAIR));
-        RpgPlayerStatsType.ACROBATICS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ACROBATICS));
-        RpgPlayerStatsType.ALCHEMY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ALCHEMY));
-        RpgPlayerStatsType.SMELTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SMELTING));
+        SkillType.MINING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_MINING));
+        SkillType.EXCAVATION.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_EXCAVATION));
+        SkillType.WOODCUTTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_WOODCUTTING));
+        SkillType.HERBALISM.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_HERBALISM));
+        SkillType.FISHING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_FISHING));
+        SkillType.UNARMED.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_UNARMED));
+        SkillType.ARCHERY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ARCHERY));
+        SkillType.SWORDS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SWORDS));
+        SkillType.AXES.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_AXES));
+        SkillType.TAMING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_TAMING));
+        SkillType.REPAIR.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_REPAIR));
+        SkillType.ACROBATICS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ACROBATICS));
+        SkillType.ALCHEMY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ALCHEMY));
+        SkillType.SMELTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SMELTING));
 
         Rarity.SCRAP.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_SCRAP));
         Rarity.COMMON.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_COMMON));
@@ -89,7 +89,7 @@ public class RPG implements PartPlugin {
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
 
-        for (Map.Entry<RpgPlayerStatsType, Skill> skill : skills.entrySet()) {
+        for (Map.Entry<SkillType, Skill> skill : skills.entrySet()) {
             skill.getValue().onEnable();
         }
     }

@@ -89,7 +89,7 @@ class SmeltingSkill extends Skill {
 
                     int exp = rpgConfiguration.getSmeltingExp(itemStack.getType(), itemStack.getAmount());
                     if (exp > 0) {
-                        rpgPlayer.set(RpgPlayerStatsType.SMELTING, exp);
+                        rpgPlayer.set(SkillType.SMELTING, exp);
                     }
                 }
             }

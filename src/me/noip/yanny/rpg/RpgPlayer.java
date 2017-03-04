@@ -25,9 +25,9 @@ class RpgPlayer {
     private final RpgBoard rpgBoard;
     private final Stats stats;
     private final Plugin plugin;
-    private final Map<RpgPlayerStatsType, Skill> skills;
+    private final Map<SkillType, Skill> skills;
 
-    RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard, Map<RpgPlayerStatsType, Skill> skills) {
+    RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard, Map<SkillType, Skill> skills) {
         this.plugin = plugin;
         this.player = player;
         this.rpgConfiguration = rpgConfiguration;
@@ -90,7 +90,7 @@ class RpgPlayer {
     void onQuit() {
         try {
             int i = 1;
-            for (Map.Entry<RpgPlayerStatsType, MutableInt> entry : stats.entrySet()) {
+            for (Map.Entry<SkillType, MutableInt> entry : stats.entrySet()) {
                 saveStatsStatement.setInt(i, stats.getValue(entry.getKey()));
                 i++;
             }
@@ -101,17 +101,17 @@ class RpgPlayer {
         }
     }
 
-    void set(RpgPlayerStatsType type, int exp) {
+    void set(SkillType type, int exp) {
         stats.addValue(type, exp);
     }
 
     ItemStack getStatsBook() {
-        Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet = stats.entrySet();
+        Set<Map.Entry<SkillType, MutableInt>> entrySet = stats.entrySet();
         String[] data = new String[entrySet.size()];
 
         int i = 0;
-        for (Map.Entry<RpgPlayerStatsType, MutableInt> entry : entrySet) {
-            RpgPlayerStatsType statsType = entry.getKey();
+        for (Map.Entry<SkillType, MutableInt> entry : entrySet) {
+            SkillType statsType = entry.getKey();
             int xp = entry.getValue().intValue();
             String name = statsType.getDisplayName();
             data[i] = buildSkillPage(skills.get(statsType), name, xp);
@@ -121,7 +121,7 @@ class RpgPlayer {
         return Utils.book("RPG STATS", "rpg plugin", data);
     }
 
-    int getStatsLevel(RpgPlayerStatsType type) {
+    int getStatsLevel(SkillType type) {
         return getLevelFromXp(stats.getValue(type));
     }
 
@@ -181,31 +181,31 @@ class RpgPlayer {
     }
 
     class Stats {
-        private final Map<RpgPlayerStatsType, MutableInt> stats = new LinkedHashMap<>();
+        private final Map<SkillType, MutableInt> stats = new LinkedHashMap<>();
 
         Stats(int mining, int excavation, int woodcutting, int herbalism, int fishing, int unarmed, int archery, int swords,
               int axes, int taming, int repair, int acrobatics, int alchemy, int smelting) {
-            stats.put(RpgPlayerStatsType.MINING, new MutableInt(mining));
-            stats.put(RpgPlayerStatsType.EXCAVATION, new MutableInt(excavation));
-            stats.put(RpgPlayerStatsType.WOODCUTTING, new MutableInt(woodcutting));
-            stats.put(RpgPlayerStatsType.HERBALISM, new MutableInt(herbalism));
-            stats.put(RpgPlayerStatsType.FISHING, new MutableInt(fishing));
-            stats.put(RpgPlayerStatsType.UNARMED, new MutableInt(unarmed));
-            stats.put(RpgPlayerStatsType.ARCHERY, new MutableInt(archery));
-            stats.put(RpgPlayerStatsType.SWORDS, new MutableInt(swords));
-            stats.put(RpgPlayerStatsType.AXES, new MutableInt(axes));
-            stats.put(RpgPlayerStatsType.TAMING, new MutableInt(taming));
-            stats.put(RpgPlayerStatsType.REPAIR, new MutableInt(repair));
-            stats.put(RpgPlayerStatsType.ACROBATICS, new MutableInt(acrobatics));
-            stats.put(RpgPlayerStatsType.ALCHEMY, new MutableInt(alchemy));
-            stats.put(RpgPlayerStatsType.SMELTING, new MutableInt(smelting));
+            stats.put(SkillType.MINING, new MutableInt(mining));
+            stats.put(SkillType.EXCAVATION, new MutableInt(excavation));
+            stats.put(SkillType.WOODCUTTING, new MutableInt(woodcutting));
+            stats.put(SkillType.HERBALISM, new MutableInt(herbalism));
+            stats.put(SkillType.FISHING, new MutableInt(fishing));
+            stats.put(SkillType.UNARMED, new MutableInt(unarmed));
+            stats.put(SkillType.ARCHERY, new MutableInt(archery));
+            stats.put(SkillType.SWORDS, new MutableInt(swords));
+            stats.put(SkillType.AXES, new MutableInt(axes));
+            stats.put(SkillType.TAMING, new MutableInt(taming));
+            stats.put(SkillType.REPAIR, new MutableInt(repair));
+            stats.put(SkillType.ACROBATICS, new MutableInt(acrobatics));
+            stats.put(SkillType.ALCHEMY, new MutableInt(alchemy));
+            stats.put(SkillType.SMELTING, new MutableInt(smelting));
         }
 
-        int getValue(RpgPlayerStatsType type) {
+        int getValue(SkillType type) {
             return stats.get(type).intValue();
         }
 
-        void addValue(RpgPlayerStatsType type, int value) {
+        void addValue(SkillType type, int value) {
             plugin.getLogger().info(type.getDisplayName() + " " + value);
             MutableInt mutableInt = stats.get(type);
             int oldLevel = getLevelFromXp(mutableInt.intValue());
@@ -223,7 +223,7 @@ class RpgPlayer {
             }
         }
 
-        Set<Map.Entry<RpgPlayerStatsType, MutableInt>> entrySet() {
+        Set<Map.Entry<SkillType, MutableInt>> entrySet() {
             return stats.entrySet();
         }
     }

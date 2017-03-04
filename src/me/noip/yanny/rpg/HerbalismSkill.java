@@ -39,7 +39,7 @@ class HerbalismSkill extends Skill {
 
         int exp = rpgConfiguration.getHerbalismExp(material);
         if (exp > 0) {
-            rpgPlayer.set(RpgPlayerStatsType.HERBALISM, exp);
+            rpgPlayer.set(SkillType.HERBALISM, exp);
         }
     }
 

@@ -101,20 +101,20 @@ class RpgConfiguration {
         translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
         translationMap.put(T_MSG_ABILITIES, "Schopnosti");
 
-        translationMap.put(T_RPG_MINING, RpgPlayerStatsType.MINING.getDisplayName());
-        translationMap.put(T_RPG_EXCAVATION, RpgPlayerStatsType.EXCAVATION.getDisplayName());
-        translationMap.put(T_RPG_WOODCUTTING, RpgPlayerStatsType.WOODCUTTING.getDisplayName());
-        translationMap.put(T_RPG_HERBALISM, RpgPlayerStatsType.HERBALISM.getDisplayName());
-        translationMap.put(T_RPG_FISHING, RpgPlayerStatsType.FISHING.getDisplayName());
-        translationMap.put(T_RPG_UNARMED, RpgPlayerStatsType.UNARMED.getDisplayName());
-        translationMap.put(T_RPG_ARCHERY, RpgPlayerStatsType.ARCHERY.getDisplayName());
-        translationMap.put(T_RPG_SWORDS, RpgPlayerStatsType.SWORDS.getDisplayName());
-        translationMap.put(T_RPG_AXES, RpgPlayerStatsType.AXES.getDisplayName());
-        translationMap.put(T_RPG_TAMING, RpgPlayerStatsType.TAMING.getDisplayName());
-        translationMap.put(T_RPG_REPAIR, RpgPlayerStatsType.REPAIR.getDisplayName());
-        translationMap.put(T_RPG_ACROBATICS, RpgPlayerStatsType.ACROBATICS.getDisplayName());
-        translationMap.put(T_RPG_ALCHEMY, RpgPlayerStatsType.ALCHEMY.getDisplayName());
-        translationMap.put(T_RPG_SMELTING, RpgPlayerStatsType.SMELTING.getDisplayName());
+        translationMap.put(T_RPG_MINING, SkillType.MINING.getDisplayName());
+        translationMap.put(T_RPG_EXCAVATION, SkillType.EXCAVATION.getDisplayName());
+        translationMap.put(T_RPG_WOODCUTTING, SkillType.WOODCUTTING.getDisplayName());
+        translationMap.put(T_RPG_HERBALISM, SkillType.HERBALISM.getDisplayName());
+        translationMap.put(T_RPG_FISHING, SkillType.FISHING.getDisplayName());
+        translationMap.put(T_RPG_UNARMED, SkillType.UNARMED.getDisplayName());
+        translationMap.put(T_RPG_ARCHERY, SkillType.ARCHERY.getDisplayName());
+        translationMap.put(T_RPG_SWORDS, SkillType.SWORDS.getDisplayName());
+        translationMap.put(T_RPG_AXES, SkillType.AXES.getDisplayName());
+        translationMap.put(T_RPG_TAMING, SkillType.TAMING.getDisplayName());
+        translationMap.put(T_RPG_REPAIR, SkillType.REPAIR.getDisplayName());
+        translationMap.put(T_RPG_ACROBATICS, SkillType.ACROBATICS.getDisplayName());
+        translationMap.put(T_RPG_ALCHEMY, SkillType.ALCHEMY.getDisplayName());
+        translationMap.put(T_RPG_SMELTING, SkillType.SMELTING.getDisplayName());
 
         translationMap.put(T_RAR_SCRAP, Rarity.SCRAP.getDisplayName());
         translationMap.put(T_RAR_COMMON, Rarity.COMMON.getDisplayName());

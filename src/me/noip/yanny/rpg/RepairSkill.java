@@ -67,7 +67,7 @@ class RepairSkill extends Skill {
 
                         int exp = rpgConfiguration.getRepairExp(repairCost);
                         if (exp > 0) {
-                            rpgPlayer.set(RpgPlayerStatsType.REPAIR, exp);
+                            rpgPlayer.set(SkillType.REPAIR, exp);
                         }
                     }
                 }

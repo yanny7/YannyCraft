@@ -69,7 +69,7 @@ class ExcavationSkill extends Skill {
                     if (exp > 0) {
                         ((TreasureHunterAbility) abilities.get(AbilityType.TREASURE_HUNTER)).execute(rpgPlayer, destMaterial);
 
-                        rpgPlayer.set(RpgPlayerStatsType.EXCAVATION, exp);
+                        rpgPlayer.set(SkillType.EXCAVATION, exp);
                         return;
                     }
                     break;
@@ -86,7 +86,7 @@ class ExcavationSkill extends Skill {
 
         @Override
         String toString(RpgPlayer rpgPlayer) {
-            return String.format("%2.1f%%", (0.01 + rpgPlayer.getStatsLevel(RpgPlayerStatsType.EXCAVATION) / 1000.0 * 0.24) * 100.0);
+            return String.format("%2.1f%%", (0.01 + rpgPlayer.getStatsLevel(SkillType.EXCAVATION) / 1000.0 * 0.24) * 100.0);
         }
 
         @Override
@@ -95,7 +95,7 @@ class ExcavationSkill extends Skill {
         }
 
         void execute(RpgPlayer rpgPlayer, Block block) {
-            if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(RpgPlayerStatsType.EXCAVATION) / 1000.0 * 0.24) {
+            if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(SkillType.EXCAVATION) / 1000.0 * 0.24) {
                 Rarity[] values = Rarity.values();
 
                 for (int i = values.length - 1; i >= 0; i--) {

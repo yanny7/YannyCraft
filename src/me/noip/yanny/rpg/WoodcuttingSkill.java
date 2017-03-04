@@ -57,7 +57,7 @@ class WoodcuttingSkill extends Skill {
                     Block destMaterial = event.getBlock();
                     int exp = rpgConfiguration.getWoodcuttingExp(destMaterial.getType());
                     if (exp > 0) {
-                        rpgPlayer.set(RpgPlayerStatsType.WOODCUTTING, exp);
+                        rpgPlayer.set(SkillType.WOODCUTTING, exp);
                         return;
                     }
                     break;

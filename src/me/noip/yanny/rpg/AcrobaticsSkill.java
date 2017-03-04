@@ -40,7 +40,7 @@ class AcrobaticsSkill extends Skill {
 
                 int exp = rpgConfiguration.getAcrobaticExp(event.getFinalDamage());
                 if (exp > 0) {
-                    rpgPlayer.set(RpgPlayerStatsType.ACROBATICS, exp);
+                    rpgPlayer.set(SkillType.ACROBATICS, exp);
                 }
             }
         }

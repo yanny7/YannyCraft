@@ -63,7 +63,7 @@ class FishingSkill extends Skill {
                                         plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
                                         return;
                                     }
-                                    rpgPlayer.set(RpgPlayerStatsType.FISHING, exp);
+                                    rpgPlayer.set(SkillType.FISHING, exp);
                                     return;
                                 }
                                 return;
@@ -98,7 +98,7 @@ class FishingSkill extends Skill {
                                 plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
                                 return;
                             }
-                            rpgPlayer.set(RpgPlayerStatsType.FISHING, exp);
+                            rpgPlayer.set(SkillType.FISHING, exp);
                             return;
                         }
                         break;
