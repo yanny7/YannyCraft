@@ -1,6 +1,6 @@
 package me.noip.yanny.rpg;
 
-public enum RpgPlayerStatsType {
+enum RpgPlayerStatsType {
     MINING("Mining"),
     EXCAVATION("Excavation"),
     WOODCUTTING("Woodcutting"),
