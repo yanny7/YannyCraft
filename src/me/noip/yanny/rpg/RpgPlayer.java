@@ -3,25 +3,15 @@ package me.noip.yanny.rpg;
 import me.noip.yanny.utils.Utils;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 class RpgPlayer {
@@ -34,7 +24,6 @@ class RpgPlayer {
     private final RpgBoard rpgBoard;
     private final Stats stats;
     private final Plugin plugin;
-    private final Random random = new Random();
 
     RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard) {
         this.plugin = plugin;
@@ -109,219 +98,8 @@ class RpgPlayer {
         }
     }
 
-    void blockBreak(BlockBreakEvent event) {
-        ItemStack handMaterial = player.getInventory().getItemInMainHand();
-        Block destMaterial = event.getBlock();
-
-        switch (handMaterial.getType()) {
-            case WOOD_PICKAXE:
-            case STONE_PICKAXE:
-            case IRON_PICKAXE:
-            case GOLD_PICKAXE:
-            case DIAMOND_PICKAXE: {
-                int exp = rpgConfiguration.getMiningExp(destMaterial.getType());
-                if (exp > 0) {
-                    stats.addValue(RpgPlayerStatsType.MINING, exp);
-                    return;
-                }
-                break;
-            }
-            case WOOD_SPADE:
-            case STONE_SPADE:
-            case IRON_SPADE:
-            case GOLD_SPADE:
-            case DIAMOND_SPADE: {
-                int exp = rpgConfiguration.getExcavationExp(destMaterial.getType());
-                if (exp > 0) {
-                    stats.addValue(RpgPlayerStatsType.EXCAVATION, exp);
-                    return;
-                }
-                break;
-            }
-            case WOOD_AXE:
-            case STONE_AXE:
-            case IRON_AXE:
-            case GOLD_AXE:
-            case DIAMOND_AXE: {
-                int exp = rpgConfiguration.getWoodcuttingExp(destMaterial.getType());
-                if (exp > 0) {
-                    stats.addValue(RpgPlayerStatsType.WOODCUTTING, exp);
-                    return;
-                }
-                break;
-            }
-        }
-
-        switch (destMaterial.getType()) {
-            case MELON_BLOCK:
-            case PUMPKIN: {
-                int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
-                if (exp > 0) {
-                    stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
-                    return;
-                }
-            }
-            case POTATO:
-            case CARROT:
-            case BEETROOT_BLOCK:
-            case CROPS:
-            case NETHER_WARTS: {
-                if ((destMaterial.getData() == 7)) { // fullyGrown
-                    int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
-                    if (exp > 0) {
-                        stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
-                        return;
-                    }
-                }
-                break;
-            }
-            case COCOA: {
-                if (((destMaterial.getData() & 0x8) == 8)) { // fullyGrown
-                    int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
-                    if (exp > 0) {
-                        stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
-                        return;
-                    }
-                }
-                break;
-            }
-            case CHORUS_FLOWER: {
-                if ((destMaterial.getData() == 5)) { // fullyGrown
-                    int exp = rpgConfiguration.getHerbalismExp(destMaterial.getType());
-                    if (exp > 0) {
-                        stats.addValue(RpgPlayerStatsType.HERBALISM, exp);
-                        return;
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    void catchFish(PlayerFishEvent event) {
-        Entity entity = event.getCaught();
-
-        if (entity != null) {
-            switch (event.getState()) {
-                case CAUGHT_ENTITY: {
-                    Rarity[] values = Rarity.values();
-                    for (int i = values.length - 1; i >= 0; i--) {
-                        Rarity next = values[i];
-                        double rand = random.nextDouble();
-
-                        if (rand <= next.getProbability()) {
-                            int exp = rpgConfiguration.getFishingExp(next);
-                            if (exp > 0) {
-                                stats.addValue(RpgPlayerStatsType.FISHING, exp);
-                                return;
-                            }
-                            return;
-                        }
-                    }
-                }
-                case CAUGHT_FISH: {
-                    ItemStack fish = ((Item) event.getCaught()).getItemStack();
-                    int exp = -1;
-
-                    switch (fish.getData().getData()) {
-                        case 0:
-                            exp = rpgConfiguration.getFishingExp(Rarity.SCRAP);
-                            break;
-                        case 1:
-                            exp = rpgConfiguration.getFishingExp(Rarity.UNCOMMON);
-                            break;
-                        case 2:
-                            exp = rpgConfiguration.getFishingExp(Rarity.EXOTIC);
-                            break;
-                        case 3:
-                            exp = rpgConfiguration.getFishingExp(Rarity.EPIC);
-                            break;
-                    }
-
-                    if (exp > 0) {
-                        stats.addValue(RpgPlayerStatsType.FISHING, exp);
-                        return;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    void entityDamaged(EntityDamageByEntityEvent event) {
-        int exp = rpgConfiguration.getDamageExp(event.getEntityType());
-        if (exp > 0) {
-            switch (event.getCause()) {
-                case PROJECTILE:
-                    stats.addValue(RpgPlayerStatsType.ARCHERY, exp);
-                    return;
-                case ENTITY_ATTACK:
-                    switch (player.getInventory().getItemInMainHand().getType()) {
-                        case AIR:
-                            stats.addValue(RpgPlayerStatsType.UNARMED, exp);
-                            break;
-                        case STONE_SWORD:
-                        case DIAMOND_SWORD:
-                        case GOLD_SWORD:
-                        case IRON_SWORD:
-                        case WOOD_SWORD:
-                            stats.addValue(RpgPlayerStatsType.SWORDS, exp);
-                            break;
-                        case DIAMOND_AXE:
-                        case GOLD_AXE:
-                        case IRON_AXE:
-                        case STONE_AXE:
-                        case WOOD_AXE:
-                            stats.addValue(RpgPlayerStatsType.AXES, exp);
-                            break;
-                    }
-            }
-        }
-    }
-
-    void entityTame(EntityTameEvent event) {
-        int exp = rpgConfiguration.getTameExp(event.getEntityType());
-        if (exp > 0) {
-            stats.addValue(RpgPlayerStatsType.TAMING, exp);
-        }
-    }
-
-    void itemRepair(int cost) {
-        int exp = rpgConfiguration.getRepairExp(cost);
-        if (exp > 0) {
-            stats.addValue(RpgPlayerStatsType.REPAIR, exp);
-        }
-    }
-
-    void fallDamage(double damage) {
-        int exp = rpgConfiguration.getAcrobaticExp(damage);
-        if (exp > 0) {
-            stats.addValue(RpgPlayerStatsType.ACROBATICS, exp);
-        }
-    }
-
-    void potionCreated(PotionType potion, Material material) {
-        int exp = rpgConfiguration.getPotionExp(potion);
-        if (exp > 0) {
-            switch (material) {
-                case POTION:
-                    stats.addValue(RpgPlayerStatsType.ALCHEMY, exp);
-                    break;
-                case SPLASH_POTION:
-                    stats.addValue(RpgPlayerStatsType.ALCHEMY, exp * 2);
-                    break;
-                case LINGERING_POTION:
-                    stats.addValue(RpgPlayerStatsType.ALCHEMY, exp * 10);
-                    break;
-            }
-        }
-    }
-
-    void itemSmelted(ItemStack itemStack) {
-        int exp = rpgConfiguration.getSmeltingExp(itemStack.getType(), itemStack.getAmount());
-        if (exp > 0) {
-            stats.addValue(RpgPlayerStatsType.SMELTING, exp);
-        }
+    void set(RpgPlayerStatsType type, int exp) {
+        stats.addValue(type, exp);
     }
 
     ItemStack getStatsBook() {

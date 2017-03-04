@@ -4,7 +4,6 @@ import me.noip.yanny.auth.PlayerRegisterEvent;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,25 +11,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.event.inventory.BrewEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RPG implements PartPlugin {
 
@@ -38,6 +26,7 @@ public class RPG implements PartPlugin {
     private Connection connection;
     private RpgConfiguration rpgConfiguration;
     private Map<UUID, RpgPlayer> rpgPlayerMap = new HashMap<>();
+    private Set<Skill> skills = new LinkedHashSet<>();
     private RpgBoard rpgBoard;
 
     public RPG(JavaPlugin plugin, Connection connection) {
@@ -46,6 +35,21 @@ public class RPG implements PartPlugin {
 
         rpgConfiguration = new RpgConfiguration(plugin);
         rpgBoard = new RpgBoard(plugin, rpgConfiguration, rpgPlayerMap);
+
+        skills.add(new MiningSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new ExcavationSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new WoodcuttingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new HerbalismSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new FishingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new UnarmedSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new ArcherySkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new SwordsSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new AxesSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new TamingSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new RepairSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new AcrobaticsSkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new AlchemySkill(plugin, rpgPlayerMap, rpgConfiguration));
+        skills.add(new SmeltingSkill(plugin, rpgPlayerMap, rpgConfiguration));
     }
 
     @Override
@@ -84,6 +88,10 @@ public class RPG implements PartPlugin {
         rpgBoard.onEnable();
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
+
+        for (Skill skill : skills) {
+            skill.onEnable();
+        }
     }
 
     @Override
@@ -155,213 +163,7 @@ public class RPG implements PartPlugin {
 
         @SuppressWarnings("unused")
         @EventHandler
-        void onBlockBreak(BlockBreakEvent event) {
-            Player player = event.getPlayer();
-            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-            if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
-                return;
-            }
-
-            rpgPlayer.blockBreak(event);
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
-        void onCatchFish(PlayerFishEvent event) {
-            Player player = event.getPlayer();
-            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-            if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
-                return;
-            }
-
-            rpgPlayer.catchFish(event);
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
-        void onMobDamagedByEntity(EntityDamageByEntityEvent event) {
-            if (!(event.getDamager() instanceof Player)) {
-                if (event.getDamager() instanceof Arrow) {
-                    Arrow arrow = (Arrow) event.getDamager();
-                    if (!(arrow.getShooter() instanceof Player)) {
-                        return;
-                    }
-                } else {
-                    return;
-                }
-            }
-
-            Entity damager = event.getDamager();
-            Player player = null;
-
-            if (damager instanceof Player) {
-                player = (Player) damager;
-            } else if (damager instanceof Arrow) {
-                player = (Player) ((Arrow) damager).getShooter();
-            }
-
-            if (player == null) {
-                plugin.getLogger().warning("RPG.onMobDamagedByEntity: Entity is not a player");
-                return;
-            }
-
-            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-            if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onMobDamagedByEntity: Player not found!" + player.getDisplayName());
-                return;
-            }
-
-            rpgPlayer.entityDamaged(event);
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
-        void onEntityTame(EntityTameEvent event) {
-            if (!(event.getOwner() instanceof Player)) {
-                return;
-            }
-
-            Player player = (Player) event.getOwner();
-            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-            if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
-                return;
-            }
-
-            rpgPlayer.entityTame(event);
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
-        void onInventoryClick(InventoryClickEvent event) {
-            if (event.getInventory() instanceof AnvilInventory) {
-                InventoryView inventoryView = event.getView();
-                int rawSlot = event.getRawSlot();
-
-                if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot != 2)) {
-                    return;
-                }
-
-                AnvilInventory anvilInventory = (AnvilInventory) event.getInventory();
-                ItemStack[] items = anvilInventory.getContents();
-
-                if (items[0] == null) {
-                    return;
-                }
-
-                ItemMeta itemMeta = items[0].getItemMeta();
-
-                if (itemMeta instanceof Repairable) {
-                    Repairable repairable = (Repairable) itemMeta;
-                    int repairCost = repairable.getRepairCost();
-
-                    Player player = (Player) event.getWhoClicked();
-                    if (player.getLevel() >= repairCost + 1) {
-                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                        if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
-                            return;
-                        }
-
-                        rpgPlayer.itemRepair(repairCost + 1);
-                    }
-                }
-            } else if (event.getInventory() instanceof BrewerInventory) {
-                InventoryView inventoryView = event.getView();
-                int rawSlot = event.getRawSlot();
-
-                if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot > 2)) {
-                    return;
-                }
-
-                switch (event.getCurrentItem().getType()) {
-                    case POTION:
-                    case SPLASH_POTION:
-                    case LINGERING_POTION: {
-                        ItemStack potion = event.getCurrentItem();
-                        PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
-
-                        if (potionMeta.isUnbreakable()) { // disable gaining XP for every take of potion
-                            return;
-                        }
-
-                        Player player = (Player) event.getWhoClicked();
-                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                        if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
-                            return;
-                        }
-
-                        potionMeta.setUnbreakable(true);
-                        potionMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-                        potion.setItemMeta(potionMeta);
-                        rpgPlayer.potionCreated(potionMeta.getBasePotionData().getType(), event.getCurrentItem().getType());
-                        break;
-                    }
-                }
-            } else if (event.getInventory() instanceof FurnaceInventory) {
-                InventoryView inventoryView = event.getView();
-                int rawSlot = event.getRawSlot();
-
-                if ((rawSlot != inventoryView.convertSlot(rawSlot)) || (rawSlot != 2)) {
-                    return;
-                }
-
-                ItemStack itemStack = event.getCurrentItem();
-
-                if (itemStack.getType() != Material.AIR) {
-                    Player player = (Player) event.getWhoClicked();
-                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                    if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
-                        return;
-                    }
-
-                    rpgPlayer.itemSmelted(itemStack);
-                }
-            }
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
-        void onBrewPotion(BrewEvent event) {
-            BrewerInventory brewerInventory = event.getContents();
-            ItemStack[] items = brewerInventory.getContents();
-
-            for (int i = 0; i < 3; i++) { // allow again get XP for alchemy
-                if (items[i] != null) {
-                    PotionMeta potionMeta = (PotionMeta) items[i].getItemMeta();
-                    potionMeta.setUnbreakable(false);
-                    items[i].setItemMeta(potionMeta);
-                }
-            }
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
         void onMobDamaged(EntityDamageEvent event) {
-            if ((event.getEntityType() == EntityType.PLAYER) && (event.getCause() == EntityDamageEvent.DamageCause.FALL)) {
-                Player player = (Player) event.getEntity();
-                RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                if (rpgPlayer == null) {
-                    plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
-                    return;
-                }
-
-                rpgPlayer.fallDamage(event.getDamage());
-                return;
-            }
-
             if (event.getEntity() instanceof Monster) {
                 Monster monster = (Monster)event.getEntity();
 

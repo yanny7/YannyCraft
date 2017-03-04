@@ -110,9 +110,13 @@ class RpgConfiguration {
         woodcuttingExp.put(Material.LOG, 30);
 
         herbalismExp.put(Material.CROPS, 30);
+        herbalismExp.put(Material.YELLOW_FLOWER, 30);
+        herbalismExp.put(Material.RED_ROSE, 30);
         herbalismExp.put(Material.COCOA, 40);
         herbalismExp.put(Material.POTATO, 50);
         herbalismExp.put(Material.CARROT, 50);
+        herbalismExp.put(Material.BROWN_MUSHROOM, 50);
+        herbalismExp.put(Material.RED_MUSHROOM, 50);
         herbalismExp.put(Material.MELON_STEM, 60);
         herbalismExp.put(Material.BEETROOT_BLOCK, 60);
         herbalismExp.put(Material.PUMPKIN, 70);
