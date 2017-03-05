@@ -25,16 +25,16 @@ class FishingSkill extends Skill {
     }
 
     static void loadDefaults(Map<Rarity, Integer> exp) {
-        exp.put(Rarity.SCRAP, 20);
-        exp.put(Rarity.COMMON, 30);
-        exp.put(Rarity.UNCOMMON, 50);
-        exp.put(Rarity.RARE, 100);
-        exp.put(Rarity.EXOTIC, 200);
-        exp.put(Rarity.HEROIC, 400);
-        exp.put(Rarity.EPIC, 600);
-        exp.put(Rarity.LEGENDARY, 1000);
-        exp.put(Rarity.MYTHIC, 5000);
-        exp.put(Rarity.GODLIKE, 10000);
+        exp.put(Rarity.SCRAP, 50);
+        exp.put(Rarity.COMMON, 100);
+        exp.put(Rarity.UNCOMMON, 200);
+        exp.put(Rarity.RARE, 500);
+        exp.put(Rarity.EXOTIC, 1000);
+        exp.put(Rarity.HEROIC, 2000);
+        exp.put(Rarity.EPIC, 6000);
+        exp.put(Rarity.LEGENDARY, 10000);
+        exp.put(Rarity.MYTHIC, 50000);
+        exp.put(Rarity.GODLIKE, 100000);
     }
 
     private class FishingSkillListener implements Listener {
