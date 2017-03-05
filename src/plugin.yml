@@ -95,6 +95,10 @@ commands:
     description: Zobrazi RPG statistiky
     permission: yannycraft.rpg
     usage: /stats
+  skill:
+    description: Nastavi level pre skill
+    permission: yannycraft.skill
+    usage: /skill [player] [skill] [level]
 
 permissions:
   yannycraft.resetpassword:
@@ -129,3 +133,5 @@ permissions:
     default: true
   yannycraft.rpg:
     default: true
+  yannycraft.skill:
+    default: op

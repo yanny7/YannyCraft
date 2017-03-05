@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Random;
@@ -33,7 +34,8 @@ class DamageReductionAbility extends Ability {
 
         if (random.nextDouble() <= 0.05 + level / 1000.0 * 0.45) {
             double reduced = level / 1000.0 * 0.5;
-            rpgPlayer.getPlayer().sendMessage(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_DAMAGE_REDUCED) + ": " + String.format("%2.1f", reduced * 100));
+            rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_DAMAGE_REDUCED) +
+                    " " + ChatColor.GREEN + String.format("%2.1f%%", reduced * 100));
             return damage - damage * reduced;
         }
 

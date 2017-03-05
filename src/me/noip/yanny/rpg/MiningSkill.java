@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -78,6 +80,33 @@ class MiningSkill extends Skill {
                         return;
                     }
                     break;
+                }
+            }
+        }
+
+        @SuppressWarnings("unused")
+        @EventHandler
+        void onMobDamagedByEntity(EntityDamageByEntityEvent event) {
+            if (!(event.getDamager() instanceof Player) || (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
+                return;
+            }
+
+            Player player = (Player) event.getDamager();
+
+            switch (player.getInventory().getItemInMainHand().getType()) {
+                case WOOD_PICKAXE:
+                case STONE_PICKAXE:
+                case IRON_PICKAXE:
+                case GOLD_PICKAXE:
+                case DIAMOND_PICKAXE: {
+                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                    if (rpgPlayer == null) {
+                        plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                        return;
+                    }
+
+                    ((DoubleDamageAbility) abilities.get(AbilityType.DOUBLE_DAMAGE)).execute(rpgPlayer, event.getEntity(), event.getFinalDamage());
                 }
             }
         }

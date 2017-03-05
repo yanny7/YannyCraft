@@ -88,6 +88,7 @@ public class RPG implements PartPlugin {
         rpgBoard.onEnable();
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
+        plugin.getCommand("skill").setExecutor(new SkillExecutor());
 
         for (Map.Entry<SkillType, Skill> skill : skills.entrySet()) {
             skill.getValue().onEnable();
@@ -128,6 +129,47 @@ public class RPG implements PartPlugin {
             ItemStack book = rpgPlayer.getStatsBook();
             Utils.openBook(book, player);
 
+            return true;
+        }
+    }
+
+    class SkillExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length != 3)) {
+                return false;
+            }
+
+            Player player = plugin.getServer().getPlayer(args[0]);
+            if (player == null) {
+                commandSender.sendMessage(ChatColor.RED + "Player " + args[0] + " does not exists");
+                return true;
+            }
+
+            SkillType skillType;
+            int level;
+
+            try {
+                skillType = SkillType.valueOf(args[1]);
+                level = Integer.parseInt(args[2]);
+            } catch (Exception e) {
+                commandSender.sendMessage(ChatColor.RED + "Error: " + e.getLocalizedMessage());
+                return true;
+            }
+
+            if (level < 0) {
+                commandSender.sendMessage(ChatColor.RED + "Level lower than zero");
+                return true;
+            }
+
+            RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+            if (rpgPlayer == null) {
+                plugin.getLogger().warning("RPG.PlayerQuitEvent: Player not found!" + player.getDisplayName());
+                return true;
+            }
+
+            rpgPlayer.setStatsLevel(skillType, level);
             return true;
         }
     }

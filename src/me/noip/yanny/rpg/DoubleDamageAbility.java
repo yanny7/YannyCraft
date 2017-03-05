@@ -41,10 +41,20 @@ class DoubleDamageAbility extends Ability {
         }
 
         if (random.nextDouble() <= (0.01 + rpgPlayer.getStatsLevel(skillType) / 1000.0 * 0.29)) {
-            ((Damageable) entity).damage(damage);
+            int multiplier = 2;
+            if (level >= 750) {
+                multiplier = 5;
+            } else if (level >= 500) {
+                multiplier = 4;
+            } else if (level >= 250) {
+                multiplier = 3;
+            }
+
+            ((Damageable) entity).damage(damage * (multiplier - 1));
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4));
-            rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_CRITICAL_DAMAGE));
+            rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_CRITICAL_DAMAGE) +
+                    ": " + ChatColor.GREEN + Integer.toString(multiplier) + "x" + ChatColor.GOLD + " dmg");
         }
     }
 }

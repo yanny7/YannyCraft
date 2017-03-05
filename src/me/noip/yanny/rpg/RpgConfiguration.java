@@ -104,7 +104,7 @@ class RpgConfiguration {
         translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
         translationMap.put(T_MSG_ABILITIES, "Schopnosti");
         translationMap.put(T_MSG_TREASURE_FOUND, "Nasiel si poklad");
-        translationMap.put(T_MSG_CRITICAL_DAMAGE, "Sposobil si kriticky utok x2 dmg");
+        translationMap.put(T_MSG_CRITICAL_DAMAGE, "Sposobil si kriticky utok");
         translationMap.put(T_MSG_DAMAGE_REDUCED, "Damage bol znizeny o");
 
         translationMap.put(T_RPG_MINING, SkillType.MINING.getDisplayName());

@@ -125,6 +125,10 @@ class RpgPlayer {
         return getLevelFromXp(stats.getValue(type));
     }
 
+    void setStatsLevel(SkillType type, int level) {
+        stats.setValue(type, (int)getXpForLevel(level));
+    }
+
     Player getPlayer() {
         return player;
     }
@@ -142,7 +146,7 @@ class RpgPlayer {
     private String buildSkillPage(Skill skill, String name, int xp) {
         StringBuilder out = new StringBuilder();
         int curLevel = getLevelFromXp(xp);
-        int nextLevelXp = getXpForLevel(curLevel + 1) - xp;
+        long nextLevelXp = getXpForLevel(curLevel + 1) - xp;
 
         out.append(ChatColor.BOLD).append(name).append('\n');
         out.append(ChatColor.RESET).append('\n');
@@ -174,12 +178,12 @@ class RpgPlayer {
     }
 
     private static int getLevelFromXp(int xp) {
-        return (int) Math.floor((Math.sqrt(625 + 100 * xp) - 25) / 50.0);
+        return (int) Math.floor((Math.sqrt(625 + 100.0 * xp) - 25) / 50.0);
     }
 
-    private static int getXpForLevel(int lvl) {
+    private static long getXpForLevel(int lvl) {
         lvl += 1;
-        return 25 * lvl * lvl - 25 * lvl;
+        return (long)(25.0 * lvl * lvl - 25.0 * lvl);
     }
 
     class Stats {
@@ -223,6 +227,11 @@ class RpgPlayer {
                         .replace("{LEVEL_DIFF}", ChatColor.GREEN + "+" + Integer.toString(newLevel - oldLevel) + ChatColor.GOLD));
                 plugin.getLogger().info("LevelUp: " + player.getDisplayName() + " " + type.name() + " : " + newLevel);
             }
+        }
+
+        void setValue(SkillType type, int value) {
+            stats.get(type).setValue(value);
+            rpgBoard.updateObjective(type, player, getLevelFromXp(value));
         }
 
         Set<Map.Entry<SkillType, MutableInt>> entrySet() {
