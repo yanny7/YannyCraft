@@ -85,7 +85,7 @@ public class MainPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        pluginMap.forEach((key, value) -> value.onEnable());
+        pluginMap.forEach((type, plugin) -> plugin.onEnable());
         getLogger().info("Enabled YannyCraft plugin");
     }
 
