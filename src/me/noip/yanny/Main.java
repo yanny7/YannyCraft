@@ -2,6 +2,7 @@ package me.noip.yanny;
 
 import me.noip.yanny.auth.Auth;
 import me.noip.yanny.boss.Boss;
+import me.noip.yanny.bulletin.Bulletin;
 import me.noip.yanny.chestlocker.ChestLocker;
 import me.noip.yanny.essentials.Essentials;
 import me.noip.yanny.residence.Residence;
@@ -23,6 +24,7 @@ public class Main extends JavaPlugin {
     private Boss boss;
     private ChestLocker chestLocker;
     private Residence residence;
+    private Bulletin bulletin;
 
     public Main() {
         if (!getDataFolder().exists()) {
@@ -79,6 +81,7 @@ public class Main extends JavaPlugin {
         boss = new Boss(this);
         chestLocker = new ChestLocker(this, connection);
         residence = new Residence(this, connection);
+        bulletin = new Bulletin(this);
 
         getLogger().info("Started YannyCraft plugin");
     }
@@ -93,6 +96,7 @@ public class Main extends JavaPlugin {
         boss.onEnable();
         chestLocker.onEnable();
         residence.onEnable();
+        bulletin.onEnable();
 
         getLogger().info("Enabled YannyCraft plugin");
     }
@@ -105,6 +109,7 @@ public class Main extends JavaPlugin {
         boss.onDisable();
         chestLocker.onDisable();
         residence.onDisable();
+        bulletin.onDisable();
 
         try {
             if (connection != null) {

@@ -99,6 +99,11 @@ commands:
     description: Nastavi level pre skill
     permission: yannycraft.skill
     usage: /skill [player] [skill] [level]
+# Bulletin commands
+  bulletin:
+    description: Upravuje bulletin spravy
+    permission: yannycraft.bulletin
+    usage: /bulletin [add|remove|list|enable|disable|delay]
 
 permissions:
   yannycraft.resetpassword:
@@ -134,4 +139,6 @@ permissions:
   yannycraft.rpg:
     default: true
   yannycraft.skill:
+    default: op
+  yannycraft.bulletin:
     default: op
