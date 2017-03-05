@@ -101,6 +101,10 @@ public class Utils {
         return toVector;
     }
 
+    public static double sumProbabilities(double p1, double p2) {
+        return (p1 + p2) / (1 + p1 * p2);
+    }
+
     public static Map<String,String> convertMapString(Map<String, Object> map) {
         Map<String,String> newMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {

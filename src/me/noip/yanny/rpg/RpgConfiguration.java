@@ -5,6 +5,7 @@ import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionType;
 
@@ -67,6 +68,7 @@ class RpgConfiguration {
     private static final String REPAIR_XP = "repair_xp";
     private static final String ACROBATICS_XP = "acrobatics_xp";
 
+    private Plugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new LinkedHashMap<>();
     private Map<Material, Integer> miningExp = new LinkedHashMap<>();
@@ -80,9 +82,11 @@ class RpgConfiguration {
     private int acrobaticsExp;
     private Map<PotionType, Integer> alchemyExp = new LinkedHashMap<>();
     private Map<Material, Integer> smeltingExp = new LinkedHashMap<>();
-    private Map<Rarity, List<Material>> treasureItems = new LinkedHashMap<>();
+    private Map<Rarity, List<ItemStack>> treasureItems = new LinkedHashMap<>();
 
     RpgConfiguration(Plugin plugin) {
+        this.plugin = plugin;
+
         MiningSkill.loadDefaults(miningExp);
         ExcavationSkill.loadDefaults(excavationExp);
         WoodcuttingSkill.loadDefaults(woodcuttingExp);
@@ -212,11 +216,38 @@ class RpgConfiguration {
         for (Rarity rarity : Rarity.values()) {
             List<String> items = treasureSection.getStringList(rarity.name());
             for (String item : items) {
-                Material material = Material.valueOf(item);
-                List<Material> rarityItems = treasureItems.get(rarity);
+                String[] tokens = item.split(" ");
+                Material material = Material.AIR;
+                short subtype = 0;
 
-                if (!rarityItems.contains(material)) {
-                    rarityItems.add(material);
+                if (tokens.length > 2) {
+                    plugin.getLogger().warning("RpgConfiguration.load: Cant load ItemStack '" + item + "'");
+                    continue;
+                }
+
+                try {
+                    material = Material.valueOf(tokens[0]);
+                    if (tokens.length == 2) {
+                        subtype = Short.parseShort(tokens[1]);
+                    }
+                } catch (Exception e) {
+                    plugin.getLogger().warning("RpgConfiguration.load: Error: " + e.getLocalizedMessage());
+                }
+
+                ItemStack itemStack = new ItemStack(material, 1, subtype);
+                List<ItemStack> rarityItems = treasureItems.get(rarity);
+                boolean duplicate = false;
+
+                for (ItemStack it : rarityItems) {
+                    if ((it.getType() == itemStack.getType()) && (it.getData().getData() == itemStack.getData().getData())) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+
+
+                if (!duplicate) {
+                    rarityItems.add(itemStack);
                 }
             }
         }
@@ -283,10 +314,16 @@ class RpgConfiguration {
         }
 
         ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
-        for (Map.Entry<Rarity, List<Material>> entry : treasureItems.entrySet()) {
+        for (Map.Entry<Rarity, List<ItemStack>> entry : treasureItems.entrySet()) {
             List<String> items = new LinkedList<>();
-            for (Material material : entry.getValue()) {
-                items.add(material.name());
+            for (ItemStack itemStack : entry.getValue()) {
+                String item = itemStack.getType().name();
+
+                if (itemStack.getData().getData() != 0) {
+                    item += " " + itemStack.getData().getData();
+                }
+
+                items.add(item);
             }
             treasureSection.set(entry.getKey().name(), items);
         }
@@ -401,8 +438,8 @@ class RpgConfiguration {
         }
     }
 
-    List<Material> getTreasure(Rarity rarity) {
-        List<Material> result = treasureItems.get(rarity);
+    List<ItemStack> getTreasure(Rarity rarity) {
+        List<ItemStack> result = treasureItems.get(rarity);
 
         if (result != null) {
             return result;

@@ -2,6 +2,7 @@ package me.noip.yanny.rpg;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +47,7 @@ public enum Rarity {
         return chatColor;
     }
 
-    public static void loadDefaults(Map<Rarity, List<Material>> treasureItems) {
+    public static void loadDefaults(Map<Rarity, List<ItemStack>> treasureItems) {
         treasureItems.put(Rarity.SCRAP, new LinkedList<>());
         treasureItems.put(Rarity.COMMON, new LinkedList<>());
         treasureItems.put(Rarity.UNCOMMON, new LinkedList<>());
@@ -57,5 +58,25 @@ public enum Rarity {
         treasureItems.put(Rarity.LEGENDARY, new LinkedList<>());
         treasureItems.put(Rarity.MYTHIC, new LinkedList<>());
         treasureItems.put(Rarity.GODLIKE, new LinkedList<>());
+
+        treasureItems.get(SCRAP).add(new ItemStack(Material.COAL));
+
+        treasureItems.get(COMMON).add(new ItemStack(Material.IRON_INGOT));
+
+        treasureItems.get(UNCOMMON).add(new ItemStack(Material.GOLD_INGOT));
+
+        treasureItems.get(RARE).add(new ItemStack(Material.DIAMOND));
+
+        treasureItems.get(EXOTIC).add(new ItemStack(Material.GHAST_TEAR));
+
+        treasureItems.get(HEROIC).add(new ItemStack(Material.TOTEM));
+
+        treasureItems.get(EPIC).add(new ItemStack(Material.SKULL_ITEM, 0, (short) 1)); // wither head
+
+        treasureItems.get(LEGENDARY).add(new ItemStack(Material.NETHER_STAR));
+
+        treasureItems.get(MYTHIC).add(new ItemStack(Material.BEACON));
+
+        treasureItems.get(GODLIKE).add(new ItemStack(Material.ELYTRA));
     }
 }

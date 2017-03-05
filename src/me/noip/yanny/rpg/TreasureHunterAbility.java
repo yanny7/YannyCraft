@@ -1,13 +1,16 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.utils.ItemInfo;
+import me.noip.yanny.utils.Items;
 import me.noip.yanny.utils.Utils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
@@ -19,6 +22,7 @@ class TreasureHunterAbility extends Ability {
     private SkillType skillType;
     private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
+    private List<ItemInfo> itemInfos = Items.getItemList();
 
     TreasureHunterAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
         super(abilityName, fromLevel);
@@ -48,11 +52,11 @@ class TreasureHunterAbility extends Ability {
                 double rand = random.nextDouble();
 
                 if (rand <= next.getProbability()) {
-                    List<Material> treasure = rpgConfiguration.getTreasure(next);
+                    List<ItemStack> treasure = rpgConfiguration.getTreasure(next);
 
                     if (treasure.size() > 0) {
-                        Material material = treasure.get(random.nextInt(treasure.size()));
-                        Entity newEntity = entity.getWorld().dropItemNaturally(entity.getLocation(), new ItemStack(material));
+                        ItemStack itemStack = treasure.get(random.nextInt(treasure.size()));
+                        Entity newEntity = entity.getWorld().dropItemNaturally(entity.getLocation(), itemStack);
                         newEntity.setVelocity(Utils.computeThrow(entity.getLocation(), rpgPlayer.getPlayer().getLocation()));
 
                         switch (next) {
@@ -75,7 +79,7 @@ class TreasureHunterAbility extends Ability {
                         }
 
                         rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_TREASURE_FOUND) +
-                                ": [" + next.getChatColor() + material.name() + ChatColor.GOLD + "]");
+                                ": [" + next.getChatColor() + itemStack.getType().name() + ChatColor.GOLD + "]");
                     }
 
                     return next;
@@ -93,20 +97,21 @@ class TreasureHunterAbility extends Ability {
             return null;
         }
 
-        if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(skillType) / 1000.0 * 0.24) {
+        if (random.nextDouble() <= 0.01 + level / 1000.0 * 0.24) {
             Rarity[] values = Rarity.values();
 
             for (int i = values.length - 1; i >= 0; i--) {
                 Rarity next = values[i];
+                double probability = Utils.sumProbabilities(next.getProbability(), level / 1000.0 * 0.005);
                 double rand = random.nextDouble();
 
-                if (rand <= next.getProbability()) {
-                    List<Material> treasure = rpgConfiguration.getTreasure(next);
+                if (rand <= probability) {
+                    List<ItemStack> treasure = rpgConfiguration.getTreasure(next);
 
                     if (treasure.size() > 0) {
-                        Material material = treasure.get(random.nextInt(treasure.size()));
+                        ItemStack itemStack = treasure.get(random.nextInt(treasure.size()));
 
-                        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(material));
+                        block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), itemStack);
 
                         switch (next) {
                             case SCRAP:
@@ -127,8 +132,21 @@ class TreasureHunterAbility extends Ability {
                                 break;
                         }
 
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        String displayName = itemMeta.getDisplayName();
+
+                        if (displayName == null) {
+                            ItemInfo itemInfo = Items.itemByType(itemStack.getType(), itemStack.getData().getData());
+
+                            if (itemInfo != null) {
+                                displayName = itemInfo.getName();
+                            } else {
+                                displayName = StringUtils.capitalize(itemStack.getType().name().toLowerCase().replace("_", " "));
+                            }
+                        }
+
                         rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_TREASURE_FOUND) +
-                                ": [" + next.getChatColor() + material.name() + ChatColor.GOLD + "]");
+                                ": [" + next.getChatColor() + displayName + ChatColor.GOLD + "]");
                     }
 
                     return next;
