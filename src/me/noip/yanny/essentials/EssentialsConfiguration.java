@@ -1,12 +1,12 @@
 package me.noip.yanny.essentials;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,15 +30,17 @@ class EssentialsConfiguration {
     private PreparedStatement setBackStatement;
     private PreparedStatement getBackStatement;
 
-    private Plugin plugin;
+    private MainPlugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
     private Location spawnLocation = null;
     private String normalChatFormat = "<&a{PLAYER}&r> {MSG}";
     private String opChatFormat = "<&4{PLAYER}&r> {MSG}";
 
-    EssentialsConfiguration(Plugin plugin, Connection connection) {
+    EssentialsConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+
+        Connection connection = plugin.getConnection();
 
         try {
             setHomeStatement = connection.prepareStatement("UPDATE users SET HomeLocation = ? WHERE ID = ?");
@@ -110,11 +112,8 @@ class EssentialsConfiguration {
             spawnSection.set("pitch", spawnLocation.getPitch());
         }
 
-
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
 
         ConfigurationSection chatSection = serverConfigurationWrapper.getConfigurationSection(CHAT_SECTION);
         chatSection.set(CHAT_NORMAL, normalChatFormat);

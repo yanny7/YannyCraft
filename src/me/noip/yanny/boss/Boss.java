@@ -1,19 +1,19 @@
 package me.noip.yanny.boss;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.plugin.Plugin;
 
 public class Boss implements PartPlugin {
 
-    private Plugin plugin;
+    private MainPlugin plugin;
     private BossConfiguration bossConfiguration;
 
-    public Boss(Plugin plugin) {
+    public Boss(MainPlugin plugin) {
         this.plugin = plugin;
         bossConfiguration = new BossConfiguration(plugin);
     }

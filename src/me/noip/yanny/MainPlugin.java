@@ -7,26 +7,23 @@ import me.noip.yanny.chestlocker.ChestLocker;
 import me.noip.yanny.essentials.Essentials;
 import me.noip.yanny.residence.Residence;
 import me.noip.yanny.rpg.RPG;
+import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class Main extends JavaPlugin {
+public class MainPlugin extends JavaPlugin {
 
     private static final String DATABASE = "users.db";
 
     private Connection connection = null;
-    private Auth auth;
-    private Essentials essentials;
-    private RPG rpg;
-    private Boss boss;
-    private ChestLocker chestLocker;
-    private Residence residence;
-    private Bulletin bulletin;
+    private Map<PartPlugin.PartPluginType, PartPlugin> pluginMap = new LinkedHashMap<>();
 
-    public Main() {
+    public MainPlugin() {
         if (!getDataFolder().exists()) {
             if (!getDataFolder().mkdirs()) {
                 getLogger().warning("Cant create data folder");
@@ -75,41 +72,26 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
 
-        auth = new Auth(this, connection);
-        essentials = new Essentials(this, auth, connection);
-        rpg = new RPG(this, connection);
-        boss = new Boss(this);
-        chestLocker = new ChestLocker(this, connection);
-        residence = new Residence(this, connection);
-        bulletin = new Bulletin(this);
+        pluginMap.put(PartPlugin.PartPluginType.AUTH, new Auth(this));
+        pluginMap.put(PartPlugin.PartPluginType.ESSENTIALS, new Essentials(this));
+        pluginMap.put(PartPlugin.PartPluginType.RPG, new RPG(this));
+        pluginMap.put(PartPlugin.PartPluginType.BOSS, new Boss(this));
+        pluginMap.put(PartPlugin.PartPluginType.CHESTLOCKER, new ChestLocker(this));
+        pluginMap.put(PartPlugin.PartPluginType.RESIDENCE, new Residence(this));
+        pluginMap.put(PartPlugin.PartPluginType.BULLETIN, new Bulletin(this));
 
         getLogger().info("Started YannyCraft plugin");
     }
 
     @Override
     public void onEnable() {
-        auth.setSpawnLocationProvider(essentials);
-
-        auth.onEnable();
-        essentials.onEnable();
-        rpg.onEnable();
-        boss.onEnable();
-        chestLocker.onEnable();
-        residence.onEnable();
-        bulletin.onEnable();
-
+        pluginMap.forEach((key, value) -> value.onEnable());
         getLogger().info("Enabled YannyCraft plugin");
     }
 
     @Override
     public void onDisable() {
-        auth.onDisable();
-        essentials.onDisable();
-        rpg.onDisable();
-        boss.onDisable();
-        chestLocker.onDisable();
-        residence.onDisable();
-        bulletin.onDisable();
+        pluginMap.forEach((type, plugin) -> plugin.onDisable());
 
         try {
             if (connection != null) {
@@ -122,4 +104,15 @@ public class Main extends JavaPlugin {
         getLogger().info("Disabled YannyCraft plugin");
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public Auth getAuth() {
+        return (Auth) pluginMap.get(PartPlugin.PartPluginType.AUTH);
+    }
+
+    public Essentials getEssentials() {
+        return (Essentials) pluginMap.get(PartPlugin.PartPluginType.ESSENTIALS);
+    }
 }

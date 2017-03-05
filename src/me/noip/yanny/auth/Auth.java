@@ -1,6 +1,6 @@
 package me.noip.yanny.auth;
 
-import me.noip.yanny.essentials.SpawnLocationProvider;
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -12,30 +12,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class Auth implements PartPlugin {
 
-    private JavaPlugin plugin;
-    private Connection connection;
+    private MainPlugin plugin;
     private LoginExecutor loginExecutor;
     private RegisterExecutor registerExecutor;
     private ChangePasswordExecutor changePasswordExecutor;
     private ResetPasswordExecutor resetPasswordExecutor;
     private AuthListener authListener;
     private AuthConfiguration authConfiguration;
-    private SpawnLocationProvider spawnLocation;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
 
-    public Auth(JavaPlugin plugin, Connection connection) {
+    public Auth(MainPlugin plugin) {
         this.plugin = plugin;
-        this.connection = connection;
         authConfiguration = new AuthConfiguration(plugin);
         authListener = new AuthListener();
         loginExecutor = new LoginExecutor();
@@ -55,7 +50,7 @@ public class Auth implements PartPlugin {
         plugin.getCommand("resetpassword").setExecutor(resetPasswordExecutor);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, spawnLocation);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, authConfiguration);
             authPlayerWrapper.loginAfterReload();
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
         }
@@ -75,10 +70,6 @@ public class Auth implements PartPlugin {
         }
 
         loggedPlayers.clear();
-    }
-
-    public void setSpawnLocationProvider(SpawnLocationProvider location) {
-        this.spawnLocation = location;
     }
 
     public boolean isLogged(Player player) {
@@ -195,7 +186,7 @@ public class Auth implements PartPlugin {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, connection, authConfiguration, spawnLocation);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, authConfiguration);
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);

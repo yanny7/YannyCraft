@@ -1,9 +1,9 @@
 package me.noip.yanny.chestlocker;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,9 @@ class ChestConfiguration {
     private Map<String, String> translationMap = new HashMap<>();
     private double lockpickingChance = 0.05;
 
-    ChestConfiguration(Plugin plugin, Connection connection) {
+    ChestConfiguration(MainPlugin plugin) {
+        Connection connection = plugin.getConnection();
+
         try {
             getOwnerStatement = connection.prepareStatement("SELECT Player FROM chests WHERE Location = ?");
             removeChestStatement = connection.prepareStatement("DELETE FROM chests WHERE Location = ?");
@@ -68,9 +70,7 @@ class ChestConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.set(LOCKPICKING_CHANCE, lockpickingChance);
 

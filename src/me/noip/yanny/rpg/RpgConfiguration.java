@@ -1,12 +1,12 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionType;
 
 import java.util.*;
@@ -68,7 +68,7 @@ class RpgConfiguration {
     private static final String REPAIR_XP = "repair_xp";
     private static final String ACROBATICS_XP = "acrobatics_xp";
 
-    private Plugin plugin;
+    private MainPlugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new LinkedHashMap<>();
     private Map<Material, Integer> miningExp = new LinkedHashMap<>();
@@ -84,7 +84,7 @@ class RpgConfiguration {
     private Map<Material, Integer> smeltingExp = new LinkedHashMap<>();
     private Map<Rarity, List<ItemStack>> treasureItems = new LinkedHashMap<>();
 
-    RpgConfiguration(Plugin plugin) {
+    RpgConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
 
         MiningSkill.loadDefaults(miningExp);
@@ -263,39 +263,25 @@ class RpgConfiguration {
 
     private void save() {
         ConfigurationSection miningSection = serverConfigurationWrapper.getConfigurationSection(EXP_MINING_SECTION);
-        for (Map.Entry<Material, Integer> pair : miningExp.entrySet()) {
-            miningSection.set(pair.getKey().name(), pair.getValue());
-        }
+        miningExp.forEach(((material, value) -> miningSection.set(material.name(), value)));
 
         ConfigurationSection excavationSection = serverConfigurationWrapper.getConfigurationSection(EXP_EXCAVATION_SECTION);
-        for (Map.Entry<Material, Integer> pair : excavationExp.entrySet()) {
-            excavationSection.set(pair.getKey().name(), pair.getValue());
-        }
+        excavationExp.forEach(((material, value) -> excavationSection.set(material.name(), value)));
 
         ConfigurationSection woodcuttingSection = serverConfigurationWrapper.getConfigurationSection(EXP_WOODCUTTING_SECTION);
-        for (Map.Entry<Material, Integer> pair : woodcuttingExp.entrySet()) {
-            woodcuttingSection.set(pair.getKey().name(), pair.getValue());
-        }
+        woodcuttingExp.forEach(((material, value) -> woodcuttingSection.set(material.name(), value)));
 
         ConfigurationSection herbalismSection = serverConfigurationWrapper.getConfigurationSection(EXP_HERBALISM_SECTION);
-        for (Map.Entry<Material, Integer> pair : herbalismExp.entrySet()) {
-            herbalismSection.set(pair.getKey().name(), pair.getValue());
-        }
+        herbalismExp.forEach(((material, value) -> herbalismSection.set(material.name(), value)));
 
         ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
-        for (Map.Entry<Rarity, Integer> pair : fishingExp.entrySet()) {
-            fishingSection.set(pair.getKey().name(), pair.getValue());
-        }
+        fishingExp.forEach(((rarity, value) -> fishingSection.set(rarity.name(), value)));
 
         ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
-        for (Map.Entry<EntityType, Integer> pair : damageExp.entrySet()) {
-            damageSection.set(pair.getKey().name(), pair.getValue());
-        }
+        damageExp.forEach(((type, value) -> damageSection.set(type.name(), value)));
 
         ConfigurationSection tameSection = serverConfigurationWrapper.getConfigurationSection(EXP_TAME_SECTION);
-        for (Map.Entry<EntityType, Integer> pair : tameExp.entrySet()) {
-            tameSection.set(pair.getKey().name(), pair.getValue());
-        }
+        tameExp.forEach(((type, value) -> tameSection.set(type.name(), value)));
 
         ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
         repairSection.set(REPAIR_XP, repairExp);
@@ -304,14 +290,10 @@ class RpgConfiguration {
         acrobaticsSection.set(ACROBATICS_XP, acrobaticsExp);
 
         ConfigurationSection alchemySection = serverConfigurationWrapper.getConfigurationSection(EXP_ALCHEMY_SECTION);
-        for (Map.Entry<PotionType, Integer> pair : alchemyExp.entrySet()) {
-            alchemySection.set(pair.getKey().name(), pair.getValue());
-        }
+        alchemyExp.forEach(((type, value) -> alchemySection.set(type.name(), value)));
 
         ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
-        for (Map.Entry<Material, Integer> pair : smeltingExp.entrySet()) {
-            smeltingSection.set(pair.getKey().name(), pair.getValue());
-        }
+        smeltingExp.forEach(((type, value) -> smeltingSection.set(type.name(), value)));
 
         ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
         for (Map.Entry<Rarity, List<ItemStack>> entry : treasureItems.entrySet()) {
@@ -329,9 +311,7 @@ class RpgConfiguration {
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        for (Map.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.save();
     }

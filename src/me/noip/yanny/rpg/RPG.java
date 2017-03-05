@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.auth.PlayerRegisterEvent;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
@@ -15,23 +16,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.util.*;
 
 public class RPG implements PartPlugin {
 
-    private JavaPlugin plugin;
-    private Connection connection;
+    private MainPlugin plugin;
     private RpgConfiguration rpgConfiguration;
     private Map<UUID, RpgPlayer> rpgPlayerMap = new HashMap<>();
     private Map<SkillType, Skill> skills = new LinkedHashMap<>();
     private RpgBoard rpgBoard;
 
-    public RPG(JavaPlugin plugin, Connection connection) {
+    public RPG(MainPlugin plugin) {
         this.plugin = plugin;
-        this.connection = connection;
 
         rpgConfiguration = new RpgConfiguration(plugin);
         rpgBoard = new RpgBoard(plugin, rpgConfiguration, rpgPlayerMap);
@@ -80,9 +77,7 @@ public class RPG implements PartPlugin {
         Rarity.MYTHIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_MYTHIC));
         Rarity.GODLIKE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_GODLIKE));
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard, skills));
-        }
+        plugin.getServer().getOnlinePlayers().forEach(player -> rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, rpgConfiguration, rpgBoard, skills)));
 
         rpgConfiguration.load();
         rpgBoard.onEnable();
@@ -90,9 +85,7 @@ public class RPG implements PartPlugin {
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
         plugin.getCommand("skill").setExecutor(new SkillExecutor());
 
-        for (Map.Entry<SkillType, Skill> skill : skills.entrySet()) {
-            skill.getValue().onEnable();
-        }
+        skills.forEach((type, skill) -> skill.onEnable());
     }
 
     @Override
@@ -179,7 +172,7 @@ public class RPG implements PartPlugin {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, connection, rpgConfiguration, rpgBoard, skills);
+            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, rpgConfiguration, rpgBoard, skills);
             rpgPlayerMap.put(player.getUniqueId(), rpgPlayer);
         }
 
@@ -201,7 +194,7 @@ public class RPG implements PartPlugin {
         @EventHandler
         void onPlayerRegister(PlayerRegisterEvent event) {
             Player player = event.getPlayer();
-            RpgPlayer.registerPlayer(connection, player);
+            RpgPlayer.registerPlayer(plugin, player);
         }
 
         @SuppressWarnings("unused")

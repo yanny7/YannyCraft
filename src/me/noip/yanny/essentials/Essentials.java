@@ -1,6 +1,6 @@
 package me.noip.yanny.essentials;
 
-import me.noip.yanny.auth.Auth;
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,30 +19,26 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Essentials implements PartPlugin, SpawnLocationProvider {
+public class Essentials implements PartPlugin {
 
-    private JavaPlugin plugin;
-    private Auth auth;
+    private MainPlugin plugin;
 
     private Map<UUID, PermissionAttachment> permissionAttachment;
     private Map<Player, Player> teleportRequest;
     private EssentialsConfiguration essentialsConfiguration;
 
-    public Essentials(JavaPlugin plugin, Auth auth, Connection connection) {
+    public Essentials(MainPlugin plugin) {
         this.plugin = plugin;
-        this.auth = auth;
 
         permissionAttachment = new HashMap<>();
         teleportRequest = new HashMap<>();
-        essentialsConfiguration = new EssentialsConfiguration(plugin, connection);
+        essentialsConfiguration = new EssentialsConfiguration(plugin);
     }
 
     @Override
@@ -65,9 +61,7 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
         plugin.getCommand("home").setExecutor(new HomeExecutor());
         plugin.getCommand("sethome").setExecutor(new SetHomeExecutor());
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin));
-        }
+        plugin.getServer().getOnlinePlayers().forEach(player -> permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin)));
     }
 
     @Override
@@ -81,7 +75,6 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
         teleportRequest.clear();
     }
 
-    @Override
     public Location getSpawnLocation() {
         return essentialsConfiguration.getSpawnLocation();
     }
@@ -437,7 +430,7 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
                 return;
             }
 
-            if (!auth.isLogged(player)) {
+            if (!plugin.getAuth().isLogged(player)) {
                 return;
             }
 

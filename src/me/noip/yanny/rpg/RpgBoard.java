@@ -27,18 +27,11 @@ class RpgBoard {
 
     void onEnable() {
         plugin.getServer().getPluginManager().registerEvents(new RpgBoardListener(), plugin);
-
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            Objective objective = createObjective(player);
-            objectiveMap.put(player, objective);
-        }
+        plugin.getServer().getOnlinePlayers().forEach(player -> objectiveMap.put(player, createObjective(player)));
     }
 
     void onDisable() {
-        for (Map.Entry<Player, Objective> entry : objectiveMap.entrySet()) {
-            Objective objective = entry.getValue();
-            objective.getScoreboard().resetScores("test");
-        }
+        objectiveMap.forEach((k, v) -> v.getScoreboard().resetScores("RPG"));
         objectiveMap.clear();
     }
 
@@ -50,7 +43,7 @@ class RpgBoard {
 
     private Objective createObjective(Player player) {
         Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("test", "test");
+        Objective objective = scoreboard.registerNewObjective("RPG", "RPG");
 
         for (SkillType statsType : SkillType.values()) {
             Score score = objective.getScore(ChatColor.GOLD + statsType.getDisplayName());

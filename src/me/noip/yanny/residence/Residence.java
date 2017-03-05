@@ -1,5 +1,6 @@
 package me.noip.yanny.residence;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.Area;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
@@ -14,19 +15,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.util.*;
 
 public class Residence implements PartPlugin {
 
-    private JavaPlugin plugin;
+    private MainPlugin plugin;
     private ResidenceConfiguration residenceConfiguration;
 
-    public Residence(JavaPlugin plugin, Connection connection) {
+    public Residence(MainPlugin plugin) {
         this.plugin = plugin;
-        residenceConfiguration = new ResidenceConfiguration(plugin, connection);
+        residenceConfiguration = new ResidenceConfiguration(plugin);
     }
 
     @Override

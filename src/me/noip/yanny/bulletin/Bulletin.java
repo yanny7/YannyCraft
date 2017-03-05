@@ -1,20 +1,20 @@
 package me.noip.yanny.bulletin;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class Bulletin implements PartPlugin {
 
-    private JavaPlugin plugin;
+    private MainPlugin plugin;
     private BulletinConfiguration bulletinConfiguration;
 
-    public Bulletin(JavaPlugin plugin) {
+    public Bulletin(MainPlugin plugin) {
         this.plugin = plugin;
 
         bulletinConfiguration = new BulletinConfiguration(plugin);

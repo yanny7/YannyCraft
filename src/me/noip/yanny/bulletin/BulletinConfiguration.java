@@ -1,11 +1,11 @@
 package me.noip.yanny.bulletin;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
@@ -22,12 +22,12 @@ class BulletinConfiguration {
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
     private List<Message> messageMap = new ArrayList<>();
-    private Plugin plugin;
+    private MainPlugin plugin;
     private int delay;
     private int schedulerId;
     private Random random = new Random();
 
-    BulletinConfiguration(Plugin plugin) {
+    BulletinConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
@@ -79,9 +79,7 @@ class BulletinConfiguration {
         serverConfigurationWrapper.set(DELAY_SECTION, delay);
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.save();
     }

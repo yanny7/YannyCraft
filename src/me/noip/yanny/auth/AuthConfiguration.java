@@ -1,9 +1,9 @@
 package me.noip.yanny.auth;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ class AuthConfiguration {
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
 
-    AuthConfiguration(Plugin plugin) {
+    AuthConfiguration(MainPlugin plugin) {
         translationMap.put("msg_register", "Zaregistruj sa /register [heslo] [heslo]");
         translationMap.put("msg_login", "Prihlas sa /login [heslo]");
         translationMap.put("msg_registered", "Bol si uspesne zaregistrovany");
@@ -56,9 +56,8 @@ class AuthConfiguration {
 
     private void save() {
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
+
         serverConfigurationWrapper.save();
     }
 

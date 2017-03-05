@@ -1,5 +1,6 @@
 package me.noip.yanny.chestlocker;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
@@ -19,9 +20,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,13 +28,13 @@ import java.util.Set;
 
 public class ChestLocker implements PartPlugin {
 
-    private JavaPlugin plugin;
+    private MainPlugin plugin;
     private ChestConfiguration chestConfiguration;
     private Random random = new Random();
 
-    public ChestLocker(JavaPlugin plugin, Connection connection) {
+    public ChestLocker(MainPlugin plugin) {
         this.plugin = plugin;
-        chestConfiguration = new ChestConfiguration(plugin, connection);
+        chestConfiguration = new ChestConfiguration(plugin);
     }
 
     @Override

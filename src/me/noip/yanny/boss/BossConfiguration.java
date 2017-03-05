@@ -1,5 +1,6 @@
 package me.noip.yanny.boss;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
@@ -14,7 +15,6 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.Plugin;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -61,7 +61,7 @@ class BossConfiguration {
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
-    private Plugin plugin;
+    private MainPlugin plugin;
     private Random random = new Random();
 
     private double bossSpawnRate = 0.1;
@@ -71,7 +71,7 @@ class BossConfiguration {
     private double bossEnchantmentChance = 0.1;
     private int bossDeathExp = 100;
 
-    BossConfiguration(Plugin plugin) {
+    BossConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
@@ -105,9 +105,7 @@ class BossConfiguration {
         serverConfigurationWrapper.set(BOSS_DEATH_EXP, bossDeathExp);
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.save();
     }

@@ -1,6 +1,6 @@
 package me.noip.yanny.auth;
 
-import me.noip.yanny.essentials.SpawnLocationProvider;
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -13,9 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,20 +31,20 @@ class AuthPlayerWrapper {
     private PreparedStatement resetStatement;
     private PreparedStatement getResetStatement;
 
-    private JavaPlugin plugin;
+    private MainPlugin plugin;
     private Player player;
     private Location loginLocation;
     private GameMode loginGameMode;
     private AuthConfiguration authConfiguration;
-    private SpawnLocationProvider locationProvider;
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(JavaPlugin plugin, Player player, Connection connection, AuthConfiguration authConfiguration, SpawnLocationProvider locationProvider) {
+    AuthPlayerWrapper(MainPlugin plugin, Player player, AuthConfiguration authConfiguration) {
         this.plugin = plugin;
         this.player = player;
         this.authConfiguration = authConfiguration;
-        this.locationProvider = locationProvider;
+
+        Connection connection = plugin.getConnection();
 
         try {
             registerStatement = connection.prepareStatement("INSERT INTO users (ID, Password, Inventory, HomeLocation, BackLocation, LastUpdated) VALUES (?, ?, ?, ?, ?, DATETIME('now'))");
@@ -86,7 +84,7 @@ class AuthPlayerWrapper {
                 player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
             }
         } else {
-            loginLocation = locationProvider.getSpawnLocation();
+            loginLocation = plugin.getEssentials().getSpawnLocation();
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
             resetPlayer(player);
@@ -95,7 +93,7 @@ class AuthPlayerWrapper {
 
         logged = false;
 
-        Location location = locationProvider.getSpawnLocation();
+        Location location = plugin.getEssentials().getSpawnLocation();
         if (location == null) {
             location = player.getWorld().getSpawnLocation();
         }
@@ -157,7 +155,7 @@ class AuthPlayerWrapper {
         } else {
             try {
                 String goodPassword = PasswordHash.createHash(password);
-                String spawnLocation = Utils.locationToString(locationProvider.getSpawnLocation());
+                String spawnLocation = Utils.locationToString(plugin.getEssentials().getSpawnLocation());
                 registerStatement.setString(1, player.getUniqueId().toString());
                 registerStatement.setString(2, goodPassword);
                 registerStatement.setString(3, playerToString(player));

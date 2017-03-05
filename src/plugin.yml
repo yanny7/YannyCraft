@@ -1,7 +1,7 @@
 name: YannyCraft
 version: 0.4.25
 author: Yanny
-main: me.noip.yanny.Main
+main: me.noip.yanny.MainPlugin
 load: STARTUP
 description: YannyCraft server plugin
 

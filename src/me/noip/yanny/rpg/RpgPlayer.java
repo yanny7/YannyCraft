@@ -1,11 +1,11 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.Utils;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,15 +24,17 @@ class RpgPlayer {
     private final RpgConfiguration rpgConfiguration;
     private final RpgBoard rpgBoard;
     private final Stats stats;
-    private final Plugin plugin;
+    private final MainPlugin plugin;
     private final Map<SkillType, Skill> skills;
 
-    RpgPlayer(Plugin plugin, Player player, Connection connection, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard, Map<SkillType, Skill> skills) {
+    RpgPlayer(MainPlugin plugin, Player player, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard, Map<SkillType, Skill> skills) {
         this.plugin = plugin;
         this.player = player;
         this.rpgConfiguration = rpgConfiguration;
         this.rpgBoard = rpgBoard;
         this.skills = skills;
+
+        Connection connection = plugin.getConnection();
 
         try {
             loadStatsStatement = connection.prepareStatement("SELECT Mining, Excavation, Woodcutting, Herbalism, " +
@@ -133,9 +135,9 @@ class RpgPlayer {
         return player;
     }
 
-    static void registerPlayer(Connection connection, Player player) {
+    static void registerPlayer(MainPlugin plugin, Player player) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO rpg (Player) VALUES (?)");
+            PreparedStatement statement = plugin.getConnection().prepareStatement("INSERT INTO rpg (Player) VALUES (?)");
             statement.setString(1, player.getUniqueId().toString());
             statement.execute();
         } catch (Exception e) {

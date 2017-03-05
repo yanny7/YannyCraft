@@ -1,12 +1,12 @@
 package me.noip.yanny.residence;
 
+import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Area;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +24,7 @@ class ResidenceConfiguration {
 
     private static final String RESIDENCE_MATERIAL = "res_material";
 
-    private Plugin plugin;
+    private MainPlugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<String, String> translationMap = new HashMap<>();
 
@@ -35,8 +35,10 @@ class ResidenceConfiguration {
 
     private Material residenceMaterial;
 
-    ResidenceConfiguration(Plugin plugin, Connection connection) {
+    ResidenceConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+
+        Connection connection = plugin.getConnection();
 
         try {
             addResidenceStatement = connection.prepareStatement("INSERT INTO residence (Player, Location1, Location2) VALUES (?, ?, ?)");
@@ -80,9 +82,7 @@ class ResidenceConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        for (HashMap.Entry<String, String> pair : translationMap.entrySet()) {
-            translationSection.set(pair.getKey(), pair.getValue());
-        }
+        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.set(RESIDENCE_MATERIAL, residenceMaterial.name());
 

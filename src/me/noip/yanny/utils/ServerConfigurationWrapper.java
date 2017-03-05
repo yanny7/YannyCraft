@@ -1,16 +1,16 @@
 package me.noip.yanny.utils;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 
 public class ServerConfigurationWrapper extends YamlConfiguration {
 
-    private Plugin plugin;
+    private MainPlugin plugin;
     private File file;
 
-    public ServerConfigurationWrapper(Plugin plugin, String configName) {
+    public ServerConfigurationWrapper(MainPlugin plugin, String configName) {
         this.plugin = plugin;
         file = new File(plugin.getDataFolder() + "/" + configName + ".yml");
     }
