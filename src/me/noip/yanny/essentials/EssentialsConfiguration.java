@@ -57,6 +57,7 @@ class EssentialsConfiguration {
         translationMap.put("msg_home_created", "Domov bol nastaveny");
         translationMap.put("msg_home", "Bol si teleportovany domov");
         translationMap.put("msg_back", "Bol si teleportovany na poslednu poziciu");
+        translationMap.put("msg_inv_cleared", "Vyprazdnil si inventar");
 
         translationMap.put("msg_err_invalid_user", "Hrac {player} neexistuje");
         translationMap.put("msg_err_permission", "Na tento prikaz nemas prava");

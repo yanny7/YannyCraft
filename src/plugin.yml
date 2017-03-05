@@ -59,6 +59,14 @@ commands:
     description: Nakrmis seba/hraca
     permission: yannycraft.feed
     usage: /feed [hrac]
+  clrinv:
+    description: Odstrani vsetky itemy z inventara
+    permission: yannycraft.clrinv
+    usage: /clrinv [hrac]
+  speed:
+    description: Nastavi rychlost hraca
+    permission: yannycraft.speed
+    usage: /speed [speed]
 # Home commands
   back:
     description: Vrat sa na miesto pred teleportom
@@ -106,6 +114,10 @@ permissions:
   yannycraft.heal:
     default: op
   yannycraft.feed:
+    default: op
+  yannycraft.clrinv:
+    default: op
+  yannycraft.speed:
     default: op
   yannycraft.back:
     default: true

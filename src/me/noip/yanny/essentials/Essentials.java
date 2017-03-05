@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,6 +60,8 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
         plugin.getCommand("tpdeny").setExecutor(new TpdenyExecutor());
         plugin.getCommand("heal").setExecutor(new HealExecutor());
         plugin.getCommand("feed").setExecutor(new FeedExecutor());
+        plugin.getCommand("clrinv").setExecutor(new ClrInvExecutor());
+        plugin.getCommand("speed").setExecutor(new SpeedExecutor());
         plugin.getCommand("back").setExecutor(new BackExecutor());
         plugin.getCommand("home").setExecutor(new HomeExecutor());
         plugin.getCommand("sethome").setExecutor(new SetHomeExecutor());
@@ -280,6 +283,67 @@ public class Essentials implements PartPlugin, SpawnLocationProvider {
                     player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
                 }
             }
+            return true;
+        }
+    }
+
+    class ClrInvExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length > 1)) {
+                return false;
+            }
+
+            Player player;
+
+            if (args.length == 1) {
+                player = plugin.getServer().getPlayer(args[0]);
+
+                if (player == null) {
+                    commandSender.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    return true;
+                }
+            } else {
+                player = (Player)commandSender;
+            }
+
+            player.getInventory().clear();
+            player.updateInventory();
+
+            commandSender.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_inv_cleared"));
+            return true;
+        }
+    }
+
+    class SpeedExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length != 1)) {
+                return false;
+            }
+
+            Player player = (Player)commandSender;
+            float speed;
+
+            try {
+                speed = Float.parseFloat(args[0]) / 10f;
+            } catch (Exception e) {
+                e.printStackTrace();
+                player.sendMessage(ChatColor.RED + "Error: " + e.getLocalizedMessage());
+                return true;
+            }
+
+            try {
+                if (player.isFlying()) {
+                    player.setFlySpeed(speed);
+                } else {
+                    player.setWalkSpeed(speed);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                player.sendMessage(ChatColor.RED + "Error: " + e.getLocalizedMessage());
+            }
+
             return true;
         }
     }
