@@ -160,10 +160,10 @@ class RpgPlayer {
             for (Ability ability : abilities) {
                 out.append(ChatColor.RESET).append(ability.getName()).append(": ");
 
-                if (ability.fromLevel() <= curLevel) {
+                if (ability.getFromLevel() <= curLevel) {
                     out.append(ChatColor.BOLD).append(ability.toString(this));
                 } else {
-                    out.append(ChatColor.GRAY).append("LVL ").append(ability.fromLevel()).append("+");
+                    out.append(ChatColor.GRAY).append(ChatColor.ITALIC).append("lvl ").append(ability.getFromLevel()).append("+");
                 }
 
                 out.append('\n');

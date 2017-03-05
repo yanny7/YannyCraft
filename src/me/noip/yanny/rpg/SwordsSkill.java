@@ -8,8 +8,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,6 +15,8 @@ class SwordsSkill extends Skill {
 
     SwordsSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.SWORDS, "Iron skill", 0, rpgConfiguration));
     }
 
     @Override
@@ -94,15 +94,17 @@ class SwordsSkill extends Skill {
                 case GOLD_SWORD:
                 case IRON_SWORD:
                 case WOOD_SWORD: {
-                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                    if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onMobDamagedByEntity: Player not found!" + player.getDisplayName());
-                        return;
-                    }
-
                     int exp = rpgConfiguration.getDamageExp(event.getEntityType());
+
                     if (exp > 0) {
+                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                        if (rpgPlayer == null) {
+                            plugin.getLogger().warning("RPG.onMobDamagedByEntity: Player not found!" + player.getDisplayName());
+                            return;
+                        }
+
+                        ((DoubleDamageAbility) abilities.get(AbilityType.DOUBLE_DAMAGE)).execute(rpgPlayer, event.getEntity(), event.getFinalDamage());
                         rpgPlayer.set(SkillType.SWORDS, exp);
                     }
                     break;

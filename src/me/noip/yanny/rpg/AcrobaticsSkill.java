@@ -13,6 +13,8 @@ class AcrobaticsSkill extends Skill {
 
     AcrobaticsSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.ACROBATICS, "Feather", 0, rpgConfiguration));
     }
 
     @Override
@@ -25,16 +27,17 @@ class AcrobaticsSkill extends Skill {
         @EventHandler
         void onMobDamaged(EntityDamageEvent event) {
             if ((event.getEntityType() == EntityType.PLAYER) && (event.getCause() == EntityDamageEvent.DamageCause.FALL)) {
-                Player player = (Player) event.getEntity();
-                RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
-
-                if (rpgPlayer == null) {
-                    plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
-                    return;
-                }
-
                 int exp = rpgConfiguration.getAcrobaticExp(event.getFinalDamage());
                 if (exp > 0) {
+                    Player player = (Player) event.getEntity();
+                    RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                    if (rpgPlayer == null) {
+                        plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
+                        return;
+                    }
+
+                    event.setDamage(((DamageReductionAbility) abilities.get(AbilityType.DAMAGE_REDUCED)).execute(rpgPlayer, event.getDamage()));
                     rpgPlayer.set(SkillType.ACROBATICS, exp);
                 }
             }

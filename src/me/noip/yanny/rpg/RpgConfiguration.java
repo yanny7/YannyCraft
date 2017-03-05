@@ -20,6 +20,7 @@ class RpgConfiguration {
     static final String T_MSG_ABILITIES = "msg_abilities";
     static final String T_MSG_TREASURE_FOUND = "msg_treasure_found";
     static final String T_MSG_CRITICAL_DAMAGE = "msg_critical_damage";
+    static final String T_MSG_DAMAGE_REDUCED = "msg_damage_reduced";
 
     static final String T_RPG_MINING = "rpg_mining";
     static final String T_RPG_EXCAVATION = "rpg_excavation";
@@ -104,6 +105,7 @@ class RpgConfiguration {
         translationMap.put(T_MSG_ABILITIES, "Schopnosti");
         translationMap.put(T_MSG_TREASURE_FOUND, "Nasiel si poklad");
         translationMap.put(T_MSG_CRITICAL_DAMAGE, "Sposobil si kriticky utok x2 dmg");
+        translationMap.put(T_MSG_DAMAGE_REDUCED, "Damage bol znizeny o");
 
         translationMap.put(T_RPG_MINING, SkillType.MINING.getDisplayName());
         translationMap.put(T_RPG_EXCAVATION, SkillType.EXCAVATION.getDisplayName());

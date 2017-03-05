@@ -1,17 +1,17 @@
 package me.noip.yanny.rpg;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +19,8 @@ class SmeltingSkill extends Skill {
 
     SmeltingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.SMELTING, "Fire skin", 0, rpgConfiguration));
     }
 
     @Override
@@ -85,6 +87,29 @@ class SmeltingSkill extends Skill {
                     int exp = rpgConfiguration.getSmeltingExp(itemStack.getType(), itemStack.getAmount());
                     if (exp > 0) {
                         rpgPlayer.set(SkillType.SMELTING, exp);
+                    }
+                }
+            }
+        }
+
+        @SuppressWarnings("unused")
+        @EventHandler
+        void onMobDamaged(EntityDamageEvent event) {
+            if ((event.getEntityType() == EntityType.PLAYER)) {
+                switch (event.getCause()) {
+                    case LAVA:
+                    case FIRE:
+                    case FIRE_TICK: {
+                        Player player = (Player) event.getEntity();
+                        RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
+
+                        if (rpgPlayer == null) {
+                            plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
+                            return;
+                        }
+
+                        event.setDamage(((DamageReductionAbility) abilities.get(AbilityType.DAMAGE_REDUCED)).execute(rpgPlayer, event.getDamage()));
+                        break;
                     }
                 }
             }

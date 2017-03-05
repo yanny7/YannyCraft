@@ -19,14 +19,12 @@ class TreasureHunterAbility extends Ability {
     private SkillType skillType;
     private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
-    private int fromLevel;
 
-    TreasureHunterAbility(Plugin plugin, SkillType skillType, int fromLevel, RpgConfiguration rpgConfiguration) {
-        super(AbilityType.TREASURE_HUNTER.getDisplayName());
+    TreasureHunterAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
+        super(abilityName, fromLevel);
 
         this.plugin = plugin;
         this.skillType = skillType;
-        this.fromLevel = fromLevel;
         this.rpgConfiguration = rpgConfiguration;
     }
 
@@ -35,15 +33,10 @@ class TreasureHunterAbility extends Ability {
         return String.format("%2.1f%%", (0.01 + rpgPlayer.getStatsLevel(skillType) / 1000.0 * 0.24) * 100.0);
     }
 
-    @Override
-    int fromLevel() {
-        return fromLevel;
-    }
-
     Rarity execute(RpgPlayer rpgPlayer, Entity entity) {
         int level = rpgPlayer.getStatsLevel(skillType);
 
-        if (level < fromLevel()) {
+        if (level < fromLevel) {
             return null;
         }
 
@@ -96,7 +89,7 @@ class TreasureHunterAbility extends Ability {
     Rarity execute(RpgPlayer rpgPlayer, Block block) {
         int level = rpgPlayer.getStatsLevel(skillType);
 
-        if (level < fromLevel()) {
+        if (level < fromLevel) {
             return null;
         }
 

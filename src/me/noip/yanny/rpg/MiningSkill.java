@@ -16,8 +16,8 @@ class MiningSkill extends Skill {
     MiningSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.MINING, 0));
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.MINING, 100, rpgConfiguration));
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.MINING, "Double drop", 0));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.MINING, "Protector", 100, rpgConfiguration));
     }
 
     @Override

@@ -15,14 +15,12 @@ class DoubleDamageAbility extends Ability {
     private SkillType skillType;
     private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
-    private int fromLevel;
 
-    DoubleDamageAbility(Plugin plugin, SkillType skillType, int fromLevel, RpgConfiguration rpgConfiguration) {
-        super(AbilityType.DOUBLE_DAMAGE.getDisplayName());
+    DoubleDamageAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
+        super(abilityName, fromLevel);
 
         this.plugin = plugin;
         this.skillType = skillType;
-        this.fromLevel = fromLevel;
         this.rpgConfiguration = rpgConfiguration;
     }
 
@@ -31,15 +29,10 @@ class DoubleDamageAbility extends Ability {
         return String.format("%2.1f%%", (0.01 + rpgPlayer.getStatsLevel(skillType) / 1000.0 * 0.29) * 100.0);
     }
 
-    @Override
-    int fromLevel() {
-        return fromLevel;
-    }
-
     void execute(RpgPlayer rpgPlayer, Entity entity, double damage) {
         int level = rpgPlayer.getStatsLevel(skillType);
 
-        if (level < fromLevel()) {
+        if (level < fromLevel) {
             return;
         }
 

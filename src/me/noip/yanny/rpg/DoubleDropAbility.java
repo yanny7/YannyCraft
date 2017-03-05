@@ -14,14 +14,12 @@ class DoubleDropAbility extends Ability {
     private Plugin plugin;
     private SkillType skillType;
     private Random random = new Random();
-    private int fromLevel;
 
-    DoubleDropAbility(Plugin plugin, SkillType skillType, int fromLevel) {
-        super(AbilityType.DOUBLE_DROP.getDisplayName());
+    DoubleDropAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel) {
+        super(abilityName, fromLevel);
 
         this.plugin = plugin;
         this.skillType = skillType;
-        this.fromLevel = fromLevel;
     }
 
     @Override
@@ -29,15 +27,10 @@ class DoubleDropAbility extends Ability {
         return String.format("%2.1f%%", (rpgPlayer.getStatsLevel(skillType) / 1000.0 * 0.5) * 100.0);
     }
 
-    @Override
-    int fromLevel() {
-        return fromLevel;
-    }
-
     void execute(RpgPlayer rpgPlayer, Block block) {
         int level = rpgPlayer.getStatsLevel(skillType);
 
-        if (level < fromLevel()) {
+        if (level < fromLevel) {
             return;
         }
 
