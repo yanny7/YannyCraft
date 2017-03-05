@@ -1,9 +1,8 @@
 package me.noip.yanny.rpg;
 
 enum AbilityType {
-    // mining
     DOUBLE_DROP("Dvojodmena"),
-    // excavation
+    DOUBLE_DAMAGE("Kritikal"),
     TREASURE_HUNTER("Hladac"),
     ;
 

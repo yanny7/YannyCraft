@@ -15,7 +15,7 @@ class HerbalismSkill extends Skill {
     HerbalismSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.HERBALISM));
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.HERBALISM, 0));
     }
 
     @Override

@@ -165,6 +165,8 @@ class RpgPlayer {
                 } else {
                     out.append(ChatColor.GRAY).append("LVL ").append(ability.fromLevel()).append("+");
                 }
+
+                out.append('\n');
             }
         }
 

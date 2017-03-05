@@ -8,8 +8,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,6 +15,8 @@ class UnarmedSkill extends Skill {
 
     UnarmedSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
+
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.UNARMED, 0, rpgConfiguration));
     }
 
     @Override
@@ -47,6 +47,8 @@ class UnarmedSkill extends Skill {
 
             int exp = rpgConfiguration.getDamageExp(event.getEntityType());
             if (exp > 0) {
+                ((DoubleDamageAbility) abilities.get(AbilityType.DOUBLE_DAMAGE)).execute(rpgPlayer, event.getEntity(), event.getFinalDamage());
+
                 rpgPlayer.set(SkillType.UNARMED, exp);
             }
         }

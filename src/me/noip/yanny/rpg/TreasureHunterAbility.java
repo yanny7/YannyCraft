@@ -7,10 +7,8 @@ import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Random;
@@ -21,12 +19,14 @@ class TreasureHunterAbility extends Ability {
     private SkillType skillType;
     private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
+    private int fromLevel;
 
-    TreasureHunterAbility(Plugin plugin, SkillType skillType, RpgConfiguration rpgConfiguration) {
+    TreasureHunterAbility(Plugin plugin, SkillType skillType, int fromLevel, RpgConfiguration rpgConfiguration) {
         super(AbilityType.TREASURE_HUNTER.getDisplayName());
 
         this.plugin = plugin;
         this.skillType = skillType;
+        this.fromLevel = fromLevel;
         this.rpgConfiguration = rpgConfiguration;
     }
 
@@ -37,10 +37,16 @@ class TreasureHunterAbility extends Ability {
 
     @Override
     int fromLevel() {
-        return 0;
+        return fromLevel;
     }
 
     Rarity execute(RpgPlayer rpgPlayer, Entity entity) {
+        int level = rpgPlayer.getStatsLevel(skillType);
+
+        if (level < fromLevel()) {
+            return null;
+        }
+
         if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(skillType) / 1000 * 0.24) {
             Rarity[] values = Rarity.values();
 
@@ -88,6 +94,12 @@ class TreasureHunterAbility extends Ability {
     }
 
     Rarity execute(RpgPlayer rpgPlayer, Block block) {
+        int level = rpgPlayer.getStatsLevel(skillType);
+
+        if (level < fromLevel()) {
+            return null;
+        }
+
         if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(skillType) / 1000.0 * 0.24) {
             Rarity[] values = Rarity.values();
 

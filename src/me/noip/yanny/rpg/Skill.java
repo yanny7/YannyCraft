@@ -2,17 +2,14 @@ package me.noip.yanny.rpg;
 
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 abstract class Skill {
 
     final Plugin plugin;
     final Map<UUID, RpgPlayer> rpgPlayerMap;
     final RpgConfiguration rpgConfiguration;
-    final Map<AbilityType, Ability> abilities = new HashMap<>();
+    final Map<AbilityType, Ability> abilities = new LinkedHashMap<>();
 
     Skill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         this.plugin = plugin;

@@ -16,7 +16,7 @@ class ExcavationSkill extends Skill {
     ExcavationSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(plugin, SkillType.EXCAVATION, rpgConfiguration));
+        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(plugin, SkillType.EXCAVATION, 0, rpgConfiguration));
     }
 
     @Override
