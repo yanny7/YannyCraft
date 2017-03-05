@@ -149,7 +149,7 @@ class BulletinConfiguration {
 
                 if (!enabledMessages.isEmpty()) {
                     String message = enabledMessages.get(random.nextInt(enabledMessages.size()));
-                    plugin.getServer().broadcastMessage("[Server] " + ChatColor.translateAlternateColorCodes('&', message));
+                    plugin.getServer().broadcastMessage(ChatColor.DARK_RED + "[Server] " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', message));
                 } else {
                     Bukkit.getScheduler().cancelTask(schedulerId);
                     schedulerId = -1;

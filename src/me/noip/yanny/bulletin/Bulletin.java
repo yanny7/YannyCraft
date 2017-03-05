@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class Bulletin implements PartPlugin {
     private class BulletinExecutor implements CommandExecutor {
         @Override
         public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-            if (!(commandSender instanceof Player) || (args.length == 0)) {
+            if (args.length == 0) {
                 return false;
             }
 
