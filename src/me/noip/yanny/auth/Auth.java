@@ -2,7 +2,6 @@ package me.noip.yanny.auth;
 
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +15,8 @@ import org.bukkit.event.player.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static me.noip.yanny.auth.AuthTranslation.*;
 
 public class Auth implements PartPlugin {
 
@@ -50,7 +51,7 @@ public class Auth implements PartPlugin {
         plugin.getCommand("resetpassword").setExecutor(resetPasswordExecutor);
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, authConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player);
             authPlayerWrapper.loginAfterReload();
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
         }
@@ -186,7 +187,7 @@ public class Auth implements PartPlugin {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player, authConfiguration);
+            AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player);
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
@@ -239,11 +240,10 @@ public class Auth implements PartPlugin {
                 String msg = event.getMessage();
 
                 if (!msg.startsWith("/login") && !msg.startsWith("/register")) {
-                    player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_command"));
+                    player.sendMessage(ERR_COMMAND_PERMISSION.display());
                     event.setCancelled(true);
                 }
             }
-
         }
 
         @SuppressWarnings("unused")
@@ -262,12 +262,9 @@ public class Auth implements PartPlugin {
             }
 
             if (!authPlayerWrapper.isLogged()){
-                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_chat"));
+                player.sendMessage(ERR_CHAT_PERMISSION.display());
                 event.setCancelled(true);
             }
-
         }
-
     }
-
 }

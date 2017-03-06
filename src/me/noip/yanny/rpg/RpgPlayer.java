@@ -15,22 +15,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static me.noip.yanny.rpg.RpgTranslation.*;
+
 class RpgPlayer {
 
     private PreparedStatement loadStatsStatement;
     private PreparedStatement saveStatsStatement;
 
     private final Player player;
-    private final RpgConfiguration rpgConfiguration;
     private final RpgBoard rpgBoard;
     private final Stats stats;
     private final MainPlugin plugin;
     private final Map<SkillType, Skill> skills;
 
-    RpgPlayer(MainPlugin plugin, Player player, RpgConfiguration rpgConfiguration, RpgBoard rpgBoard, Map<SkillType, Skill> skills) {
+    RpgPlayer(MainPlugin plugin, Player player, RpgBoard rpgBoard, Map<SkillType, Skill> skills) {
         this.plugin = plugin;
         this.player = player;
-        this.rpgConfiguration = rpgConfiguration;
         this.rpgBoard = rpgBoard;
         this.skills = skills;
 
@@ -152,15 +152,15 @@ class RpgPlayer {
 
         out.append(ChatColor.BOLD).append(name).append('\n');
         out.append(ChatColor.RESET).append('\n');
-        out.append(ChatColor.RESET).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_LEVEL)).append(": ").append(ChatColor.BOLD).append(curLevel).append('\n');
-        out.append(ChatColor.RESET).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_XP)).append(": ").append(ChatColor.BOLD).append(xp).append('\n');
-        out.append(ChatColor.RESET).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_NEXT_LEVEL_XP)).append(": ").append(ChatColor.BOLD).append(nextLevelXp).append('\n');
+        out.append(ChatColor.RESET).append(RPG_LEVEL.getDisplayName()).append(": ").append(ChatColor.BOLD).append(curLevel).append('\n');
+        out.append(ChatColor.RESET).append(RPG_XP.getDisplayName()).append(": ").append(ChatColor.BOLD).append(xp).append('\n');
+        out.append(ChatColor.RESET).append(RPG_NEXT_XP.getDisplayName()).append(": ").append(ChatColor.BOLD).append(nextLevelXp).append('\n');
         out.append(ChatColor.RESET).append('\n');
 
         Collection<Ability> abilities = skill.getAbilities();
 
         if (abilities.size() > 0) {
-            out.append(ChatColor.RESET).append(ChatColor.BOLD).append(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_ABILITIES)).append('\n');
+            out.append(ChatColor.RESET).append(ChatColor.BOLD).append(RPG_ABILITIES.getDisplayName()).append('\n');
             out.append(ChatColor.RESET).append('\n');
 
             for (Ability ability : abilities) {
@@ -223,7 +223,7 @@ class RpgPlayer {
             int newLevel = getLevelFromXp(mutableInt.intValue());
             if (newLevel != oldLevel) {
                 rpgBoard.updateObjective(type, player, newLevel);
-                player.sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_LEVELUP)
+                player.sendMessage(LEVELUP.display()
                         .replace("{STATS_TYPE}", ChatColor.GREEN + type.getDisplayName() + ChatColor.GOLD)
                         .replace("{LEVEL}", ChatColor.GREEN + Integer.toString(newLevel) + ChatColor.GOLD)
                         .replace("{LEVEL_DIFF}", ChatColor.GREEN + "+" + Integer.toString(newLevel - oldLevel) + ChatColor.GOLD));

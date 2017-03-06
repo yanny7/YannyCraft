@@ -17,8 +17,8 @@ class UnarmedSkill extends Skill {
     UnarmedSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.UNARMED, "Iron hand", 0, rpgConfiguration));
-        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.UNARMED, "Stone skin", 100, rpgConfiguration));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.UNARMED, "Iron hand", 0));
+        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.UNARMED, "Stone skin", 100));
     }
 
     @Override

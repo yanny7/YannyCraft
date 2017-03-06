@@ -102,12 +102,6 @@ public class Utils {
         return (p1 + p2) / (1 + p1 * p2);
     }
 
-    public static Map<String, String> convertToStringMap(Map<String, Object> map) {
-        Map<String,String> newMap = new HashMap<>();
-        map.forEach((key, value) -> newMap.put(key, (value instanceof String) ? (String) value : value.toString()));
-        return newMap;
-    }
-
     public static <T extends Enum<T>> Map<T, Integer> convertToEnumMap(Map<String, Object> map, Class<T> enumType) {
         Map<T, Integer> result = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {

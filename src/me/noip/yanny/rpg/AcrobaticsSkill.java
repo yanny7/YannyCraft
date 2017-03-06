@@ -14,7 +14,7 @@ class AcrobaticsSkill extends Skill {
     AcrobaticsSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.ACROBATICS, "Feather", 0, rpgConfiguration));
+        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.ACROBATICS, "Feather", 0));
     }
 
     @Override

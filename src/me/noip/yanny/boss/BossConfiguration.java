@@ -2,10 +2,8 @@ package me.noip.yanny.boss;
 
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
-import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
@@ -17,8 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 class BossConfiguration {
@@ -57,10 +53,8 @@ class BossConfiguration {
     private static final String BOSS_DEATH_EXP = "boss_death_exp";
 
     private static final String CONFIGURATION_NAME = "boss";
-    private static final String TRANSLATION_SECTION = "translation";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new HashMap<>();
     private MainPlugin plugin;
     private Random random = new Random();
 
@@ -87,12 +81,6 @@ class BossConfiguration {
         bossEnchantmentChance = serverConfigurationWrapper.getDouble(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
         bossDeathExp = serverConfigurationWrapper.getInt(BOSS_DEATH_EXP, bossDeathExp);
 
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
-
         save();
     }
 
@@ -104,14 +92,7 @@ class BossConfiguration {
         serverConfigurationWrapper.set(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
         serverConfigurationWrapper.set(BOSS_DEATH_EXP, bossDeathExp);
 
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        translationMap.forEach(translationSection::set);
-
         serverConfigurationWrapper.save();
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
     }
 
     void bossDeathDrop(EntityDeathEvent event) {

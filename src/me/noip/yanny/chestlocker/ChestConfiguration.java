@@ -2,20 +2,16 @@ package me.noip.yanny.chestlocker;
 
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
-import me.noip.yanny.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
 
 class ChestConfiguration {
 
     private static final String CONFIGURATION_NAME = "chests";
-
     private static final String TRANSLATION_SECTION = "translation";
-
     private static final String LOCKPICKING_CHANCE = "lockpicking_chance";
 
     private PreparedStatement getOwnerStatement;
@@ -23,7 +19,6 @@ class ChestConfiguration {
     private PreparedStatement addChestStatement;
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new HashMap<>();
     private double lockpickingChance = 0.05;
 
     ChestConfiguration(MainPlugin plugin) {
@@ -37,17 +32,6 @@ class ChestConfiguration {
             e.printStackTrace();
         }
 
-        translationMap.put("msg_chest_lock", "Uzamkol si truhlicu");
-        translationMap.put("msg_chest_locked", "Truhlica je uzamknuta");
-        translationMap.put("msg_chest_unlocked", "Odomkol si truhlicu");
-        translationMap.put("msg_chest_destroyed", "Znicil si uzamknutu truhlicu");
-        translationMap.put("msg_chest_protected", "Truhlica je uzamknuta");
-        translationMap.put("msg_chest_owned", "Truhlica je uz uzamknuta");
-        translationMap.put("msg_chest_not_owned", "Nevlastnis tuto truhlicu");
-        translationMap.put("msg_chest_lockpicking", "Nepodarilo sa ti odomknut truhlicu");
-        translationMap.put("msg_chest_invalid", "Nemieris na truhlicu");
-        translationMap.put("msg_chest_not_locked", "Truhlica je odomknuta");
-
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }
 
@@ -58,7 +42,9 @@ class ChestConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
+        for (ChestTranslation translation : ChestTranslation.values()) {
+            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        }
 
         lockpickingChance = serverConfigurationWrapper.getDouble(LOCKPICKING_CHANCE, lockpickingChance);
 
@@ -67,18 +53,13 @@ class ChestConfiguration {
 
     private void save() {
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
+        for (ChestTranslation translation : ChestTranslation.values()) {
+            translationSection.set(translation.name(), translation.getDisplayName());
         }
-        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.set(LOCKPICKING_CHANCE, lockpickingChance);
 
         serverConfigurationWrapper.save();
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
     }
 
     String getOwner(String location) {

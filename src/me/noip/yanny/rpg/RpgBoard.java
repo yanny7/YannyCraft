@@ -12,16 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static me.noip.yanny.rpg.RpgTranslation.*;
+
 class RpgBoard {
 
     private Plugin plugin;
-    private RpgConfiguration rpgConfiguration;
     private Map<UUID, RpgPlayer> playerMap;
     private Map<Player, Objective> objectiveMap = new HashMap<>();
 
-    RpgBoard(Plugin plugin, RpgConfiguration rpgConfiguration, Map<UUID, RpgPlayer> playerMap) {
+    RpgBoard(Plugin plugin, Map<UUID, RpgPlayer> playerMap) {
         this.plugin = plugin;
-        this.rpgConfiguration = rpgConfiguration;
         this.playerMap = playerMap;
     }
 
@@ -50,7 +50,7 @@ class RpgBoard {
             score.setScore(playerMap.get(player.getUniqueId()).getStatsLevel(statsType));
         }
 
-        objective.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_STATS));
+        objective.setDisplayName(RPG_STATS.getDisplayName());
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         player.setScoreboard(scoreboard);
         return objective;

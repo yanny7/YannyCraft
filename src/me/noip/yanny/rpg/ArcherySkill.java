@@ -15,7 +15,7 @@ class ArcherySkill extends Skill {
     ArcherySkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.ARCHERY, "Sharp eye", 0, rpgConfiguration));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.ARCHERY, "Sharp eye", 0));
     }
 
     @Override

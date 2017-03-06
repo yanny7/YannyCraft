@@ -14,7 +14,7 @@ class AxesSkill extends Skill {
     AxesSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.AXES, "Berserk", 0, rpgConfiguration));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.AXES, "Berserk", 0));
     }
 
     @Override

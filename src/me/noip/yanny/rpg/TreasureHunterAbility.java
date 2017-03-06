@@ -16,13 +16,14 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 import java.util.Random;
 
+import static me.noip.yanny.rpg.RpgTranslation.*;
+
 class TreasureHunterAbility extends Ability {
 
     private Plugin plugin;
     private SkillType skillType;
     private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
-    private List<ItemInfo> itemInfos = Items.getItemList();
 
     TreasureHunterAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
         super(abilityName, fromLevel);
@@ -78,8 +79,20 @@ class TreasureHunterAbility extends Ability {
                                 break;
                         }
 
-                        rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_TREASURE_FOUND) +
-                                ": [" + next.getChatColor() + itemStack.getType().name() + ChatColor.GOLD + "]");
+                        ItemMeta itemMeta = itemStack.getItemMeta();
+                        String displayName = itemMeta.getDisplayName();
+
+                        if (displayName == null) {
+                            ItemInfo itemInfo = Items.itemByType(itemStack.getType(), itemStack.getData().getData());
+
+                            if (itemInfo != null) {
+                                displayName = itemInfo.getName();
+                            } else {
+                                displayName = StringUtils.capitalize(itemStack.getType().name().toLowerCase().replace("_", " "));
+                            }
+                        }
+
+                        rpgPlayer.getPlayer().sendMessage(TREASURE_FOUND.display().replace("{TREASURE}", next.getChatColor() + displayName + TREASURE_FOUND.getChatColor()));
                     }
 
                     return next;
@@ -145,8 +158,7 @@ class TreasureHunterAbility extends Ability {
                             }
                         }
 
-                        rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_TREASURE_FOUND) +
-                                ": [" + next.getChatColor() + displayName + ChatColor.GOLD + "]");
+                        rpgPlayer.getPlayer().sendMessage(TREASURE_FOUND.display().replace("{TREASURE}", next.getChatColor() + displayName + TREASURE_FOUND.getChatColor()));
                     }
 
                     return next;

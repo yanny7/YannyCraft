@@ -16,7 +16,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static me.noip.yanny.residence.ResidenceTranslation.*;
 
 public class Residence implements PartPlugin {
 
@@ -151,14 +155,14 @@ public class Residence implements PartPlugin {
                         Area res = inArea(area);
 
                         if (res != null) {
-                            player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_exists"));
+                            player.sendMessage(ERR_RES_EXISTS.display());
                         } else {
                             residenceConfiguration.addResidence(area);
-                            player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_created"));
+                            player.sendMessage(RES_CREATED.display());
                         }
 
                     } else {
-                        player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_wrong_place"));
+                        player.sendMessage(ERR_RES_WRONG_PLACE.display());
                     }
 
                     return true;
@@ -171,12 +175,12 @@ public class Residence implements PartPlugin {
 
                         if (owner.equals(player.getUniqueId()) || player.isOp()) {
                             residenceConfiguration.removeResidence(area.uuid, area);
-                            player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_removed"));
+                            player.sendMessage(RES_REMOVED.display());
                         } else {
-                            player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_not_owned"));
+                            player.sendMessage(ERR_RES_NOT_OWNED.display());
                         }
                     } else {
-                        player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_not_exists"));
+                        player.sendMessage(ERR_RES_EXISTS.display());
                     }
                     return true;
                 }
@@ -185,9 +189,9 @@ public class Residence implements PartPlugin {
 
                     if (area != null) {
                         String owner = plugin.getServer().getOfflinePlayer(UUID.fromString(area.uuid)).getName();
-                        player.sendMessage(ChatColor.GOLD + residenceConfiguration.getTranslation("msg_res_owner").replace("{player}", ChatColor.GREEN + owner));
+                        player.sendMessage(RES_OWNER.display().replace("{player}", ChatColor.GOLD + owner + RES_OWNER.getChatColor()));
                     } else {
-                        player.sendMessage(ChatColor.GREEN + residenceConfiguration.getTranslation("msg_res_not_exists"));
+                        player.sendMessage(ERR_RES_EXISTS.display());
                     }
                     return true;
                 }
@@ -208,7 +212,7 @@ public class Residence implements PartPlugin {
                 Player player = event.getPlayer();
 
                 if (!owner.equals(player.getUniqueId()) && !player.isOp()) {
-                    player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_foreign"));
+                    player.sendMessage(ERR_RES_FOREIGN.display());
                     event.setCancelled(true);
                 }
             }
@@ -224,7 +228,7 @@ public class Residence implements PartPlugin {
                 Player player = event.getPlayer();
 
                 if (!owner.equals(player.getUniqueId()) && !player.isOp()) {
-                    player.sendMessage(ChatColor.RED + residenceConfiguration.getTranslation("msg_res_foreign"));
+                    player.sendMessage(ERR_RES_FOREIGN.display());
                     event.setCancelled(true);
                 }
             }

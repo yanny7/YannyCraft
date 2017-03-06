@@ -5,19 +5,19 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Random;
 
+import static me.noip.yanny.rpg.RpgTranslation.*;
+
 class DamageReductionAbility extends Ability {
 
     private Plugin plugin;
     private SkillType skillType;
-    private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
 
-    DamageReductionAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
+    DamageReductionAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel) {
         super(abilityName, fromLevel);
 
         this.plugin = plugin;
         this.skillType = skillType;
-        this.rpgConfiguration = rpgConfiguration;
     }
 
     @Override
@@ -34,8 +34,7 @@ class DamageReductionAbility extends Ability {
 
         if (random.nextDouble() <= 0.05 + level / 1000.0 * 0.45) {
             double reduced = level / 1000.0 * 0.5;
-            rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_DAMAGE_REDUCED) +
-                    " " + ChatColor.GREEN + String.format("%2.1f%%", reduced * 100));
+            rpgPlayer.getPlayer().sendMessage(DAMAGE_REDUCED.display().replace("{DMG_PERC}", ChatColor.GREEN + String.format("%2.1f%%", reduced * 100) + DAMAGE_REDUCED.getChatColor()));
             return damage - damage * reduced;
         }
 

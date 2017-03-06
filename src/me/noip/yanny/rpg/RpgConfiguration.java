@@ -9,45 +9,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 class RpgConfiguration {
-
-    static final String T_MSG_STATS = "msg_stats";
-    static final String T_MSG_LEVEL = "msg_level";
-    static final String T_MSG_XP = "msg_xp";
-    static final String T_MSG_NEXT_LEVEL_XP = "msg_next_lvl_xp";
-    static final String T_MSG_LEVELUP = "msg_levelup";
-    static final String T_MSG_ABILITIES = "msg_abilities";
-    static final String T_MSG_TREASURE_FOUND = "msg_treasure_found";
-    static final String T_MSG_CRITICAL_DAMAGE = "msg_critical_damage";
-    static final String T_MSG_DAMAGE_REDUCED = "msg_damage_reduced";
-
-    static final String T_RPG_MINING = "rpg_mining";
-    static final String T_RPG_EXCAVATION = "rpg_excavation";
-    static final String T_RPG_WOODCUTTING = "rpg_woodcutting";
-    static final String T_RPG_HERBALISM = "rpg_herbalism";
-    static final String T_RPG_FISHING = "rpg_fishing";
-    static final String T_RPG_UNARMED = "rpg_unarmed";
-    static final String T_RPG_ARCHERY = "rpg_archery";
-    static final String T_RPG_SWORDS = "rpg_swords";
-    static final String T_RPG_AXES = "rpg_axes";
-    static final String T_RPG_TAMING = "rpg_taming";
-    static final String T_RPG_REPAIR = "rpg_repair";
-    static final String T_RPG_ACROBATICS = "rpg_acrobatics";
-    static final String T_RPG_ALCHEMY = "rpg_alchemy";
-    static final String T_RPG_SMELTING = "rpg_smelting";
-
-    static final String T_RAR_SCRAP = "rar_scrap";
-    static final String T_RAR_COMMON = "rar_common";
-    static final String T_RAR_UNCOMMON = "rar_uncommon";
-    static final String T_RAR_RARE = "rar_rare";
-    static final String T_RAR_EXOTIC = "rar_exotic";
-    static final String T_RAR_HEROIC = "rar_heroic";
-    static final String T_RAR_EPIC = "rar_epic";
-    static final String T_RAR_LEGENDARY = "rar_legendary";
-    static final String T_RAR_MYTHIC = "rar_mythic";
-    static final String T_RAR_GODLIKE = "rar_godlike";
 
     private static final String CONFIGURATION_NAME = "rpg";
     private static final String TRANSLATION_SECTION = "translation";
@@ -70,7 +38,6 @@ class RpgConfiguration {
 
     private MainPlugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new LinkedHashMap<>();
     private Map<Material, Integer> miningExp = new LinkedHashMap<>();
     private Map<Material, Integer> excavationExp = new LinkedHashMap<>();
     private Map<Material, Integer> woodcuttingExp = new LinkedHashMap<>();
@@ -100,42 +67,6 @@ class RpgConfiguration {
 
         repairExp = 50;
         acrobaticsExp = 50; // per hearth
-
-        translationMap.put(T_MSG_STATS, "RPG Statistiky");
-        translationMap.put(T_MSG_LEVEL, "Level");
-        translationMap.put(T_MSG_XP, "Xp");
-        translationMap.put(T_MSG_NEXT_LEVEL_XP, "Xp na dalsi lvl");
-        translationMap.put(T_MSG_LEVELUP, "Tvoj skill '{STATS_TYPE}' sa zvysil na level {LEVEL} ({LEVEL_DIFF})");
-        translationMap.put(T_MSG_ABILITIES, "Schopnosti");
-        translationMap.put(T_MSG_TREASURE_FOUND, "Nasiel si poklad");
-        translationMap.put(T_MSG_CRITICAL_DAMAGE, "Sposobil si kriticky utok");
-        translationMap.put(T_MSG_DAMAGE_REDUCED, "Damage bol znizeny o");
-
-        translationMap.put(T_RPG_MINING, SkillType.MINING.getDisplayName());
-        translationMap.put(T_RPG_EXCAVATION, SkillType.EXCAVATION.getDisplayName());
-        translationMap.put(T_RPG_WOODCUTTING, SkillType.WOODCUTTING.getDisplayName());
-        translationMap.put(T_RPG_HERBALISM, SkillType.HERBALISM.getDisplayName());
-        translationMap.put(T_RPG_FISHING, SkillType.FISHING.getDisplayName());
-        translationMap.put(T_RPG_UNARMED, SkillType.UNARMED.getDisplayName());
-        translationMap.put(T_RPG_ARCHERY, SkillType.ARCHERY.getDisplayName());
-        translationMap.put(T_RPG_SWORDS, SkillType.SWORDS.getDisplayName());
-        translationMap.put(T_RPG_AXES, SkillType.AXES.getDisplayName());
-        translationMap.put(T_RPG_TAMING, SkillType.TAMING.getDisplayName());
-        translationMap.put(T_RPG_REPAIR, SkillType.REPAIR.getDisplayName());
-        translationMap.put(T_RPG_ACROBATICS, SkillType.ACROBATICS.getDisplayName());
-        translationMap.put(T_RPG_ALCHEMY, SkillType.ALCHEMY.getDisplayName());
-        translationMap.put(T_RPG_SMELTING, SkillType.SMELTING.getDisplayName());
-
-        translationMap.put(T_RAR_SCRAP, Rarity.SCRAP.getDisplayName());
-        translationMap.put(T_RAR_COMMON, Rarity.COMMON.getDisplayName());
-        translationMap.put(T_RAR_UNCOMMON, Rarity.UNCOMMON.getDisplayName());
-        translationMap.put(T_RAR_RARE, Rarity.RARE.getDisplayName());
-        translationMap.put(T_RAR_EXOTIC, Rarity.EXOTIC.getDisplayName());
-        translationMap.put(T_RAR_HEROIC, Rarity.HEROIC.getDisplayName());
-        translationMap.put(T_RAR_EPIC, Rarity.EPIC.getDisplayName());
-        translationMap.put(T_RAR_LEGENDARY, Rarity.LEGENDARY.getDisplayName());
-        translationMap.put(T_RAR_MYTHIC, Rarity.MYTHIC.getDisplayName());
-        translationMap.put(T_RAR_GODLIKE, Rarity.GODLIKE.getDisplayName());
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }
@@ -256,7 +187,15 @@ class RpgConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
+        for (RpgTranslation translation : RpgTranslation.values()) {
+            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        }
+        for (Rarity rarity : Rarity.values()) {
+            rarity.setDisplayName(translationSection.getString(rarity.name(), rarity.getDisplayName()));
+        }
+        for (SkillType skillType : SkillType.values()) {
+            skillType.setDisplayName(translationSection.getString(skillType.name(), skillType.getDisplayName()));
+        }
 
         save(); // save defaults
     }
@@ -311,13 +250,17 @@ class RpgConfiguration {
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        translationMap.forEach(translationSection::set);
+        for (RpgTranslation translation : RpgTranslation.values()) {
+            translationSection.set(translation.name(), translation.getDisplayName());
+        }
+        for (Rarity rarity : Rarity.values()) {
+            translationSection.set(rarity.name(), rarity.getDisplayName());
+        }
+        for (SkillType skillType : SkillType.values()) {
+            translationSection.set(skillType.name(), skillType.getDisplayName());
+        }
 
         serverConfigurationWrapper.save();
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
     }
 
     int getMiningExp(Material material) {

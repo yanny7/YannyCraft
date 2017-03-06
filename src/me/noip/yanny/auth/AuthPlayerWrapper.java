@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.util.Map;
 import java.util.UUID;
 
+import static me.noip.yanny.auth.AuthTranslation.*;
+
 class AuthPlayerWrapper {
 
     private PreparedStatement registerStatement;
@@ -35,14 +37,12 @@ class AuthPlayerWrapper {
     private Player player;
     private Location loginLocation;
     private GameMode loginGameMode;
-    private AuthConfiguration authConfiguration;
     private boolean logged;
     private boolean registered;
 
-    AuthPlayerWrapper(MainPlugin plugin, Player player, AuthConfiguration authConfiguration) {
+    AuthPlayerWrapper(MainPlugin plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
-        this.authConfiguration = authConfiguration;
 
         Connection connection = plugin.getConnection();
 
@@ -78,17 +78,17 @@ class AuthPlayerWrapper {
 
             if (resetPassword) {
                 registered = false;
-                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_register"));
+                player.sendMessage(REGISTER.display());
             } else {
                 registered = true;
-                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_login"));
+                player.sendMessage(LOGIN.display());
             }
         } else {
             loginLocation = plugin.getEssentials().getSpawnLocation();
             loginGameMode = GameMode.SURVIVAL;
             registered = false;
             resetPlayer(player);
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_register"));
+            player.sendMessage(REGISTER.display());
         }
 
         logged = false;
@@ -105,25 +105,25 @@ class AuthPlayerWrapper {
     void onQuit() {
         if (registered) {
             storeData(player);
-            plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_disconnect_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
+            plugin.getServer().broadcastMessage(DISCONNECT_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + DISCONNECT_ALL.getChatColor()));
         }
     }
 
     RegisterStatus register(String password, String passwordAgain) {
         if (logged || registered) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_registered"));
+            player.sendMessage(ERR_REGISTERED.display());
             return RegisterStatus.FAILED;
         }
         if (!password.equals(passwordAgain)) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password_not_same"));
+            player.sendMessage(ERR_PASSWORDS_NOT_SAME.display());
             return RegisterStatus.FAILED;
         }
         if (!password.matches("[A-Za-z0-9]+")) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_characters"));
+            player.sendMessage(ERR_CHARACTERS.display());
             return RegisterStatus.FAILED;
         }
         if ((password.length() < 6) || (password.length() > 32)) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_length"));
+            player.sendMessage(ERR_LENGTH.display());
             return RegisterStatus.FAILED;
         }
 
@@ -149,7 +149,7 @@ class AuthPlayerWrapper {
                 changePasswordStatement.execute();
             } catch (Exception e) {
                 e.printStackTrace();
-                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password"));
+                player.sendMessage(ERR_PASSWORD_CHANGE.display());
                 return RegisterStatus.FAILED;
             }
         } else {
@@ -164,15 +164,15 @@ class AuthPlayerWrapper {
                 registerStatement.execute();
             } catch (Exception e) {
                 e.printStackTrace();
-                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_register"));
+                player.sendMessage(ERR_REGISTER.display());
                 return RegisterStatus.FAILED;
             }
         }
 
         registered = true;
         logged = true;
-        plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_registered_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
-        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_registered"));
+        plugin.getServer().broadcastMessage(REGISTERED_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + REGISTERED_ALL.getChatColor()));
+        player.sendMessage(REGISTERED.display());
         player.setGameMode(GameMode.SURVIVAL);
 
         if (resetPassword) {
@@ -184,17 +184,17 @@ class AuthPlayerWrapper {
 
     boolean login(String password) {
         if (!registered) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_not_registered"));
+            player.sendMessage(ERR_NOT_REGISTERED.display());
             return false;
         }
         if (logged) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_logged"));
+            player.sendMessage(ERR_LOGGED.display());
             return false;
         }
 
         try {
             if (!checkPassword(password)) {
-                player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_wrong_password"));
+                player.sendMessage(ERR_WRONG_PASSWORD.display());
                 return false;
             }
         } catch (Exception e) {
@@ -203,8 +203,8 @@ class AuthPlayerWrapper {
         }
 
         logged = true;
-        plugin.getServer().broadcastMessage(ChatColor.GOLD + authConfiguration.getTranslation("msg_logged_all").replace("{player}", ChatColor.GREEN + player.getDisplayName() + ChatColor.GOLD));
-        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
+        plugin.getServer().broadcastMessage(LOGGED_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + LOGGED_ALL.getChatColor()));
+        player.sendMessage(LOGGED.display());
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
         return true;
@@ -212,25 +212,24 @@ class AuthPlayerWrapper {
 
     void loginAfterReload() {
         logged = true;
-        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_logged"));
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
     }
 
     void changePassword(String password, String passwordAgain) {
         if (!logged || !registered) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_registered"));
+            player.sendMessage(ERR_REGISTERED.display());
         }
         if (!password.equals(passwordAgain)) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password_not_same"));
+            player.sendMessage(ERR_PASSWORDS_NOT_SAME.display());
             return;
         }
         if (!password.matches("[A-Za-z0-9]+")) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_characters"));
+            player.sendMessage(ERR_CHARACTERS.display());
             return;
         }
         if ((password.length() < 6) || (password.length() > 32)) {
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_length"));
+            player.sendMessage(ERR_LENGTH.display());
             return;
         }
 
@@ -241,11 +240,11 @@ class AuthPlayerWrapper {
             changePasswordStatement.execute();
         } catch (Exception e) {
             e.printStackTrace();
-            player.sendMessage(ChatColor.RED + authConfiguration.getTranslation("msg_err_password"));
+            player.sendMessage(ERR_PASSWORD_CHANGE.display());
             return;
         }
 
-        player.sendMessage(ChatColor.GREEN + authConfiguration.getTranslation("msg_password_changed"));
+        player.sendMessage(PASSWORD_CHANGED.display());
     }
 
     void resetPassword(UUID uuid) {

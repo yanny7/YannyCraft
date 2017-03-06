@@ -31,7 +31,7 @@ public class RPG implements PartPlugin {
         this.plugin = plugin;
 
         rpgConfiguration = new RpgConfiguration(plugin);
-        rpgBoard = new RpgBoard(plugin, rpgConfiguration, rpgPlayerMap);
+        rpgBoard = new RpgBoard(plugin, rpgPlayerMap);
 
         skills.put(SkillType.MINING, new MiningSkill(plugin, rpgPlayerMap, rpgConfiguration));
         skills.put(SkillType.EXCAVATION, new ExcavationSkill(plugin, rpgPlayerMap, rpgConfiguration));
@@ -51,36 +51,11 @@ public class RPG implements PartPlugin {
 
     @Override
     public void onEnable() {
-        SkillType.MINING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_MINING));
-        SkillType.EXCAVATION.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_EXCAVATION));
-        SkillType.WOODCUTTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_WOODCUTTING));
-        SkillType.HERBALISM.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_HERBALISM));
-        SkillType.FISHING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_FISHING));
-        SkillType.UNARMED.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_UNARMED));
-        SkillType.ARCHERY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ARCHERY));
-        SkillType.SWORDS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SWORDS));
-        SkillType.AXES.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_AXES));
-        SkillType.TAMING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_TAMING));
-        SkillType.REPAIR.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_REPAIR));
-        SkillType.ACROBATICS.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ACROBATICS));
-        SkillType.ALCHEMY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_ALCHEMY));
-        SkillType.SMELTING.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RPG_SMELTING));
-
-        Rarity.SCRAP.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_SCRAP));
-        Rarity.COMMON.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_COMMON));
-        Rarity.UNCOMMON.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_UNCOMMON));
-        Rarity.RARE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_RARE));
-        Rarity.EXOTIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_EXOTIC));
-        Rarity.HEROIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_HEROIC));
-        Rarity.EPIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_EPIC));
-        Rarity.LEGENDARY.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_LEGENDARY));
-        Rarity.MYTHIC.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_MYTHIC));
-        Rarity.GODLIKE.setDisplayName(rpgConfiguration.getTranslation(RpgConfiguration.T_RAR_GODLIKE));
-
-        plugin.getServer().getOnlinePlayers().forEach(player -> rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, rpgConfiguration, rpgBoard, skills)));
+        plugin.getServer().getOnlinePlayers().forEach(player -> rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, rpgBoard, skills)));
 
         rpgConfiguration.load();
         rpgBoard.onEnable();
+
         plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
         plugin.getCommand("skill").setExecutor(new SkillExecutor());
@@ -172,7 +147,7 @@ public class RPG implements PartPlugin {
         @EventHandler
         void onPlayerJoin(PlayerJoinEvent event) {
             Player player = event.getPlayer();
-            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, rpgConfiguration, rpgBoard, skills);
+            RpgPlayer rpgPlayer = new RpgPlayer(plugin, player, rpgBoard, skills);
             rpgPlayerMap.put(player.getUniqueId(), rpgPlayer);
         }
 

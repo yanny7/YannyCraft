@@ -3,7 +3,6 @@ package me.noip.yanny.chestlocker;
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import static me.noip.yanny.chestlocker.ChestTranslation.*;
 
 public class ChestLocker implements PartPlugin {
 
@@ -67,7 +68,7 @@ public class ChestLocker implements PartPlugin {
                 if (!isFree) {
                     if (isOwner || player.isOp()) {
                         chestConfiguration.removeChest(blockLocation);
-                        player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_unlocked"));
+                        player.sendMessage(CHEST_UNLOCKED.display());
 
                         List<Block> around = new ArrayList<>();
                         around.add(block.getRelative(1, 0, 0));
@@ -83,13 +84,13 @@ public class ChestLocker implements PartPlugin {
                             }
                         }
                     } else {
-                        player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_not_owned"));
+                        player.sendMessage(ERR_CHEST_NOT_OWNED.display());
                     }
                 } else {
-                    player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_not_locked"));
+                    player.sendMessage(ERR_CHEST_NOT_LOCKED.display());
                 }
             } else {
-                player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_invalid"));
+                player.sendMessage(ERR_CHEST_INVALID.display());
             }
 
             return true;
@@ -129,10 +130,10 @@ public class ChestLocker implements PartPlugin {
                 if (!isFree) {
                     if (isOwner || player.isOp()) {
                         chestConfiguration.removeChest(blockLocation);
-                        player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_destroyed"));
+                        player.sendMessage(CHEST_DESTROYED.display());
                     } else {
                         event.setCancelled(true);
-                        player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_protected"));
+                        player.sendMessage(ERR_CHEST_PROTECTED.display());
                     }
                 }
             }
@@ -165,7 +166,7 @@ public class ChestLocker implements PartPlugin {
                                 chestConfiguration.addChest(chestLocation, playerUUID);
                             } else {
                                 event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_not_owned"));
+                                player.sendMessage(ERR_CHEST_NOT_OWNED.display());
                             }
 
                             break;
@@ -198,7 +199,7 @@ public class ChestLocker implements PartPlugin {
                 if (isFree) {
                     if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (itemStack.getType() == Material.EMERALD)) {
                         chestConfiguration.addChest(blockLocation, playerUUID);
-                        player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_lock"));
+                        player.sendMessage(CHEST_LOCK.display());
 
                         List<Block> around = new ArrayList<>();
                         around.add(block.getRelative(1, 0, 0));
@@ -231,7 +232,7 @@ public class ChestLocker implements PartPlugin {
                         }
 
                         if (random.nextDouble() < chestConfiguration.getLockpickingChance()) {
-                            player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_unlocked"));
+                            player.sendMessage(CHEST_UNLOCKED.display());
                             chestConfiguration.removeChest(blockLocation);
 
                             List<Block> around = new ArrayList<>();
@@ -248,15 +249,15 @@ public class ChestLocker implements PartPlugin {
                                 }
                             }
                         } else {
-                            player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_lockpicking"));
+                            player.sendMessage(ERR_CHEST_LOCKPICKING.display());
                             event.setCancelled(true);
                         }
                     } else if (!player.isOp()) {
-                        player.sendMessage(ChatColor.RED + chestConfiguration.getTranslation("msg_chest_locked"));
+                        player.sendMessage(ERR_CHEST_LOCKED.display());
                         event.setCancelled(true);
                     }
                 } else if (player.isSneaking() && (action == Action.RIGHT_CLICK_BLOCK) && (itemStack.getType() == Material.EMERALD)) {
-                    player.sendMessage(ChatColor.GREEN + chestConfiguration.getTranslation("msg_chest_owned"));
+                    player.sendMessage(CHEST_OWNED.display());
                 }
             }
         }

@@ -12,21 +12,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 class ResidenceConfiguration {
 
     private static final String CONFIGURATION_NAME = "residence";
-
     private static final String TRANSLATION_SECTION = "translation";
-
     private static final String RESIDENCE_MATERIAL = "res_material";
 
     private MainPlugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new HashMap<>();
 
     private PreparedStatement addResidenceStatement;
     private PreparedStatement getResidenceStatement;
@@ -49,15 +44,6 @@ class ResidenceConfiguration {
             e.printStackTrace();
         }
 
-        translationMap.put("msg_res_created", "Vytvoril si rezidenciu");
-        translationMap.put("msg_res_exists", "Uz tu je vytvorena rezidencia");
-        translationMap.put("msg_res_wrong_place", "Nestojis na spravnom mieste pre vytvorenie rezidencie");
-        translationMap.put("msg_res_removed", "Rezidencia bola zrusena");
-        translationMap.put("msg_res_not_owned", "Nevlastnis tuto rezidenciu");
-        translationMap.put("msg_res_not_exists", "Na tomto mieste nieje ziadna rezidencia");
-        translationMap.put("msg_res_owner", "Majitel: {player}");
-        translationMap.put("msg_res_foreign", "Nemas opravnenia v tejto rezidencii");
-
         residenceMaterial = Material.REDSTONE_BLOCK;
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
@@ -70,7 +56,9 @@ class ResidenceConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
+        for (ResidenceTranslation translation : ResidenceTranslation.values()) {
+            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        }
 
         residenceMaterial = Material.getMaterial(serverConfigurationWrapper.getString(RESIDENCE_MATERIAL, residenceMaterial.name()));
 
@@ -79,18 +67,13 @@ class ResidenceConfiguration {
 
     private void save() {
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
+        for (ResidenceTranslation translation : ResidenceTranslation.values()) {
+            translationSection.set(translation.name(), translation.getDisplayName());
         }
-        translationMap.forEach(translationSection::set);
 
         serverConfigurationWrapper.set(RESIDENCE_MATERIAL, residenceMaterial.name());
 
         serverConfigurationWrapper.save();
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
     }
 
     Material getResidenceMaterial() {

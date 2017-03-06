@@ -16,7 +16,7 @@ class SwordsSkill extends Skill {
     SwordsSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.SWORDS, "Iron skill", 0, rpgConfiguration));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.SWORDS, "Iron skill", 0));
     }
 
     @Override

@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static me.noip.yanny.essentials.EssentialsTranslation.*;
+
 public class Essentials implements PartPlugin {
 
     private MainPlugin plugin;
@@ -96,17 +98,19 @@ public class Essentials implements PartPlugin {
 
             if (args.length == 0) {
                 player.teleport(essentialsConfiguration.getSpawnLocation());
+                player.sendMessage(SPAWN_TELEPORTED.display());
             } else {
                 if (player.hasPermission("yannycraft.spawn.other")) {
                     Player target = plugin.getServer().getPlayer(args[0]);
 
                     if (target != null) {
                         target.teleport(essentialsConfiguration.getSpawnLocation());
+                        target.sendMessage(SPAWN_TELEPORTED.display());
                     } else {
-                        player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                        player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
                     }
                 } else {
-                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_permission"));
+                    player.sendMessage(ERR_PERMISSION.display());
                 }
             }
 
@@ -125,7 +129,7 @@ public class Essentials implements PartPlugin {
             Location location = player.getLocation();
             essentialsConfiguration.setSpawnLocation(location);
             player.getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ()); // update also world location
-            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_spawn_set"));
+            player.sendMessage(SPAWN_SET.display());
             return true;
         }
     }
@@ -143,7 +147,7 @@ public class Essentials implements PartPlugin {
             if (target != null) {
                 player.teleport(target.getLocation());
             } else {
-                player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
             }
             return true;
         }
@@ -160,11 +164,11 @@ public class Essentials implements PartPlugin {
             Player target = plugin.getServer().getPlayer(args[0]);
 
             if (target != null) {
-                player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_tpa_sended"));
-                target.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_tpa_received").replace("{player}", ChatColor.GOLD + player.getDisplayName() + ChatColor.GREEN));
+                player.sendMessage(TPA_SENDED.display());
+                target.sendMessage(TPA_RECEIVED.display().replace("{player}", ChatColor.GOLD + player.getDisplayName() + TPA_RECEIVED.getChatColor()));
                 teleportRequest.put(target, player);
             } else {
-                player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
             }
             return true;
         }
@@ -182,9 +186,9 @@ public class Essentials implements PartPlugin {
 
             if (target != null) {
                 target.teleport(player.getLocation());
-                target.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_teleported").replace("{player}", ChatColor.GOLD + player.getDisplayName() + ChatColor.GREEN));
+                target.sendMessage(TELEPORTED.display().replace("{player}", ChatColor.GOLD + player.getDisplayName() + TELEPORTED.getChatColor()));
             } else {
-                player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
             }
             return true;
         }
@@ -205,7 +209,7 @@ public class Essentials implements PartPlugin {
                 if (target != null) {
                     target.teleport(player.getLocation());
                 } else {
-                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
                 }
             }
 
@@ -224,8 +228,8 @@ public class Essentials implements PartPlugin {
 
             if (teleportRequest.containsKey(player)) {
                 Player target = teleportRequest.remove(player);
-                player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_tpdeny"));
-                target.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_tpdeny"));
+                player.sendMessage(TPDENY.display());
+                target.sendMessage(ERR_TPDENY.display());
             }
             return true;
         }
@@ -248,7 +252,7 @@ public class Essentials implements PartPlugin {
                 if (target != null) {
                     target.setHealth(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
                 } else {
-                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
                 }
             }
             return true;
@@ -272,7 +276,7 @@ public class Essentials implements PartPlugin {
                 if (target != null) {
                     target.setFoodLevel(20);
                 } else {
-                    player.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
                 }
             }
             return true;
@@ -292,7 +296,7 @@ public class Essentials implements PartPlugin {
                 player = plugin.getServer().getPlayer(args[0]);
 
                 if (player == null) {
-                    commandSender.sendMessage(ChatColor.RED + essentialsConfiguration.getTranslation("msg_err_invalid_user").replace("{player}", ChatColor.GOLD + args[0] + ChatColor.RED));
+                    commandSender.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
                     return true;
                 }
             } else {
@@ -302,7 +306,7 @@ public class Essentials implements PartPlugin {
             player.getInventory().clear();
             player.updateInventory();
 
-            commandSender.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_inv_cleared"));
+            commandSender.sendMessage(INV_CLEARED.display());
             return true;
         }
     }
@@ -349,7 +353,7 @@ public class Essentials implements PartPlugin {
 
             Player player = (Player) commandSender;
             player.teleport(essentialsConfiguration.getBackLocation(player));
-            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_back"));
+            player.sendMessage(BACK_TELEPORTED.display());
             return true;
         }
     }
@@ -363,7 +367,7 @@ public class Essentials implements PartPlugin {
 
             Player player = (Player) commandSender;
             player.teleport(essentialsConfiguration.getHomeLocation(player));
-            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home"));
+            player.sendMessage(HOME_TELEPORTED.display());
             return true;
         }
     }
@@ -377,7 +381,7 @@ public class Essentials implements PartPlugin {
 
             Player player = (Player) commandSender;
             essentialsConfiguration.setHomeLocation(player, player.getLocation());
-            player.sendMessage(ChatColor.GREEN + essentialsConfiguration.getTranslation("msg_home_created"));
+            player.sendMessage(HOME_CREATED.display());
             return true;
         }
     }

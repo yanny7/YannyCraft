@@ -9,19 +9,19 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Random;
 
+import static me.noip.yanny.rpg.RpgTranslation.*;
+
 class DoubleDamageAbility extends Ability {
 
     private Plugin plugin;
     private SkillType skillType;
-    private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
 
-    DoubleDamageAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
+    DoubleDamageAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel) {
         super(abilityName, fromLevel);
 
         this.plugin = plugin;
         this.skillType = skillType;
-        this.rpgConfiguration = rpgConfiguration;
     }
 
     @Override
@@ -53,8 +53,7 @@ class DoubleDamageAbility extends Ability {
             ((Damageable) entity).damage(damage * (multiplier - 1));
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4));
-            rpgPlayer.getPlayer().sendMessage(ChatColor.GOLD + rpgConfiguration.getTranslation(RpgConfiguration.T_MSG_CRITICAL_DAMAGE) +
-                    ": " + ChatColor.GREEN + Integer.toString(multiplier) + "x" + ChatColor.GOLD + " dmg");
+            rpgPlayer.getPlayer().sendMessage(CRITICAL_DAMAGE.display().replace("{DMG_MULT}", ChatColor.GREEN + Integer.toString(multiplier) + "x" + ChatColor.GOLD));
         }
     }
 }

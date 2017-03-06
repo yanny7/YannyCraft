@@ -2,18 +2,18 @@ package me.noip.yanny.bulletin;
 
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
-import me.noip.yanny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 class BulletinConfiguration {
 
     private static final String CONFIGURATION_NAME = "bulletin";
-    private static final String TRANSLATION_SECTION = "translation";
     private static final String MESSAGES_SECTION = "messages";
     private static final String DELAY_SECTION = "delay";
 
@@ -21,7 +21,6 @@ class BulletinConfiguration {
     private static final String MSG_DISABLED = "disabled";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new HashMap<>();
     private List<Message> messageMap = new ArrayList<>();
     private MainPlugin plugin;
     private int delay;
@@ -55,12 +54,6 @@ class BulletinConfiguration {
         }
         scheduleMessage();
 
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
-
         save();
     }
 
@@ -79,14 +72,7 @@ class BulletinConfiguration {
 
         serverConfigurationWrapper.set(DELAY_SECTION, delay);
 
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        translationMap.forEach(translationSection::set);
-
         serverConfigurationWrapper.save();
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
     }
 
     void addMessage(String content) {

@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
 
 class EssentialsConfiguration {
 
@@ -32,7 +30,6 @@ class EssentialsConfiguration {
 
     private MainPlugin plugin;
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private Map<String, String> translationMap = new HashMap<>();
     private Location spawnLocation = null;
     private String normalChatFormat = "<&a{PLAYER}&r> {MSG}";
     private String opChatFormat = "<&4{PLAYER}&r> {MSG}";
@@ -51,19 +48,6 @@ class EssentialsConfiguration {
             e.printStackTrace();
         }
 
-        translationMap.put("msg_spawn_set", "Nova spawn lokacia bola nastavena");
-        translationMap.put("msg_tpa_sended", "Poziadavka na teleport bola odoslana hracovi");
-        translationMap.put("msg_tpa_received", "Hrac {player} sa chce k tebe teleportovat /tpaccept prijmi, /tpdeny zamietni");
-        translationMap.put("msg_tpdeny", "Poziadavka na teleport bola zamietnuta");
-        translationMap.put("msg_teleported", "Bol si teleportovany k hracovi {player}");
-        translationMap.put("msg_home_created", "Domov bol nastaveny");
-        translationMap.put("msg_home", "Bol si teleportovany domov");
-        translationMap.put("msg_back", "Bol si teleportovany na poslednu poziciu");
-        translationMap.put("msg_inv_cleared", "Vyprazdnil si inventar");
-
-        translationMap.put("msg_err_invalid_user", "Hrac {player} neexistuje");
-        translationMap.put("msg_err_permission", "Na tento prikaz nemas prava");
-
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }
 
@@ -79,7 +63,9 @@ class EssentialsConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
+        for (EssentialsTranslation translation : EssentialsTranslation.values()) {
+            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        }
 
         // try to load spawn location, after startup this fails, after reload succeed
         String spawnWorld = getSpawnWorld();
@@ -113,7 +99,9 @@ class EssentialsConfiguration {
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        translationMap.forEach(translationSection::set);
+        for (EssentialsTranslation translation : EssentialsTranslation.values()) {
+            translationSection.set(translation.name(), translation.getDisplayName());
+        }
 
         ConfigurationSection chatSection = serverConfigurationWrapper.getConfigurationSection(CHAT_SECTION);
         chatSection.set(CHAT_NORMAL, normalChatFormat);
@@ -161,10 +149,6 @@ class EssentialsConfiguration {
 
     String getChatOp() {
         return opChatFormat;
-    }
-
-    String getTranslation(String key) {
-        return translationMap.get(key);
     }
 
     Location getHomeLocation(Player player) {
