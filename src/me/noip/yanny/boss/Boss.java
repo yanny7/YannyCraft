@@ -39,11 +39,9 @@ public class Boss implements PartPlugin {
         @SuppressWarnings("unused")
         @EventHandler
         void onMobSpawned(CreatureSpawnEvent event) {
-            if (!(event.getEntity() instanceof Monster)) {
-                return;
+            if (event.getEntity() instanceof Monster) {
+                bossConfiguration.createBoss((Monster) event.getEntity(), event.getSpawnReason());
             }
-
-            bossConfiguration.createBoss((Monster) event.getEntity(), event.getSpawnReason());
         }
     }
 }

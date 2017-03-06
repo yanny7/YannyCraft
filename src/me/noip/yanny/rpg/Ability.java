@@ -2,7 +2,7 @@ package me.noip.yanny.rpg;
 
 abstract class Ability {
 
-    final String name;
+    private final String name;
     final int fromLevel;
 
     Ability(String name, int fromLevel) {

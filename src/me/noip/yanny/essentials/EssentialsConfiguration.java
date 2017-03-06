@@ -79,7 +79,7 @@ class EssentialsConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
 
         // try to load spawn location, after startup this fails, after reload succeed
         String spawnWorld = getSpawnWorld();

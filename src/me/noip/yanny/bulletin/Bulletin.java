@@ -83,25 +83,7 @@ public class Bulletin implements PartPlugin {
                         return true;
                     }
 
-                    List<BulletinConfiguration.Message> messages = bulletinConfiguration.getMessages();
-                    commandSender.sendMessage(ChatColor.GREEN + "Delay: " + bulletinConfiguration.getDelay() + " min");
-
-                    if (!messages.isEmpty()) {
-                        commandSender.sendMessage(ChatColor.GREEN + "------------------------------------------------");
-
-                        for (int i = 0; i < messages.size(); i++) {
-                            BulletinConfiguration.Message message = messages.get(i);
-                            if (message.disabled) {
-                                commandSender.sendMessage(String.format("%d: %s", i, ChatColor.GRAY + message.content));
-                            } else {
-                                commandSender.sendMessage(String.format("%d: %s", i, ChatColor.translateAlternateColorCodes('&', message.content)));
-                            }
-                        }
-
-                        commandSender.sendMessage(ChatColor.GREEN + "------------------------------------------------");
-                    } else {
-                        commandSender.sendMessage(ChatColor.RED + "No messages in pool");
-                    }
+                    bulletinConfiguration.listMessaged(commandSender);
                     break;
                 }
                 case "enable": {

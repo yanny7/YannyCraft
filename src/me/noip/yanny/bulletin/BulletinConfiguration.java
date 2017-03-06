@@ -5,6 +5,7 @@ import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
@@ -58,7 +59,7 @@ class BulletinConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
 
         save();
     }
@@ -94,10 +95,6 @@ class BulletinConfiguration {
         save();
     }
 
-    List<Message> getMessages() {
-        return messageMap;
-    }
-
     boolean removeMessage(int id) {
         if (id < 0 || id >= messageMap.size()) {
             return false;
@@ -127,8 +124,26 @@ class BulletinConfiguration {
         save();
     }
 
-    int getDelay() {
-        return delay;
+    void listMessaged(CommandSender commandSender) {
+        commandSender.sendMessage(ChatColor.GREEN + "Delay: " + delay + " min");
+
+        if (!messageMap.isEmpty()) {
+            commandSender.sendMessage(ChatColor.GREEN + "------------------------------------------------");
+
+            for (int i = 0; i < messageMap.size(); i++) {
+                BulletinConfiguration.Message message = messageMap.get(i);
+
+                if (message.disabled) {
+                    commandSender.sendMessage(String.format("%d: %s", i, ChatColor.GRAY + message.content));
+                } else {
+                    commandSender.sendMessage(String.format("%d: %s", i, ChatColor.translateAlternateColorCodes('&', message.content)));
+                }
+            }
+
+            commandSender.sendMessage(ChatColor.GREEN + "------------------------------------------------");
+        } else {
+            commandSender.sendMessage(ChatColor.RED + "No messages in pool");
+        }
     }
 
     private void scheduleMessage() {
@@ -152,10 +167,11 @@ class BulletinConfiguration {
                     Bukkit.getScheduler().cancelTask(schedulerId);
                     schedulerId = -1;
                 }
-            }, 20 * 30 * delay, 20 * 60 * delay);
+            }, 20 * 30 * delay, 20 * 60 * delay
+        );
     }
 
-    class Message {
+    private class Message {
         String content;
         boolean disabled;
 

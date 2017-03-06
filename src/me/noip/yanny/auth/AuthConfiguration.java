@@ -49,7 +49,7 @@ class AuthConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
 
         save(); // save defaults
     }

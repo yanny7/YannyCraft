@@ -147,43 +147,43 @@ class RpgConfiguration {
         if (miningSection == null) {
             miningSection = serverConfigurationWrapper.createSection(EXP_MINING_SECTION);
         }
-        miningExp.putAll(Utils.convertMapMaterialInteger(miningSection.getValues(false)));
+        miningExp.putAll(Utils.convertToEnumMap(miningSection.getValues(false), Material.class));
 
         ConfigurationSection excavationSection = serverConfigurationWrapper.getConfigurationSection(EXP_EXCAVATION_SECTION);
         if (excavationSection == null) {
             excavationSection = serverConfigurationWrapper.createSection(EXP_EXCAVATION_SECTION);
         }
-        excavationExp.putAll(Utils.convertMapMaterialInteger(excavationSection.getValues(false)));
+        excavationExp.putAll(Utils.convertToEnumMap(excavationSection.getValues(false), Material.class));
 
         ConfigurationSection woodcuttingSection = serverConfigurationWrapper.getConfigurationSection(EXP_WOODCUTTING_SECTION);
         if (woodcuttingSection == null) {
             woodcuttingSection = serverConfigurationWrapper.createSection(EXP_WOODCUTTING_SECTION);
         }
-        woodcuttingExp.putAll(Utils.convertMapMaterialInteger(woodcuttingSection.getValues(false)));
+        woodcuttingExp.putAll(Utils.convertToEnumMap(woodcuttingSection.getValues(false), Material.class));
 
         ConfigurationSection herbalismSection = serverConfigurationWrapper.getConfigurationSection(EXP_HERBALISM_SECTION);
         if (herbalismSection == null) {
             herbalismSection = serverConfigurationWrapper.createSection(EXP_HERBALISM_SECTION);
         }
-        herbalismExp.putAll(Utils.convertMapMaterialInteger(herbalismSection.getValues(false)));
+        herbalismExp.putAll(Utils.convertToEnumMap(herbalismSection.getValues(false), Material.class));
 
         ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
         if (fishingSection == null) {
             fishingSection = serverConfigurationWrapper.createSection(EXP_FISHING_SECTION);
         }
-        fishingExp.putAll(Utils.convertMapRarityInteger(fishingSection.getValues(false)));
+        fishingExp.putAll(Utils.convertToEnumMap(fishingSection.getValues(false), Rarity.class));
 
         ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
         if (damageSection == null) {
             damageSection = serverConfigurationWrapper.createSection(EXP_DAMAGE_SECTION);
         }
-        damageExp.putAll(Utils.convertMapEntityTypeInteger(damageSection.getValues(false)));
+        damageExp.putAll(Utils.convertToEnumMap(damageSection.getValues(false), EntityType.class));
 
         ConfigurationSection tameSection = serverConfigurationWrapper.getConfigurationSection(EXP_TAME_SECTION);
         if (tameSection == null) {
             tameSection = serverConfigurationWrapper.createSection(EXP_TAME_SECTION);
         }
-        tameExp.putAll(Utils.convertMapEntityTypeInteger(tameSection.getValues(false)));
+        tameExp.putAll(Utils.convertToEnumMap(tameSection.getValues(false), EntityType.class));
 
         ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
         if (repairSection == null) {
@@ -201,13 +201,13 @@ class RpgConfiguration {
         if (alchemySection == null) {
             alchemySection = serverConfigurationWrapper.createSection(EXP_ALCHEMY_SECTION);
         }
-        alchemyExp.putAll(Utils.convertMapPotionTypeInteger(alchemySection.getValues(false)));
+        alchemyExp.putAll(Utils.convertToEnumMap(alchemySection.getValues(false), PotionType.class));
 
         ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
         if (smeltingSection == null) {
             smeltingSection = serverConfigurationWrapper.createSection(EXP_SMELTING_SECTION);
         }
-        smeltingExp.putAll(Utils.convertMapMaterialInteger(smeltingSection.getValues(false)));
+        smeltingExp.putAll(Utils.convertToEnumMap(smeltingSection.getValues(false), Material.class));
 
         ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
         if (treasureSection == null) {
@@ -256,7 +256,7 @@ class RpgConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
 
         save(); // save defaults
     }

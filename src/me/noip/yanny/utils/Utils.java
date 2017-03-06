@@ -2,18 +2,15 @@ package me.noip.yanny.utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import me.noip.yanny.rpg.Rarity;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -105,71 +102,20 @@ public class Utils {
         return (p1 + p2) / (1 + p1 * p2);
     }
 
-    public static Map<String,String> convertMapString(Map<String, Object> map) {
+    public static Map<String, String> convertToStringMap(Map<String, Object> map) {
         Map<String,String> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getValue() instanceof String){
-                newMap.put(entry.getKey(), (String) entry.getValue());
-            }
-        }
+        map.forEach((key, value) -> newMap.put(key, (value instanceof String) ? (String) value : value.toString()));
         return newMap;
     }
 
-    public static Map<String, Integer> convertMapInteger(Map<String, Object> map) {
-        Map<String, Integer> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if(entry.getValue() instanceof Integer){
-                newMap.put(entry.getKey(), (Integer) entry.getValue());
-            }
-        }
-        return newMap;
-    }
-
-    public static Map<Material, Integer> convertMapMaterialInteger(Map<String, Object> map) {
-        Map<Material, Integer> newMap = new HashMap<>();
+    public static <T extends Enum<T>> Map<T, Integer> convertToEnumMap(Map<String, Object> map, Class<T> enumType) {
+        Map<T, Integer> result = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Integer) {
-                Material material = Material.getMaterial(entry.getKey());
-
-                if (material != null) {
-                    newMap.put(material, (Integer) entry.getValue());
-                }
+                T type = Enum.valueOf(enumType, entry.getKey());
+                result.put(type, (Integer) entry.getValue());
             }
         }
-        return newMap;
+        return result;
     }
-
-    public static Map<Rarity, Integer> convertMapRarityInteger(Map<String, Object> map) {
-        Map<Rarity, Integer> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Integer) {
-                Rarity rarity = Rarity.valueOf(entry.getKey());
-                newMap.put(rarity, (Integer) entry.getValue());
-            }
-        }
-        return newMap;
-    }
-
-    public static Map<EntityType, Integer> convertMapEntityTypeInteger(Map<String, Object> map) {
-        Map<EntityType, Integer> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Integer) {
-                EntityType entityType = EntityType.valueOf(entry.getKey());
-                newMap.put(entityType, (Integer) entry.getValue());
-            }
-        }
-        return newMap;
-    }
-
-    public static Map<PotionType, Integer> convertMapPotionTypeInteger(Map<String, Object> map) {
-        Map<PotionType, Integer> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof Integer) {
-                PotionType potionType = PotionType.valueOf(entry.getKey());
-                newMap.put(potionType, (Integer) entry.getValue());
-            }
-        }
-        return newMap;
-    }
-
 }

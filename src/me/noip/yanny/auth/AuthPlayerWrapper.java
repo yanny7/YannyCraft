@@ -327,9 +327,7 @@ class AuthPlayerWrapper {
         player.setLevel(0);
         player.teleport(player.getWorld().getSpawnLocation());
         player.setGameMode(GameMode.SURVIVAL);
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-            player.removePotionEffect(potionEffect.getType());
-        }
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
         player.setBedSpawnLocation(player.getWorld().getSpawnLocation());
     }
 
@@ -352,9 +350,7 @@ class AuthPlayerWrapper {
         yaml.set("gamemode", player.getGameMode().toString());
 
         ConfigurationSection potionEffectsSection = yaml.createSection("potionEffects");
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-            potionEffectsSection.set(potionEffect.getType().getName(), potionEffect);
-        }
+        player.getActivePotionEffects().forEach(potionEffect -> potionEffectsSection.set(potionEffect.getType().getName(), potionEffect));
 
         yaml.set("bedLocation", player.getBedSpawnLocation());
 
@@ -395,10 +391,9 @@ class AuthPlayerWrapper {
         player.teleport(location);
         player.setGameMode(gameMode);
 
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
         ConfigurationSection potionEffectsSection = yaml.getConfigurationSection("potionEffects");
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-            player.removePotionEffect(potionEffect.getType());
-        }
+
         if (potionEffectsSection != null) {
             Map<String, Object> objects = potionEffectsSection.getValues(false);
             for (Map.Entry<String, Object> entry : objects.entrySet()) {

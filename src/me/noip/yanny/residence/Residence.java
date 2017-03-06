@@ -103,7 +103,10 @@ public class Residence implements PartPlugin {
         int playerZ = location.getBlockZ();
 
         for (Area area : areas) {
-            if ((area.first.getBlockX() <= playerX) && (area.second.getBlockX() >= playerX) && (area.first.getBlockZ() <= playerZ) && (area.second.getBlockZ() >= playerZ)) {
+            Location first = area.first;
+            Location second = area.second;
+
+            if ((first.getBlockX() <= playerX) && (second.getBlockX() >= playerX) && (first.getBlockZ() <= playerZ) && (second.getBlockZ() >= playerZ)) {
                 return area;
             }
         }
@@ -119,7 +122,10 @@ public class Residence implements PartPlugin {
         int b2 = location.second.getBlockZ();
 
         for (Area area : areas) {
-            if ((area.second.getBlockX() >= a1) && (area.first.getBlockX() <= b1) && (area.second.getBlockZ() >= a2) && (area.first.getBlockZ() <= b2)) {
+            Location first = area.first;
+            Location second = area.second;
+
+            if ((second.getBlockX() >= a1) && (first.getBlockX() <= b1) && (second.getBlockZ() >= a2) && (first.getBlockZ() <= b2)) {
                 return area;
             }
         }

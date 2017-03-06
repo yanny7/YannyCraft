@@ -58,7 +58,7 @@ class ChestConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
 
         lockpickingChance = serverConfigurationWrapper.getDouble(LOCKPICKING_CHANCE, lockpickingChance);
 

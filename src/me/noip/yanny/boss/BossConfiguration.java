@@ -64,8 +64,8 @@ class BossConfiguration {
     private MainPlugin plugin;
     private Random random = new Random();
 
-    private double bossSpawnRate = 0.1;
-    private double bossDropChance = 0.25;
+    private double bossSpawnRate = 0.05;
+    private double bossDropChance = 0.2;
     private int bossArmoredHealth = 40;
     private int bossHealth = 100;
     private double bossEnchantmentChance = 0.1;
@@ -91,7 +91,7 @@ class BossConfiguration {
         if (translationSection == null) {
             translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         }
-        translationMap.putAll(Utils.convertMapString(translationSection.getValues(false)));
+        translationMap.putAll(Utils.convertToStringMap(translationSection.getValues(false)));
 
         save();
     }
