@@ -2,7 +2,7 @@ package me.noip.yanny.auth;
 
 import org.bukkit.ChatColor;
 
-public enum AuthTranslation {
+enum AuthTranslation {
     REGISTER("Zaregistruj sa /register [heslo] [heslo]", ChatColor.GREEN),
     LOGIN("Prihlas sa /login [heslo]", ChatColor.GREEN),
     REGISTERED("Bol si uspesne zaregistrovany", ChatColor.GREEN),

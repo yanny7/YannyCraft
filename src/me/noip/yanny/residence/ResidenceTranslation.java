@@ -2,7 +2,7 @@ package me.noip.yanny.residence;
 
 import org.bukkit.ChatColor;
 
-public enum ResidenceTranslation {
+enum ResidenceTranslation {
     RES_CREATED("Vytvoril si rezidenciu", ChatColor.GREEN),
     RES_REMOVED("Rezidencia bola zrusena", ChatColor.GREEN),
     RES_OWNER("Majitel: {player}", ChatColor.GREEN),

@@ -2,6 +2,8 @@ package me.noip.yanny.auth;
 
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.PartPlugin;
+import me.noip.yanny.utils.PlayerAuthEvent;
+import me.noip.yanny.utils.PlayerRegisterEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

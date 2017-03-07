@@ -1,7 +1,7 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.MainPlugin;
-import me.noip.yanny.auth.PlayerRegisterEvent;
+import me.noip.yanny.utils.PlayerRegisterEvent;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;

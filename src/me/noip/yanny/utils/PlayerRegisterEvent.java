@@ -1,4 +1,4 @@
-package me.noip.yanny.auth;
+package me.noip.yanny.utils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -10,7 +10,7 @@ public class PlayerRegisterEvent extends Event {
 
     private Player player;
 
-    PlayerRegisterEvent(Player player) {
+    public PlayerRegisterEvent(Player player) {
         this.player = player;
     }
 

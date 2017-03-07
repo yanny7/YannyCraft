@@ -2,7 +2,7 @@ package me.noip.yanny.rpg;
 
 import org.bukkit.ChatColor;
 
-public enum RpgTranslation {
+enum RpgTranslation {
 
     RPG_STATS("RPG Statistiky", ChatColor.RESET),
     RPG_LEVEL("Level", ChatColor.RESET),

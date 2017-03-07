@@ -2,7 +2,7 @@ package me.noip.yanny.essentials;
 
 import org.bukkit.ChatColor;
 
-public enum EssentialsTranslation {
+enum EssentialsTranslation {
     SPAWN_SET("Nova spawn lokacia bola nastavena", ChatColor.GREEN),
     TPA_SENDED("Poziadavka na teleport bola odoslana hracovi", ChatColor.GREEN),
     TPA_RECEIVED("Hrac {player} sa chce k tebe teleportovat /tpaccept prijmi, /tpdeny zamietni", ChatColor.GREEN),

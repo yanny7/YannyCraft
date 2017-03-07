@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public enum Rarity {
+enum Rarity {
     SCRAP(1.0, "Odpad", ChatColor.GRAY),
     COMMON(0.4, "Bezne", ChatColor.WHITE),
     UNCOMMON(0.16, "Vzacne", ChatColor.YELLOW),

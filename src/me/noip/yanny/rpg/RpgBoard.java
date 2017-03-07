@@ -1,6 +1,6 @@
 package me.noip.yanny.rpg;
 
-import me.noip.yanny.auth.PlayerAuthEvent;
+import me.noip.yanny.utils.PlayerAuthEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

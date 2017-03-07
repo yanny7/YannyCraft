@@ -2,7 +2,7 @@ package me.noip.yanny.chestlocker;
 
 import org.bukkit.ChatColor;
 
-public enum ChestTranslation {
+enum ChestTranslation {
     CHEST_LOCK("Uzamkol si truhlicu", ChatColor.GREEN),
     CHEST_UNLOCKED("Odomkol si truhlicu", ChatColor.GREEN),
     CHEST_DESTROYED("Znicil si uzamknutu truhlicu", ChatColor.GREEN),
