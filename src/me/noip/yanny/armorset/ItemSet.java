@@ -1,19 +1,19 @@
 package me.noip.yanny.armorset;
 
 import me.noip.yanny.rpg.Rarity;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
+import me.noip.yanny.utils.CustomItemStack;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Map;
 
 public class ItemSet {
     private String name;
-    private List<ItemStack> items;
+    private List<CustomItemStack> items;
     private Rarity rarity;
-    private Map<Integer, Map<Enchantment, Integer>> setEffect;
+    private Map<Integer, Map<PotionEffectType, Integer>> setEffect;
 
-    ItemSet(String name, List<ItemStack> items, Rarity rarity, Map<Integer, Map<Enchantment, Integer>> setEffect) {
+    ItemSet(String name, List<CustomItemStack> items, Rarity rarity, Map<Integer, Map<PotionEffectType, Integer>> setEffect) {
         this.name = name;
         this.items = items;
         this.rarity = rarity;
@@ -24,7 +24,7 @@ public class ItemSet {
         return name;
     }
 
-    List<ItemStack> getItems() {
+    List<CustomItemStack> getItems() {
         return items;
     }
 
@@ -32,7 +32,11 @@ public class ItemSet {
         return rarity;
     }
 
-    Map<Integer, Map<Enchantment, Integer>> getSetEffect() {
+    Map<PotionEffectType, Integer> getSetEffect(int count) {
+        return setEffect.get(count);
+    }
+
+    Map<Integer, Map<PotionEffectType, Integer>> getSetEffects() {
         return setEffect;
     }
 

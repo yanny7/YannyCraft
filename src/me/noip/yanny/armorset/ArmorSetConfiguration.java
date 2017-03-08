@@ -2,12 +2,13 @@ package me.noip.yanny.armorset;
 
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.rpg.Rarity;
+import me.noip.yanny.utils.CustomItemStack;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -20,21 +21,23 @@ class ArmorSetConfiguration {
     private static final String ARMOR_ITEMS = "items";
     private static final String ARMOR_ENCHANTMENTS = "enchantments";
     private static final String ARMOR_LORE = "lore";
+    private static final String ARMOR_NAME = "name";
     private static final String ARMOR_EFFECTS = "set_effects";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private MainPlugin plugin;
-    private Map<ItemStack, ItemSet> itemSets = new HashMap<>();
+    private Map<CustomItemStack, ItemSet> itemSets = new HashMap<>();
 
     ArmorSetConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
 
-        List<ItemStack> list = new ArrayList<>();
+        List<CustomItemStack> list = new ArrayList<>();
         {
-            ItemStack itemStack = new ItemStack(Material.DIAMOND_HELMET);
+            CustomItemStack itemStack = new CustomItemStack(Material.DIAMOND_HELMET);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setLore(Arrays.asList("Helmet of fire"));
+            itemMeta.setDisplayName("Helmet of fire");
+            itemMeta.setLore(Arrays.asList("Helmet once owned by", "high undead priest"));
             itemMeta.addEnchant(Enchantment.DURABILITY, 2, false);
             itemMeta.addEnchant(Enchantment.PROTECTION_FIRE, 2, false);
             itemStack.setItemMeta(itemMeta);
@@ -42,9 +45,10 @@ class ArmorSetConfiguration {
             list.add(itemStack);
         }
         {
-            ItemStack itemStack = new ItemStack(Material.DIAMOND_CHESTPLATE);
+            CustomItemStack itemStack = new CustomItemStack(Material.DIAMOND_CHESTPLATE);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setLore(Arrays.asList("Chestplate of fire"));
+            itemMeta.setDisplayName("Chestplate of fire");
+            itemMeta.setLore(Arrays.asList("Very old and powerful", "item"));
             itemMeta.addEnchant(Enchantment.DURABILITY, 2, false);
             itemMeta.addEnchant(Enchantment.PROTECTION_FIRE, 2, false);
             itemStack.setItemMeta(itemMeta);
@@ -52,9 +56,10 @@ class ArmorSetConfiguration {
             list.add(itemStack);
         }
         {
-            ItemStack itemStack = new ItemStack(Material.DIAMOND_LEGGINGS);
+            CustomItemStack itemStack = new CustomItemStack(Material.DIAMOND_LEGGINGS);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setLore(Arrays.asList("Leggins of fire"));
+            itemMeta.setDisplayName("Leggins of fire");
+            itemMeta.setLore(Arrays.asList("Made in pure fire", "by old elves"));
             itemMeta.addEnchant(Enchantment.DURABILITY, 2, false);
             itemMeta.addEnchant(Enchantment.PROTECTION_FIRE, 2, false);
             itemStack.setItemMeta(itemMeta);
@@ -62,9 +67,21 @@ class ArmorSetConfiguration {
             list.add(itemStack);
         }
         {
-            ItemStack itemStack = new ItemStack(Material.DIAMOND_BOOTS);
+            CustomItemStack itemStack = new CustomItemStack(Material.DIAMOND_BOOTS);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setLore(Arrays.asList("Boots of fire"));
+            itemMeta.setDisplayName("Boots of fire");
+            itemMeta.setLore(Arrays.asList("God-blessed boots", "that help you cross", "lava lakes"));
+            itemMeta.addEnchant(Enchantment.DURABILITY, 2, false);
+            itemMeta.addEnchant(Enchantment.PROTECTION_FIRE, 2, false);
+            itemStack.setItemMeta(itemMeta);
+
+            list.add(itemStack);
+        }
+        {
+            CustomItemStack itemStack = new CustomItemStack(Material.SHIELD);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.setDisplayName("Shield of fire");
+            itemMeta.setLore(Arrays.asList("Created by old", "templars in long", "forgotten times"));
             itemMeta.addEnchant(Enchantment.DURABILITY, 2, false);
             itemMeta.addEnchant(Enchantment.PROTECTION_FIRE, 2, false);
             itemStack.setItemMeta(itemMeta);
@@ -72,12 +89,13 @@ class ArmorSetConfiguration {
             list.add(itemStack);
         }
 
-        Map<Integer, Map<Enchantment, Integer>> setEffect = new HashMap<>();
-        setEffect.put(2, new HashMap<Enchantment, Integer>(){{ put(Enchantment.FIRE_ASPECT, 1); }});
-        setEffect.put(3, new HashMap<Enchantment, Integer>(){{ put(Enchantment.FIRE_ASPECT, 2); }});
-        setEffect.put(4, new HashMap<Enchantment, Integer>(){{ put(Enchantment.FIRE_ASPECT, 2); put(Enchantment.KNOCKBACK, 1); }});
+        Map<Integer, Map<PotionEffectType, Integer>> setEffect = new HashMap<>();
+        setEffect.put(2, new HashMap<PotionEffectType, Integer>(){{ put(PotionEffectType.DAMAGE_RESISTANCE, 1); }});
+        setEffect.put(3, new HashMap<PotionEffectType, Integer>(){{ put(PotionEffectType.DAMAGE_RESISTANCE, 2); }});
+        setEffect.put(4, new HashMap<PotionEffectType, Integer>(){{ put(PotionEffectType.DAMAGE_RESISTANCE, 3); }});
+        setEffect.put(5, new HashMap<PotionEffectType, Integer>(){{ put(PotionEffectType.DAMAGE_RESISTANCE, 4); }});
 
-        for (ItemStack itemStack : list) {
+        for (CustomItemStack itemStack : list) {
             itemSets.put(itemStack, new ItemSet("Armor of fire", list, Rarity.HEROIC, setEffect));
         }
     }
@@ -101,7 +119,7 @@ class ArmorSetConfiguration {
 
             String rarityString = armorSetSection.getString(ARMOR_RARITY);
             Rarity rarity = Rarity.getByName(rarityString);
-            List<ItemStack> items = new ArrayList<>();
+            List<CustomItemStack> items = new ArrayList<>();
 
             ConfigurationSection itemsSection = armorSetSection.getConfigurationSection(ARMOR_ITEMS);
             if (itemsSection == null) {
@@ -122,7 +140,7 @@ class ArmorSetConfiguration {
                     continue;
                 }
 
-                ItemStack itemStack = new ItemStack(material);
+                CustomItemStack itemStack = new CustomItemStack(material);
                 ItemMeta itemMeta = itemStack.getItemMeta();
 
                 ConfigurationSection itemSection = itemsSection.getConfigurationSection(item);
@@ -132,6 +150,7 @@ class ArmorSetConfiguration {
                 }
 
                 itemMeta.setLore(itemSection.getStringList(ARMOR_LORE));
+                itemMeta.setDisplayName(itemSection.getString(ARMOR_NAME));
 
                 for (String enchantment : itemSection.getStringList(ARMOR_ENCHANTMENTS)) {
                     String[] tokens = enchantment.split(":");
@@ -163,7 +182,7 @@ class ArmorSetConfiguration {
                 items.add(itemStack);
             }
 
-            Map<Integer, Map<Enchantment, Integer>> setEffects = new HashMap<>();
+            Map<Integer, Map<PotionEffectType, Integer>> setEffects = new HashMap<>();
             ConfigurationSection effectsSection = armorSetSection.getConfigurationSection(ARMOR_EFFECTS);
             if (effectsSection == null) {
                 debugMessage("Can`t get configuration section: " + ARMOR_EFFECTS);
@@ -172,7 +191,7 @@ class ArmorSetConfiguration {
 
             for (String effects : effectsSection.getKeys(false)) {
                 int level;
-                Map<Enchantment, Integer> entry = new HashMap<>();
+                Map<PotionEffectType, Integer> entry = new HashMap<>();
 
                 try {
                     level = Integer.parseInt(effects);
@@ -190,9 +209,9 @@ class ArmorSetConfiguration {
                     }
 
                     int lvl;
-                    Enchantment ench = Enchantment.getByName(tokens[0]);
+                    PotionEffectType eff = PotionEffectType.getByName(tokens[0]);
 
-                    if (ench == null) {
+                    if (eff == null) {
                         debugMessage("Can`t decode Effect type: " + tokens[0]);
                         continue;
                     }
@@ -204,7 +223,7 @@ class ArmorSetConfiguration {
                         continue;
                     }
 
-                    entry.put(ench, lvl);
+                    entry.put(eff, lvl);
                 }
 
                 setEffects.put(level, entry);
@@ -212,7 +231,7 @@ class ArmorSetConfiguration {
 
             ItemSet itemSet = new ItemSet(set, items, rarity, setEffects);
 
-            for (ItemStack itemStack : items) {
+            for (CustomItemStack itemStack : items) {
                 itemSets.put(itemStack, itemSet);
             }
         }
@@ -224,18 +243,19 @@ class ArmorSetConfiguration {
         serverConfigurationWrapper.set(ARMOR_SET_SECTION, null); // clear
         ConfigurationSection armorSetsSection = serverConfigurationWrapper.createSection(ARMOR_SET_SECTION);
 
-        for (Map.Entry<ItemStack, ItemSet> set : itemSets.entrySet()) {
+        for (Map.Entry<CustomItemStack, ItemSet> set : itemSets.entrySet()) {
             ItemSet itemSet = set.getValue();
             ConfigurationSection armorSetSection = armorSetsSection.createSection(itemSet.getName());
 
             armorSetSection.set(ARMOR_RARITY, itemSet.getRarity().name());
             ConfigurationSection itemsSection = armorSetSection.createSection(ARMOR_ITEMS);
-            List<ItemStack> items = itemSet.getItems();
+            List<CustomItemStack> items = itemSet.getItems();
 
-            for (ItemStack itemStack : items) {
+            for (CustomItemStack itemStack : items) {
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 ConfigurationSection itemSection = itemsSection.createSection(itemStack.getType().name());
                 itemSection.set(ARMOR_LORE, itemMeta.getLore());
+                itemSection.set(ARMOR_NAME, itemMeta.getDisplayName());
 
                 List<String> enchantments = new ArrayList<>();
                 for (Map.Entry<Enchantment, Integer> enchantment : itemMeta.getEnchants().entrySet()) {
@@ -244,11 +264,11 @@ class ArmorSetConfiguration {
                 itemSection.set(ARMOR_ENCHANTMENTS, enchantments);
             }
 
-            Map<Integer, Map<Enchantment, Integer>> effects = itemSet.getSetEffect();
+            Map<Integer, Map<PotionEffectType, Integer>> effects = itemSet.getSetEffects();
             ConfigurationSection effectsSection = armorSetSection.createSection(ARMOR_EFFECTS);
-            for (Map.Entry<Integer, Map<Enchantment, Integer>> effect : effects.entrySet()) {
+            for (Map.Entry<Integer, Map<PotionEffectType, Integer>> effect : effects.entrySet()) {
                 List<String> list = new ArrayList<>();
-                for (Map.Entry<Enchantment, Integer> entry : effect.getValue().entrySet()) {
+                for (Map.Entry<PotionEffectType, Integer> entry : effect.getValue().entrySet()) {
                     list.add(entry.getKey().getName() + ":" + entry.getValue().toString());
                 }
                 effectsSection.set(effect.getKey().toString(), list);
@@ -258,11 +278,11 @@ class ArmorSetConfiguration {
         serverConfigurationWrapper.save();
     }
 
-    ItemSet getItemSet(ItemStack itemStack) {
+    ItemSet getItemSet(CustomItemStack itemStack) {
         return itemSets.get(itemStack);
     }
 
-    Map<ItemStack,ItemSet> getArmorSets() {
+    Map<CustomItemStack, ItemSet> getArmorSets() {
         return itemSets;
     }
 
