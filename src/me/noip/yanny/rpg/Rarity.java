@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,13 @@ public enum Rarity {
     private double probability;
     private String displayName;
     private ChatColor chatColor;
+    private static Map<String, Rarity> byName = new HashMap<>();
+
+    static {
+        for (Rarity rarity : values()) {
+            byName.put(rarity.name(), rarity);
+        }
+    }
 
     Rarity(double probability, String displayName, ChatColor chatColor) {
         this.probability = probability;
@@ -45,6 +53,10 @@ public enum Rarity {
 
     public ChatColor getChatColor() {
         return chatColor;
+    }
+
+    public static Rarity getByName(String name) {
+        return byName.get(name);
     }
 
     public static void loadDefaults(Map<Rarity, List<ItemStack>> treasureItems) {
