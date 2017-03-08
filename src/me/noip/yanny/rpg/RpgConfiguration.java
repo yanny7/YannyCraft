@@ -1,6 +1,7 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.armorset.ItemSet;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
@@ -198,6 +199,12 @@ class RpgConfiguration {
         }
 
         save(); // save defaults
+
+        // load now sets, so they are not stored into treasure section
+        Map<ItemStack, ItemSet> itemSets = plugin.getArmorSet().getArmorSets();
+        for (Map.Entry<ItemStack, ItemSet> item : itemSets.entrySet()) {
+            treasureItems.get(item.getValue().getRarity()).add(item.getKey());
+        }
     }
 
     private void save() {

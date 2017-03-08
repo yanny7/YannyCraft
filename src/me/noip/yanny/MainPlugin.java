@@ -1,5 +1,6 @@
 package me.noip.yanny;
 
+import me.noip.yanny.armorset.ArmorSet;
 import me.noip.yanny.auth.Auth;
 import me.noip.yanny.boss.Boss;
 import me.noip.yanny.bulletin.Bulletin;
@@ -8,6 +9,7 @@ import me.noip.yanny.essentials.Essentials;
 import me.noip.yanny.residence.Residence;
 import me.noip.yanny.rpg.RPG;
 import me.noip.yanny.utils.PartPlugin;
+import me.noip.yanny.utils.PartPluginType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -21,7 +23,7 @@ public class MainPlugin extends JavaPlugin {
     private static final String DATABASE = "users.db";
 
     private Connection connection = null;
-    private Map<PartPlugin.PartPluginType, PartPlugin> pluginMap = new LinkedHashMap<>();
+    private Map<PartPluginType, PartPlugin> pluginMap = new LinkedHashMap<>();
 
     public MainPlugin() {
         if (!getDataFolder().exists()) {
@@ -72,13 +74,14 @@ public class MainPlugin extends JavaPlugin {
             e.printStackTrace();
         }
 
-        pluginMap.put(PartPlugin.PartPluginType.AUTH, new Auth(this));
-        pluginMap.put(PartPlugin.PartPluginType.ESSENTIALS, new Essentials(this));
-        pluginMap.put(PartPlugin.PartPluginType.RPG, new RPG(this));
-        pluginMap.put(PartPlugin.PartPluginType.BOSS, new Boss(this));
-        pluginMap.put(PartPlugin.PartPluginType.CHESTLOCKER, new ChestLocker(this));
-        pluginMap.put(PartPlugin.PartPluginType.RESIDENCE, new Residence(this));
-        pluginMap.put(PartPlugin.PartPluginType.BULLETIN, new Bulletin(this));
+        pluginMap.put(PartPluginType.AUTH, new Auth(this));
+        pluginMap.put(PartPluginType.ARMOR_SET, new ArmorSet(this));
+        pluginMap.put(PartPluginType.ESSENTIALS, new Essentials(this));
+        pluginMap.put(PartPluginType.RPG, new RPG(this));
+        pluginMap.put(PartPluginType.BOSS, new Boss(this));
+        pluginMap.put(PartPluginType.CHESTLOCKER, new ChestLocker(this));
+        pluginMap.put(PartPluginType.RESIDENCE, new Residence(this));
+        pluginMap.put(PartPluginType.BULLETIN, new Bulletin(this));
 
         getLogger().info("Started YannyCraft plugin");
     }
@@ -109,10 +112,14 @@ public class MainPlugin extends JavaPlugin {
     }
 
     public Auth getAuth() {
-        return (Auth) pluginMap.get(PartPlugin.PartPluginType.AUTH);
+        return (Auth) pluginMap.get(PartPluginType.AUTH);
     }
 
     public Essentials getEssentials() {
-        return (Essentials) pluginMap.get(PartPlugin.PartPluginType.ESSENTIALS);
+        return (Essentials) pluginMap.get(PartPluginType.ESSENTIALS);
+    }
+
+    public ArmorSet getArmorSet() {
+        return (ArmorSet) pluginMap.get(PartPluginType.ARMOR_SET);
     }
 }
