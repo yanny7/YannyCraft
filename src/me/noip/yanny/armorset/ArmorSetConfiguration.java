@@ -27,6 +27,7 @@ class ArmorSetConfiguration {
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private MainPlugin plugin;
     private Map<CustomItemStack, ItemSet> itemSets = new HashMap<>();
+    private Map<Rarity, List<ItemSet>> raritySets = new HashMap<>();
 
     ArmorSetConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
@@ -95,8 +96,13 @@ class ArmorSetConfiguration {
         setEffect.put(4, new HashMap<PotionEffectType, Integer>(){{ put(PotionEffectType.DAMAGE_RESISTANCE, 3); }});
         setEffect.put(5, new HashMap<PotionEffectType, Integer>(){{ put(PotionEffectType.DAMAGE_RESISTANCE, 4); }});
 
+        Rarity rarity = Rarity.HEROIC;
+        ItemSet itemSet = new ItemSet("Armor of fire", list, rarity, setEffect);
+
+        raritySets.put(rarity, new ArrayList<ItemSet>(){{ add(itemSet); }});
+
         for (CustomItemStack itemStack : list) {
-            itemSets.put(itemStack, new ItemSet("Armor of fire", list, Rarity.HEROIC, setEffect));
+            itemSets.put(itemStack, itemSet);
         }
     }
 
@@ -107,7 +113,9 @@ class ArmorSetConfiguration {
         if (armorSetsSection == null) {
             armorSetsSection = serverConfigurationWrapper.createSection(ARMOR_SET_SECTION);
         } else {
-            itemSets.clear(); // do not use default set, if there is defined in configuration
+            // do not use default set, if there is defined in configuration
+            itemSets.clear();
+            raritySets.clear();
         }
 
         for (String set : armorSetsSection.getKeys(false)) {
@@ -231,6 +239,9 @@ class ArmorSetConfiguration {
 
             ItemSet itemSet = new ItemSet(set, items, rarity, setEffects);
 
+            raritySets.computeIfAbsent(rarity, k -> new ArrayList<>());
+            raritySets.get(rarity).add(itemSet);
+
             for (CustomItemStack itemStack : items) {
                 itemSets.put(itemStack, itemSet);
             }
@@ -284,6 +295,10 @@ class ArmorSetConfiguration {
 
     Map<CustomItemStack, ItemSet> getArmorSets() {
         return itemSets;
+    }
+
+    List<ItemSet> getSetByRarity(Rarity rarity) {
+        return raritySets.get(rarity);
     }
 
     private void debugMessage(String msg) {

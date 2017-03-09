@@ -1,9 +1,14 @@
 package me.noip.yanny.armorset;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.rpg.Rarity;
 import me.noip.yanny.utils.CustomItemStack;
 import me.noip.yanny.utils.PartPlugin;
 import org.apache.commons.lang.mutable.MutableInt;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -25,6 +30,8 @@ public class ArmorSet implements PartPlugin {
     @Override
     public void onEnable() {
         armorSetConfiguration.load();
+
+        plugin.getCommand("armorset").setExecutor(new ArmorSetExecutor());
 
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
                 Map<CustomItemStack, ItemSet> armorSets = armorSetConfiguration.getArmorSets();
@@ -63,7 +70,7 @@ public class ArmorSet implements PartPlugin {
                         if (effectFromSet != null) {
                             for (Map.Entry<PotionEffectType, Integer> effect : effectFromSet.entrySet()) {
                                 PotionEffectType potionEffectType = effect.getKey();
-                                PotionEffect potionEffect = new PotionEffect(potionEffectType, 20 * 5 + 1, effect.getValue());
+                                PotionEffect potionEffect = new PotionEffect(potionEffectType, 20 * 2 + 1, effect.getValue());
 
                                 if (player.hasPotionEffect(potionEffectType)) {
                                     player.removePotionEffect(potionEffectType);
@@ -74,7 +81,7 @@ public class ArmorSet implements PartPlugin {
                         }
                     }
                 }
-            }, 20, 20 * 5
+            }, 20, 20 * 2
         );
     }
 
@@ -85,5 +92,80 @@ public class ArmorSet implements PartPlugin {
 
     public Map<CustomItemStack, ItemSet> getArmorSets() {
         return armorSetConfiguration.getArmorSets();
+    }
+
+    private class ArmorSetExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (args.length == 0) {
+                return false;
+            }
+
+            switch (args[0]) {
+                case "list": {
+                    if ((args.length != 2) || (Rarity.getByName(args[1]) == null)) {
+                        commandSender.sendMessage(ChatColor.RED + "Usage: /armorset list " + Arrays.toString(Rarity.values()));
+                        return true;
+                    }
+
+                    Rarity rarity = Rarity.getByName(args[1]);
+                    List<ItemSet> sets = armorSetConfiguration.getSetByRarity(rarity);
+                    ChatColor color = rarity.getChatColor();
+
+                    if (sets != null) {
+                        int i = 0;
+                        for (ItemSet itemSet : sets) {
+                            commandSender.sendMessage(String.format("[%d: %s%s%s] ", i++, color, itemSet.getName(), ChatColor.RESET));
+                        }
+                    } else {
+                        commandSender.sendMessage(ChatColor.RED + "No item sets for rarity " + rarity.name());
+                    }
+
+                    break;
+                }
+                case "get": {
+                    if (!(commandSender instanceof Player) || (args.length != 3) || (Rarity.getByName(args[1]) == null)) {
+                        commandSender.sendMessage(ChatColor.RED + "Usage: /armorset get [ID] " + Arrays.toString(Rarity.values()));
+                        return true;
+                    }
+
+                    int id;
+
+                    try {
+                        id = Integer.parseInt(args[1]);
+                    } catch (Exception e) {
+                        commandSender.sendMessage(ChatColor.RED + "Cant parse item ID: " + e.getLocalizedMessage());
+                        return true;
+                    }
+
+                    Rarity rarity = Rarity.getByName(args[2]);
+                    List<ItemSet> itemSets = armorSetConfiguration.getSetByRarity(rarity);
+
+                    if (itemSets == null) {
+                        commandSender.sendMessage(ChatColor.RED + "No item sets for rarity " + rarity.name());
+                        return true;
+                    }
+
+                    ItemSet itemSet = itemSets.get(id);
+
+                    if (itemSet == null) {
+                        commandSender.sendMessage(ChatColor.RED + "No item set with ID " + id);
+                        return true;
+                    }
+
+                    Player player = (Player) commandSender;
+
+                    for (ItemStack itemStack : itemSet.getItems()) {
+                        player.getInventory().addItem(itemStack);
+                    }
+
+                    break;
+                }
+                default:
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

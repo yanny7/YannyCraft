@@ -104,6 +104,11 @@ commands:
     description: Upravuje bulletin spravy
     permission: yannycraft.bulletin
     usage: /bulletin [add|remove|list|enable|disable|delay]
+# ArmorSet commands
+  armorset:
+    description: Vylistuje setky sety/Prida cely set do inventara
+    permission: yannycraft.armorset
+    usage: /armorset [list|get]
 
 permissions:
   yannycraft.resetpassword:
@@ -141,4 +146,6 @@ permissions:
   yannycraft.skill:
     default: op
   yannycraft.bulletin:
+    default: op
+  yannycraft.armorset:
     default: op
