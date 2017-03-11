@@ -65,12 +65,12 @@ public class ArmorSet implements PartPlugin {
                     for (Map.Entry<ItemSet, MutableInt> entry : sets.entrySet()) {
                         ItemSet itemSet = entry.getKey();
                         int count = entry.getValue().intValue();
-                        Map<PotionEffectType, Integer> effectFromSet = itemSet.getSetEffect(count);
+                        Map<PotionEffectType, Integer> effectFromSet = itemSet.getEffect(count);
 
                         if (effectFromSet != null) {
                             for (Map.Entry<PotionEffectType, Integer> effect : effectFromSet.entrySet()) {
                                 PotionEffectType potionEffectType = effect.getKey();
-                                PotionEffect potionEffect = new PotionEffect(potionEffectType, 20 * 2 + 1, effect.getValue());
+                                PotionEffect potionEffect = new PotionEffect(potionEffectType, 20 * 2 + 1, effect.getValue() - 1);
 
                                 if (player.hasPotionEffect(potionEffectType)) {
                                     player.removePotionEffect(potionEffectType);
@@ -124,7 +124,7 @@ public class ArmorSet implements PartPlugin {
                     break;
                 }
                 case "get": {
-                    if (!(commandSender instanceof Player) || (args.length != 3) || (Rarity.getByName(args[1]) == null)) {
+                    if (!(commandSender instanceof Player) || (args.length != 3) || (Rarity.getByName(args[2]) == null)) {
                         commandSender.sendMessage(ChatColor.RED + "Usage: /armorset get [ID] " + Arrays.toString(Rarity.values()));
                         return true;
                     }
