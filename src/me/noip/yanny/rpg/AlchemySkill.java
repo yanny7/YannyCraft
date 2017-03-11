@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,14 +11,13 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionType;
 
 import java.util.*;
 
 class AlchemySkill extends Skill {
 
-    AlchemySkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    AlchemySkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
     }
 
@@ -73,7 +73,7 @@ class AlchemySkill extends Skill {
                         RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                         if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
+                            logger.logWarn(RPG.class, "AlchemySkill.InventoryClickEvent: Player not found!" + player.getDisplayName());
                             return;
                         }
 

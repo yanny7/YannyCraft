@@ -1,20 +1,18 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
-import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
 class TamingSkill extends Skill {
 
-    TamingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    TamingSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
     }
 
@@ -44,7 +42,7 @@ class TamingSkill extends Skill {
             RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onEntityTame: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "TamingSkill.EntityTameEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 

@@ -1,7 +1,6 @@
 package me.noip.yanny.rpg;
 
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Random;
 
@@ -9,14 +8,12 @@ import static me.noip.yanny.rpg.RpgTranslation.*;
 
 class DamageReductionAbility extends Ability {
 
-    private Plugin plugin;
     private SkillType skillType;
     private Random random = new Random();
 
-    DamageReductionAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel) {
+    DamageReductionAbility(SkillType skillType, String abilityName, int fromLevel) {
         super(abilityName, fromLevel);
 
-        this.plugin = plugin;
         this.skillType = skillType;
     }
 

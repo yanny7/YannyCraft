@@ -1,20 +1,23 @@
 package me.noip.yanny.rpg;
 
-import org.bukkit.plugin.Plugin;
+import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 
 import java.util.*;
 
 abstract class Skill {
 
-    final Plugin plugin;
+    final MainPlugin plugin;
+    final LoggerHandler logger;
     final Map<UUID, RpgPlayer> rpgPlayerMap;
     final RpgConfiguration rpgConfiguration;
     final Map<AbilityType, Ability> abilities = new LinkedHashMap<>();
 
-    Skill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    Skill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         this.plugin = plugin;
         this.rpgPlayerMap = rpgPlayerMap;
         this.rpgConfiguration = rpgConfiguration;
+        logger = plugin.getLoggerHandler();
     }
 
     Collection<Ability> getAbilities() {

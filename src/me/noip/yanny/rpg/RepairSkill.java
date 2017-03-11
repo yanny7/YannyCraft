@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,16 +10,13 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
-import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
 class RepairSkill extends Skill {
 
-    RepairSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    RepairSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
     }
 
@@ -57,7 +55,7 @@ class RepairSkill extends Skill {
                         RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                         if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
+                            logger.logWarn(RPG.class, "RepairSkill.InventoryClickEvent: Player not found!" + player.getDisplayName());
                             return;
                         }
 

@@ -4,14 +4,11 @@ import me.noip.yanny.utils.ItemInfo;
 import me.noip.yanny.utils.Items;
 import me.noip.yanny.utils.Utils;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.Random;
@@ -20,15 +17,13 @@ import static me.noip.yanny.rpg.RpgTranslation.*;
 
 class TreasureHunterAbility extends Ability {
 
-    private Plugin plugin;
     private SkillType skillType;
     private RpgConfiguration rpgConfiguration;
     private Random random = new Random();
 
-    TreasureHunterAbility(Plugin plugin, SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
+    TreasureHunterAbility(SkillType skillType, String abilityName, int fromLevel, RpgConfiguration rpgConfiguration) {
         super(abilityName, fromLevel);
 
-        this.plugin = plugin;
         this.skillType = skillType;
         this.rpgConfiguration = rpgConfiguration;
     }
@@ -64,18 +59,18 @@ class TreasureHunterAbility extends Ability {
                             case SCRAP:
                             case COMMON:
                             case UNCOMMON:
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4));
+                                entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4);
                                 break;
                             case RARE:
                             case EXOTIC:
                             case HEROIC:
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> entity.getWorld().playEffect(entity.getLocation(), Effect.MOBSPAWNER_FLAMES, 4));
+                                entity.getWorld().playEffect(entity.getLocation(), Effect.MOBSPAWNER_FLAMES, 4);
                                 break;
                             case EPIC:
                             case LEGENDARY:
                             case MYTHIC:
                             case GODLIKE:
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> entity.getWorld().playEffect(entity.getLocation(), Effect.DRAGON_BREATH, 4));
+                                entity.getWorld().playEffect(entity.getLocation(), Effect.DRAGON_BREATH, 4);
                                 break;
                         }
 
@@ -130,18 +125,18 @@ class TreasureHunterAbility extends Ability {
                             case SCRAP:
                             case COMMON:
                             case UNCOMMON:
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.SMOKE, 4));
+                                block.getWorld().playEffect(block.getLocation(), Effect.SMOKE, 4);
                                 break;
                             case RARE:
                             case EXOTIC:
                             case HEROIC:
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.MOBSPAWNER_FLAMES, 4));
+                                block.getWorld().playEffect(block.getLocation(), Effect.MOBSPAWNER_FLAMES, 4);
                                 break;
                             case EPIC:
                             case LEGENDARY:
                             case MYTHIC:
                             case GODLIKE:
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> block.getWorld().playEffect(block.getLocation(), Effect.DRAGON_BREATH, 4));
+                                block.getWorld().playEffect(block.getLocation(), Effect.DRAGON_BREATH, 4);
                                 break;
                         }
 

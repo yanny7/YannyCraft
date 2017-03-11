@@ -1,21 +1,21 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
 class ArcherySkill extends Skill {
 
-    ArcherySkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    ArcherySkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.ARCHERY, "Sharp eye", 0));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(SkillType.ARCHERY, "Sharp eye", 0));
     }
 
     @Override
@@ -43,7 +43,7 @@ class ArcherySkill extends Skill {
                 RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                 if (rpgPlayer == null) {
-                    plugin.getLogger().warning("RPG.onMobDamagedByEntity: Player not found!" + player.getDisplayName());
+                    logger.logWarn(RPG.class, "ArcherySkill.EntityDamageByEntityEvent: Player not found!" + player.getDisplayName());
                     return;
                 }
 

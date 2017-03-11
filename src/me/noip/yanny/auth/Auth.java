@@ -1,6 +1,7 @@
 package me.noip.yanny.auth;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.PlayerAuthEvent;
 import me.noip.yanny.utils.PlayerRegisterEvent;
@@ -23,6 +24,8 @@ import static me.noip.yanny.auth.AuthTranslation.*;
 public class Auth implements PartPlugin {
 
     private MainPlugin plugin;
+    private LoggerHandler logger;
+
     private LoginExecutor loginExecutor;
     private RegisterExecutor registerExecutor;
     private ChangePasswordExecutor changePasswordExecutor;
@@ -34,6 +37,8 @@ public class Auth implements PartPlugin {
 
     public Auth(MainPlugin plugin) {
         this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
+
         authConfiguration = new AuthConfiguration(plugin);
         authListener = new AuthListener();
         loginExecutor = new LoginExecutor();
@@ -65,7 +70,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.remove(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("PlayerQuitEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "PlayerQuitEvent: Player not found!" + player.getDisplayName());
                 continue;
             }
 
@@ -95,7 +100,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("RegisterExecutor: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "RegisterExecutor: Player not found!" + player.getDisplayName());
                 return false;
             }
 
@@ -123,7 +128,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("LoginExecutor: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "LoginExecutor: Player not found!" + player.getDisplayName());
                 return false;
             }
 
@@ -146,7 +151,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("ChangePasswordExecutor: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "ChangePasswordExecutor: Player not found!" + player.getDisplayName());
                 return false;
             }
 
@@ -166,7 +171,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("ChangePasswordExecutor: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "ResetPasswordExecutor: Player not found!" + player.getDisplayName());
                 return false;
             }
 
@@ -193,7 +198,7 @@ public class Auth implements PartPlugin {
 
             event.setJoinMessage(null);
             loggedPlayers.put(player.getUniqueId(), authPlayerWrapper);
-            plugin.getLogger().info("Player joined: " + player.getDisplayName());
+            logger.logInfo(Auth.class, "Player joined: " + player.getDisplayName());
         }
 
         @SuppressWarnings("unused")
@@ -203,7 +208,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.remove(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("PlayerQuitEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "PlayerQuitEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 
@@ -218,7 +223,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("PlayerMoveEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "PlayerMoveEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 
@@ -234,7 +239,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("PlayerMoveEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "PlayerCommandPreprocessEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 
@@ -255,7 +260,7 @@ public class Auth implements PartPlugin {
             AuthPlayerWrapper authPlayerWrapper = loggedPlayers.get(player.getUniqueId());
 
             if (authPlayerWrapper == null) {
-                plugin.getLogger().warning("PlayerMoveEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(Auth.class, "AsyncPlayerChatEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 

@@ -1,11 +1,10 @@
 package me.noip.yanny.auth;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.essentials.Essentials;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.Utils;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,7 +32,9 @@ class AuthPlayerWrapper {
     private PreparedStatement resetStatement;
     private PreparedStatement getResetStatement;
 
-    private MainPlugin plugin;
+    private LoggerHandler logger;
+    private Server server;
+    private Essentials essentials;
     private Player player;
     private Location loginLocation;
     private GameMode loginGameMode;
@@ -41,8 +42,10 @@ class AuthPlayerWrapper {
     private boolean registered;
 
     AuthPlayerWrapper(MainPlugin plugin, Player player) {
-        this.plugin = plugin;
         this.player = player;
+        logger = plugin.getLoggerHandler();
+        server = plugin.getServer();
+        essentials = plugin.getEssentials();
 
         Connection connection = plugin.getConnection();
 
@@ -56,6 +59,7 @@ class AuthPlayerWrapper {
             getResetStatement = connection.prepareStatement("SELECT ResetPassword FROM users WHERE ID = ?");
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
 
         if (restoreData(player)) {
@@ -74,6 +78,7 @@ class AuthPlayerWrapper {
                 rs.close();
             } catch (Exception e) {
                 e.printStackTrace();
+                return;
             }
 
             if (resetPassword) {
@@ -105,7 +110,9 @@ class AuthPlayerWrapper {
     void onQuit() {
         if (registered) {
             storeData(player);
-            plugin.getServer().broadcastMessage(DISCONNECT_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + DISCONNECT_ALL.getChatColor()));
+            server.broadcastMessage(DISCONNECT_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + DISCONNECT_ALL.getChatColor()));
+        } else {
+            logger.logInfo(Auth.class, "Unregistered player has disconnected: " + player);
         }
     }
 
@@ -139,6 +146,8 @@ class AuthPlayerWrapper {
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
+            player.sendMessage(ERR_PASSWORD_CHANGE.display());
+            return RegisterStatus.FAILED;
         }
 
         if (resetPassword) {
@@ -155,7 +164,7 @@ class AuthPlayerWrapper {
         } else {
             try {
                 String goodPassword = PasswordHash.createHash(password);
-                String spawnLocation = Utils.locationToString(plugin.getEssentials().getSpawnLocation());
+                String spawnLocation = Utils.locationToString(essentials.getSpawnLocation());
                 registerStatement.setString(1, player.getUniqueId().toString());
                 registerStatement.setString(2, goodPassword);
                 registerStatement.setString(3, playerToString(player));
@@ -171,7 +180,7 @@ class AuthPlayerWrapper {
 
         registered = true;
         logged = true;
-        plugin.getServer().broadcastMessage(REGISTERED_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + REGISTERED_ALL.getChatColor()));
+        server.broadcastMessage(REGISTERED_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + REGISTERED_ALL.getChatColor()));
         player.sendMessage(REGISTERED.display());
         player.setGameMode(GameMode.SURVIVAL);
 
@@ -203,7 +212,7 @@ class AuthPlayerWrapper {
         }
 
         logged = true;
-        plugin.getServer().broadcastMessage(LOGGED_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + LOGGED_ALL.getChatColor()));
+        server.broadcastMessage(LOGGED_ALL.display().replace("{player}", ChatColor.GREEN + player.getDisplayName() + LOGGED_ALL.getChatColor()));
         player.sendMessage(LOGGED.display());
         player.setGameMode(loginGameMode);
         player.teleport(loginLocation);
@@ -399,7 +408,7 @@ class AuthPlayerWrapper {
                 if (entry.getValue() instanceof PotionEffect) {
                     player.addPotionEffect((PotionEffect) entry.getValue());
                 } else {
-                    plugin.getLogger().warning("AuthPlayerWrapper.stringToPlayer: Object is not a PotionEffect");
+                    logger.logWarn(Auth.class, "AuthPlayerWrapper.stringToPlayer: Object is not a PotionEffect");
                 }
             }
         }

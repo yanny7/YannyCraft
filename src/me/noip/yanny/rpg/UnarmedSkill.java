@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -7,18 +8,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
 
 class UnarmedSkill extends Skill {
 
-    UnarmedSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    UnarmedSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.UNARMED, "Iron hand", 0));
-        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.UNARMED, "Stone skin", 100));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(SkillType.UNARMED, "Iron hand", 0));
+        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(SkillType.UNARMED, "Stone skin", 100));
     }
 
     @Override
@@ -43,7 +43,7 @@ class UnarmedSkill extends Skill {
             RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onMobDamagedByEntity: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "UnarmedSkill.EntityDamageByEntityEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 
@@ -63,7 +63,7 @@ class UnarmedSkill extends Skill {
                 RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                 if (rpgPlayer == null) {
-                    plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
+                    logger.logWarn(RPG.class, "UnarmedSkill.EntityDamageEvent: Player not found!" + player.getDisplayName());
                     return;
                 }
 

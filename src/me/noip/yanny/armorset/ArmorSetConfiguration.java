@@ -3,6 +3,7 @@ package me.noip.yanny.armorset;
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.rpg.Rarity;
 import me.noip.yanny.utils.CustomItemStack;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,12 +26,12 @@ class ArmorSetConfiguration {
     private static final String ARMOR_EFFECTS = "set_effects";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
-    private MainPlugin plugin;
+    private LoggerHandler logger;
     private Map<CustomItemStack, ItemSet> itemSets = new HashMap<>();
     private Map<Rarity, List<ItemSet>> raritySets = new HashMap<>();
 
     ArmorSetConfiguration(MainPlugin plugin) {
-        this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
 
         List<CustomItemStack> list = new ArrayList<>();
@@ -121,7 +122,7 @@ class ArmorSetConfiguration {
         for (String set : armorSetsSection.getKeys(false)) {
             ConfigurationSection armorSetSection = armorSetsSection.getConfigurationSection(set);
             if (armorSetSection == null) {
-                debugMessage("Can`t get configuration section: " + set);
+                warning("Can`t get configuration section: " + set);
                 continue;
             }
 
@@ -131,12 +132,12 @@ class ArmorSetConfiguration {
 
             ConfigurationSection itemsSection = armorSetSection.getConfigurationSection(ARMOR_ITEMS);
             if (itemsSection == null) {
-                debugMessage("Can`t get configuration section: " + ARMOR_ITEMS);
+                warning("Can`t get configuration section: " + ARMOR_ITEMS);
                 continue;
             }
 
             if (rarity == null) {
-                debugMessage("Can`t decode Rarity type: " + rarityString);
+                warning("Can`t decode Rarity type: " + rarityString);
                 continue;
             }
 
@@ -144,7 +145,7 @@ class ArmorSetConfiguration {
                 Material material = Material.getMaterial(item);
 
                 if (material == null) {
-                    debugMessage("Can`t decode Material type: " + item);
+                    warning("Can`t decode Material type: " + item);
                     continue;
                 }
 
@@ -153,7 +154,7 @@ class ArmorSetConfiguration {
 
                 ConfigurationSection itemSection = itemsSection.getConfigurationSection(item);
                 if (itemSection == null) {
-                    debugMessage("Can`t get configuration section: " + item);
+                    warning("Can`t get configuration section: " + item);
                     continue;
                 }
 
@@ -164,7 +165,7 @@ class ArmorSetConfiguration {
                     String[] tokens = enchantment.split(":");
 
                     if (tokens.length != 2) {
-                        debugMessage("Wrong Enchantment format: " + enchantment);
+                        warning("Wrong Enchantment format: " + enchantment);
                         continue;
                     }
 
@@ -172,14 +173,14 @@ class ArmorSetConfiguration {
                     Enchantment ench = Enchantment.getByName(tokens[0]);
 
                     if (ench == null) {
-                        debugMessage("Can`t decode Enchantment type: " + tokens[0]);
+                        warning("Can`t decode Enchantment type: " + tokens[0]);
                         continue;
                     }
 
                     try {
                         level = Integer.valueOf(tokens[1]);
                     } catch (Exception e) {
-                        debugMessage("Can`t decode Enchantment level: " + tokens[1] + " : " + e.getLocalizedMessage());
+                        warning("Can`t decode Enchantment level: " + tokens[1] + " : " + e.getLocalizedMessage());
                         continue;
                     }
 
@@ -193,7 +194,7 @@ class ArmorSetConfiguration {
             Map<Integer, Map<PotionEffectType, Integer>> setEffects = new HashMap<>();
             ConfigurationSection effectsSection = armorSetSection.getConfigurationSection(ARMOR_EFFECTS);
             if (effectsSection == null) {
-                debugMessage("Can`t get configuration section: " + ARMOR_EFFECTS);
+                warning("Can`t get configuration section: " + ARMOR_EFFECTS);
                 continue;
             }
 
@@ -204,7 +205,7 @@ class ArmorSetConfiguration {
                 try {
                     level = Integer.parseInt(effects);
                 } catch (Exception e) {
-                    debugMessage("Can`t decode Set level: " + effects + " : " + e.getLocalizedMessage());
+                    warning("Can`t decode Set level: " + effects + " : " + e.getLocalizedMessage());
                     continue;
                 }
 
@@ -212,7 +213,7 @@ class ArmorSetConfiguration {
                     String[] tokens = effect.split(":");
 
                     if (tokens.length != 2) {
-                        debugMessage("Wrong Effect format: " + effect);
+                        warning("Wrong Effect format: " + effect);
                         continue;
                     }
 
@@ -220,14 +221,14 @@ class ArmorSetConfiguration {
                     PotionEffectType eff = PotionEffectType.getByName(tokens[0]);
 
                     if (eff == null) {
-                        debugMessage("Can`t decode Effect type: " + tokens[0]);
+                        warning("Can`t decode Effect type: " + tokens[0]);
                         continue;
                     }
 
                     try {
                         lvl = Integer.valueOf(tokens[1]);
                     } catch (Exception e) {
-                        debugMessage("Can`t decode Enchantment level: " + tokens[1] + " : " + e.getLocalizedMessage());
+                        warning("Can`t decode Enchantment level: " + tokens[1] + " : " + e.getLocalizedMessage());
                         continue;
                     }
 
@@ -301,7 +302,7 @@ class ArmorSetConfiguration {
         return raritySets.get(rarity);
     }
 
-    private void debugMessage(String msg) {
-        plugin.getLogger().warning("[" + ArmorSet.class.getSimpleName() + "] " + msg);
+    private void warning(String message) {
+        logger.logWarn(ArmorSet.class, message);
     }
 }

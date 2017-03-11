@@ -1,10 +1,12 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.PlayerRegisterEvent;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,6 +24,8 @@ import java.util.*;
 public class RPG implements PartPlugin {
 
     private MainPlugin plugin;
+    private LoggerHandler logger;
+    private Server server;
     private RpgConfiguration rpgConfiguration;
     private Map<UUID, RpgPlayer> rpgPlayerMap = new HashMap<>();
     private Map<SkillType, Skill> skills = new LinkedHashMap<>();
@@ -29,6 +33,8 @@ public class RPG implements PartPlugin {
 
     public RPG(MainPlugin plugin) {
         this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
+        server = plugin.getServer();
 
         rpgConfiguration = new RpgConfiguration(plugin);
         rpgBoard = new RpgBoard(plugin, rpgPlayerMap);
@@ -51,12 +57,12 @@ public class RPG implements PartPlugin {
 
     @Override
     public void onEnable() {
-        plugin.getServer().getOnlinePlayers().forEach(player -> rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, rpgBoard, skills)));
+        server.getOnlinePlayers().forEach(player -> rpgPlayerMap.put(player.getUniqueId(), new RpgPlayer(plugin, player, rpgBoard, skills)));
 
         rpgConfiguration.load();
         rpgBoard.onEnable();
 
-        plugin.getServer().getPluginManager().registerEvents(new RpgListener(), plugin);
+        server.getPluginManager().registerEvents(new RpgListener(), plugin);
         plugin.getCommand("stats").setExecutor(new StatsExecutor());
         plugin.getCommand("skill").setExecutor(new SkillExecutor());
 
@@ -67,7 +73,7 @@ public class RPG implements PartPlugin {
     public void onDisable() {
         rpgBoard.onDisable();
 
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : server.getOnlinePlayers()) {
             RpgPlayer rpgPlayer = rpgPlayerMap.remove(player.getUniqueId());
 
             if (rpgPlayer == null) {
@@ -89,14 +95,12 @@ public class RPG implements PartPlugin {
             RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.PlayerQuitEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "RPG.StatsExecutor: Player not found!" + player.getDisplayName());
                 return true;
             }
 
-            plugin.getLogger().info("Book opened by: " + player.getDisplayName());
             ItemStack book = rpgPlayer.getStatsBook();
             Utils.openBook(book, player);
-
             return true;
         }
     }
@@ -108,7 +112,7 @@ public class RPG implements PartPlugin {
                 return false;
             }
 
-            Player player = plugin.getServer().getPlayer(args[0]);
+            Player player = server.getPlayer(args[0]);
             if (player == null) {
                 commandSender.sendMessage(ChatColor.RED + "Player " + args[0] + " does not exists");
                 return true;
@@ -133,7 +137,7 @@ public class RPG implements PartPlugin {
             RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.PlayerQuitEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "RPG.SkillExecutor: Player not found!" + player.getDisplayName());
                 return true;
             }
 
@@ -158,7 +162,7 @@ public class RPG implements PartPlugin {
             RpgPlayer rpgPlayer = rpgPlayerMap.remove(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.PlayerQuitEvent: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "RPG.PlayerQuitEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 

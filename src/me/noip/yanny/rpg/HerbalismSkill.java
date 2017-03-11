@@ -1,21 +1,21 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
 class HerbalismSkill extends Skill {
 
-    HerbalismSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    HerbalismSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.HERBALISM, "Farmer", 0));
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(SkillType.HERBALISM, "Farmer", 0));
     }
 
     @Override
@@ -30,7 +30,7 @@ class HerbalismSkill extends Skill {
             RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "HerbalismSkill.BlockBreakEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 

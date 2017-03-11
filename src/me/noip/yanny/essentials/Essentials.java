@@ -1,9 +1,11 @@
 package me.noip.yanny.essentials;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.PartPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,6 +32,8 @@ import static me.noip.yanny.essentials.EssentialsTranslation.*;
 public class Essentials implements PartPlugin {
 
     private MainPlugin plugin;
+    private Server server;
+    private LoggerHandler logger;
 
     private Map<UUID, PermissionAttachment> permissionAttachment;
     private Map<Player, Player> teleportRequest;
@@ -37,6 +41,8 @@ public class Essentials implements PartPlugin {
 
     public Essentials(MainPlugin plugin) {
         this.plugin = plugin;
+        server = plugin.getServer();
+        logger = plugin.getLoggerHandler();
 
         permissionAttachment = new HashMap<>();
         teleportRequest = new HashMap<>();
@@ -63,12 +69,12 @@ public class Essentials implements PartPlugin {
         plugin.getCommand("home").setExecutor(new HomeExecutor());
         plugin.getCommand("sethome").setExecutor(new SetHomeExecutor());
 
-        plugin.getServer().getOnlinePlayers().forEach(player -> permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin)));
+        server.getOnlinePlayers().forEach(player -> permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin)));
     }
 
     @Override
     public void onDisable() {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
+        for (Player player : server.getOnlinePlayers()) {
             PermissionAttachment attachment = permissionAttachment.remove(player.getUniqueId());
             player.removeAttachment(attachment);
         }
@@ -92,7 +98,7 @@ public class Essentials implements PartPlugin {
             PermissionAttachment permission = permissionAttachment.get(player.getUniqueId());
 
             if (permission == null) {
-                plugin.getLogger().warning("SpawnExecutor: PermissionAttachment not found!" + player.getDisplayName());
+                logger.logWarn(Essentials.class, "SpawnExecutor: PermissionAttachment not found for player " + player.getDisplayName());
                 return false;
             }
 
@@ -101,7 +107,7 @@ public class Essentials implements PartPlugin {
                 player.sendMessage(SPAWN_TELEPORTED.display());
             } else {
                 if (player.hasPermission("yannycraft.spawn.other")) {
-                    Player target = plugin.getServer().getPlayer(args[0]);
+                    Player target = server.getPlayer(args[0]);
 
                     if (target != null) {
                         target.teleport(essentialsConfiguration.getSpawnLocation());
@@ -142,7 +148,7 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
-            Player target = plugin.getServer().getPlayer(args[0]);
+            Player target = server.getPlayer(args[0]);
 
             if (target != null) {
                 player.teleport(target.getLocation());
@@ -161,7 +167,7 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
-            Player target = plugin.getServer().getPlayer(args[0]);
+            Player target = server.getPlayer(args[0]);
 
             if (target != null) {
                 player.sendMessage(TPA_SENDED.display());
@@ -182,7 +188,7 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
-            Player target = plugin.getServer().getPlayer(args[0]);
+            Player target = server.getPlayer(args[0]);
 
             if (target != null) {
                 target.teleport(player.getLocation());
@@ -247,7 +253,7 @@ public class Essentials implements PartPlugin {
             if (args.length == 0) {
                 player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             } else {
-                Player target = plugin.getServer().getPlayer(args[0]);
+                Player target = server.getPlayer(args[0]);
 
                 if (target != null) {
                     target.setHealth(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
@@ -271,7 +277,7 @@ public class Essentials implements PartPlugin {
             if (args.length == 0) {
                 player.setFoodLevel(20);
             } else {
-                Player target = plugin.getServer().getPlayer(args[0]);
+                Player target = server.getPlayer(args[0]);
 
                 if (target != null) {
                     target.setFoodLevel(20);
@@ -293,7 +299,7 @@ public class Essentials implements PartPlugin {
             Player player;
 
             if (args.length == 1) {
-                player = plugin.getServer().getPlayer(args[0]);
+                player = server.getPlayer(args[0]);
 
                 if (player == null) {
                     commandSender.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));

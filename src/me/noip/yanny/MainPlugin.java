@@ -8,6 +8,7 @@ import me.noip.yanny.chestlocker.ChestLocker;
 import me.noip.yanny.essentials.Essentials;
 import me.noip.yanny.residence.Residence;
 import me.noip.yanny.rpg.RPG;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.PartPluginType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +23,7 @@ public class MainPlugin extends JavaPlugin {
 
     private static final String DATABASE = "users.db";
 
+    private LoggerHandler loggerHandler;
     private Connection connection = null;
     private Map<PartPluginType, PartPlugin> pluginMap = new LinkedHashMap<>();
 
@@ -33,6 +35,8 @@ public class MainPlugin extends JavaPlugin {
         }
 
         try {
+            loggerHandler = new LoggerHandler(this);
+
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + getDataFolder() + "/" + DATABASE);
 
@@ -105,6 +109,10 @@ public class MainPlugin extends JavaPlugin {
         }
 
         getLogger().info("Disabled YannyCraft plugin");
+    }
+
+    public LoggerHandler getLoggerHandler() {
+        return loggerHandler;
     }
 
     public Connection getConnection() {

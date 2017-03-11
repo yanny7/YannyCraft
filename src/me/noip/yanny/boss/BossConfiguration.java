@@ -1,6 +1,7 @@
 package me.noip.yanny.boss;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -56,6 +57,7 @@ class BossConfiguration {
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private MainPlugin plugin;
+    private LoggerHandler logger;
     private Random random = new Random();
 
     private double bossSpawnRate = 0.05;
@@ -67,6 +69,7 @@ class BossConfiguration {
 
     BossConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
     }
@@ -212,7 +215,7 @@ class BossConfiguration {
                 }
                 break;
             default:
-                plugin.getLogger().warning("Invalid item for enchanting: " + itemStack.getType().name());
+                logger.logWarn(Boss.class, "Invalid item for enchanting: " + itemStack.getType().name());
         }
 
         itemStack.setItemMeta(itemMeta);

@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -7,16 +8,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
 class WoodcuttingSkill extends Skill {
 
-    WoodcuttingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    WoodcuttingSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.WOODCUTTING, "Double wood", 0));
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(SkillType.WOODCUTTING, "Double wood", 0));
     }
 
     @Override
@@ -44,7 +44,7 @@ class WoodcuttingSkill extends Skill {
                     RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                     if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                        logger.logWarn(RPG.class, "WoodcuttingSkill.BlockBreakEvent: Player not found!" + player.getDisplayName());
                         return;
                     }
 

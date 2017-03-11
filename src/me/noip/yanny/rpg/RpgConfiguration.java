@@ -3,6 +3,7 @@ package me.noip.yanny.rpg;
 import me.noip.yanny.MainPlugin;
 import me.noip.yanny.utils.CustomItemStack;
 import me.noip.yanny.armorset.ItemSet;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Material;
@@ -39,6 +40,7 @@ class RpgConfiguration {
     private static final String ACROBATICS_XP = "acrobatics_xp";
 
     private MainPlugin plugin;
+    private LoggerHandler logger;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Map<Material, Integer> miningExp = new LinkedHashMap<>();
     private Map<Material, Integer> excavationExp = new LinkedHashMap<>();
@@ -55,6 +57,7 @@ class RpgConfiguration {
 
     RpgConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
 
         MiningSkill.loadDefaults(miningExp);
         ExcavationSkill.loadDefaults(excavationExp);
@@ -150,11 +153,11 @@ class RpgConfiguration {
             List<String> items = treasureSection.getStringList(rarity.name());
             for (String item : items) {
                 String[] tokens = item.split(" ");
-                Material material = Material.AIR;
+                Material material;
                 short subtype = 0;
 
                 if (tokens.length > 2) {
-                    plugin.getLogger().warning("RpgConfiguration.load: Cant load ItemStack '" + item + "'");
+                    logger.logWarn(RPG.class, "RpgConfiguration.load: Cant load ItemStack '" + item + "'");
                     continue;
                 }
 
@@ -164,7 +167,8 @@ class RpgConfiguration {
                         subtype = Short.parseShort(tokens[1]);
                     }
                 } catch (Exception e) {
-                    plugin.getLogger().warning("RpgConfiguration.load: Error: " + e.getLocalizedMessage());
+                    logger.logWarn(RPG.class, "RpgConfiguration.load: Error: " + e.getLocalizedMessage());
+                    continue;
                 }
 
                 ItemStack itemStack = new ItemStack(material, 1, subtype);

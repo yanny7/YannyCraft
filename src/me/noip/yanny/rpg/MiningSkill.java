@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -9,17 +10,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
 class MiningSkill extends Skill {
 
-    MiningSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    MiningSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(plugin, SkillType.MINING, "Double drop", 0));
-        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(plugin, SkillType.MINING, "Protector", 100));
+        abilities.put(AbilityType.DOUBLE_DROP, new DoubleDropAbility(SkillType.MINING, "Double drop", 0));
+        abilities.put(AbilityType.DOUBLE_DAMAGE, new DoubleDamageAbility(SkillType.MINING, "Protector", 100));
     }
 
     @Override
@@ -58,7 +58,7 @@ class MiningSkill extends Skill {
             RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
             if (rpgPlayer == null) {
-                plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                logger.logWarn(RPG.class, "MiningSkill.BlockBreakEvent: Player not found!" + player.getDisplayName());
                 return;
             }
 
@@ -102,7 +102,7 @@ class MiningSkill extends Skill {
                     RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                     if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                        logger.logWarn(RPG.class, "MiningSkill.EntityDamagedByEntityEvent: Player not found!" + player.getDisplayName());
                         return;
                     }
 

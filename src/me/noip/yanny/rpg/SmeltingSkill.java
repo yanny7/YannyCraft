@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -10,17 +11,16 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
 
 class SmeltingSkill extends Skill {
 
-    SmeltingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    SmeltingSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(plugin, SkillType.SMELTING, "Fire skin", 0));
+        abilities.put(AbilityType.DAMAGE_REDUCED, new DamageReductionAbility(SkillType.SMELTING, "Fire skin", 0));
     }
 
     @Override
@@ -80,7 +80,7 @@ class SmeltingSkill extends Skill {
                     RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                     if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onInventoryClick: Player not found!" + player.getDisplayName());
+                        logger.logWarn(RPG.class, "SmeltingSkill.InventoryClickEvent: Player not found!" + player.getDisplayName());
                         return;
                     }
 
@@ -104,7 +104,7 @@ class SmeltingSkill extends Skill {
                         RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                         if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onMobDamaged: Player not found!" + player.getDisplayName());
+                            logger.logWarn(RPG.class, "SmeltingSkill.EntityDamageEvent: Player not found!" + player.getDisplayName());
                             return;
                         }
 

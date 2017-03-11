@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -13,10 +14,10 @@ import java.util.*;
 
 class ExcavationSkill extends Skill {
 
-    ExcavationSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    ExcavationSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(plugin, SkillType.EXCAVATION, "Lucky hand", 0, rpgConfiguration));
+        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(SkillType.EXCAVATION, "Lucky hand", 0, rpgConfiguration));
     }
 
     @Override
@@ -50,7 +51,7 @@ class ExcavationSkill extends Skill {
                     RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                     if (rpgPlayer == null) {
-                        plugin.getLogger().warning("RPG.onBlockBreak: Player not found!" + player.getDisplayName());
+                        logger.logWarn(RPG.class, "ExcavationSkill.BlockBreakEvent: Player not found!" + player.getDisplayName());
                         return;
                     }
 

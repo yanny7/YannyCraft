@@ -214,7 +214,7 @@ class RpgPlayer {
         }
 
         void addValue(SkillType type, int value) {
-            plugin.getLogger().info(type.getDisplayName() + " " + value);
+            plugin.getLogger().info(type.getDisplayName() + " " + value); //TODO debug info
             MutableInt mutableInt = stats.get(type);
             int oldLevel = getLevelFromXp(mutableInt.intValue());
 
@@ -227,7 +227,6 @@ class RpgPlayer {
                         .replace("{STATS_TYPE}", ChatColor.GREEN + type.getDisplayName() + ChatColor.GOLD)
                         .replace("{LEVEL}", ChatColor.GREEN + Integer.toString(newLevel) + ChatColor.GOLD)
                         .replace("{LEVEL_DIFF}", ChatColor.GREEN + "+" + Integer.toString(newLevel - oldLevel) + ChatColor.GOLD));
-                plugin.getLogger().info("LevelUp: " + player.getDisplayName() + " " + type.name() + " : " + newLevel);
             }
         }
 

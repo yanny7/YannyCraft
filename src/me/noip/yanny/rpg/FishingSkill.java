@@ -1,5 +1,6 @@
 package me.noip.yanny.rpg;
 
+import me.noip.yanny.MainPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -7,16 +8,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
 class FishingSkill extends Skill {
 
-    FishingSkill(Plugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
+    FishingSkill(MainPlugin plugin, Map<UUID, RpgPlayer> rpgPlayerMap, RpgConfiguration rpgConfiguration) {
         super(plugin, rpgPlayerMap, rpgConfiguration);
 
-        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(plugin, SkillType.FISHING, "Luck of deep", 0, rpgConfiguration));
+        abilities.put(AbilityType.TREASURE_HUNTER, new TreasureHunterAbility(SkillType.FISHING, "Luck of deep", 0, rpgConfiguration));
     }
 
     @Override
@@ -48,7 +48,7 @@ class FishingSkill extends Skill {
                         RpgPlayer rpgPlayer = rpgPlayerMap.get(player.getUniqueId());
 
                         if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
+                            logger.logWarn(RPG.class, "FishingSkill.PlayerFishEvent: Player not found!" + player.getDisplayName());
                             return;
                         }
 
@@ -71,7 +71,7 @@ class FishingSkill extends Skill {
                         int exp = -1;
 
                         if (rpgPlayer == null) {
-                            plugin.getLogger().warning("RPG.onCatchFish: Player not found!" + player.getDisplayName());
+                            logger.logWarn(RPG.class, "FishingSkill.PlayerFishEvent: Player not found!" + player.getDisplayName());
                             return;
                         }
 

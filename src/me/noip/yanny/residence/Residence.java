@@ -97,7 +97,6 @@ public class Residence implements PartPlugin {
             return result;
         }
 
-        plugin.getLogger().warning("Residence.findResidenceArea: invalid base block");
         return null;
     }
 

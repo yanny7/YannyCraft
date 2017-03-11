@@ -2,6 +2,7 @@ package me.noip.yanny.rpg;
 
 import me.noip.yanny.utils.PlayerAuthEvent;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,17 +18,19 @@ import static me.noip.yanny.rpg.RpgTranslation.*;
 class RpgBoard {
 
     private Plugin plugin;
+    private Server server;
     private Map<UUID, RpgPlayer> playerMap;
     private Map<Player, Objective> objectiveMap = new HashMap<>();
 
     RpgBoard(Plugin plugin, Map<UUID, RpgPlayer> playerMap) {
         this.plugin = plugin;
         this.playerMap = playerMap;
+        server = plugin.getServer();
     }
 
     void onEnable() {
-        plugin.getServer().getPluginManager().registerEvents(new RpgBoardListener(), plugin);
-        plugin.getServer().getOnlinePlayers().forEach(player -> objectiveMap.put(player, createObjective(player)));
+        server.getPluginManager().registerEvents(new RpgBoardListener(), plugin);
+        server.getOnlinePlayers().forEach(player -> objectiveMap.put(player, createObjective(player)));
     }
 
     void onDisable() {
@@ -42,7 +45,7 @@ class RpgBoard {
     }
 
     private Objective createObjective(Player player) {
-        Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
+        Scoreboard scoreboard = server.getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("RPG", "RPG");
 
         for (SkillType statsType : SkillType.values()) {
