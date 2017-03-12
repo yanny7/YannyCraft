@@ -5,6 +5,7 @@ import me.noip.yanny.auth.Auth;
 import me.noip.yanny.boss.Boss;
 import me.noip.yanny.bulletin.Bulletin;
 import me.noip.yanny.chestlocker.ChestLocker;
+import me.noip.yanny.effect.Lightning;
 import me.noip.yanny.essentials.Essentials;
 import me.noip.yanny.residence.Residence;
 import me.noip.yanny.rpg.RPG;
@@ -74,6 +75,12 @@ public class MainPlugin extends JavaPlugin {
                     + "Acrobatics INTEGER DEFAULT(0),"
                     + "Alchemy INTEGER DEFAULT(0),"
                     + "Smelting INTEGER DEFAULT(0))");
+            statement.execute("CREATE TABLE IF NOT EXISTS lightning ("
+                    + "Location VARCHAR(64) PRIMARY KEY NOT NULL,"
+                    + "World VARCHAR(64) NOT NULL,"
+                    + "Delay INTEGER NOT NULL,"
+                    + "Distance DOUBLE NOT NULL,"
+                    + "Speed DOUBLE NOT NULL)");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +93,7 @@ public class MainPlugin extends JavaPlugin {
         pluginMap.put(PartPluginType.CHESTLOCKER, new ChestLocker(this));
         pluginMap.put(PartPluginType.RESIDENCE, new Residence(this));
         pluginMap.put(PartPluginType.BULLETIN, new Bulletin(this));
+        pluginMap.put(PartPluginType.LIGHTNING, new Lightning(this));
 
         getLogger().info("Started YannyCraft plugin");
     }

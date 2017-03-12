@@ -9,5 +9,6 @@ public enum PartPluginType {
     RESIDENCE,
     RPG,
     ARMOR_SET,
+    LIGHTNING,
 }
 

@@ -109,6 +109,11 @@ commands:
     description: Vylistuje setky sety/Prida cely set do inventara
     permission: yannycraft.armorset
     usage: /armorset [list|get]
+# Effect commands
+  lightning:
+    description: Na pozicii hraca zacne udierat blesk
+    permission: yannycraft.effects
+    usage: /lightning [create|remove|list]
 
 permissions:
   yannycraft.resetpassword:
@@ -148,4 +153,6 @@ permissions:
   yannycraft.bulletin:
     default: op
   yannycraft.armorset:
+    default: op
+  yannycraft.effects:
     default: op
