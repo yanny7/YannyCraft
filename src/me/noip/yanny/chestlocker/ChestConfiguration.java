@@ -1,6 +1,7 @@
 package me.noip.yanny.chestlocker;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -17,17 +18,21 @@ class ChestConfiguration {
     private PreparedStatement getOwnerStatement;
     private PreparedStatement removeChestStatement;
     private PreparedStatement addChestStatement;
+    private PreparedStatement chestCountStatement;
 
+    private LoggerHandler logger;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private double lockpickingChance = 0.05;
 
     ChestConfiguration(MainPlugin plugin) {
+        logger = plugin.getLoggerHandler();
         Connection connection = plugin.getConnection();
 
         try {
             getOwnerStatement = connection.prepareStatement("SELECT Player FROM chests WHERE Location = ?");
             removeChestStatement = connection.prepareStatement("DELETE FROM chests WHERE Location = ?");
             addChestStatement = connection.prepareStatement("INSERT INTO chests (Location, Player) VALUES (?, ?)");
+            chestCountStatement = connection.prepareStatement("SELECT COUNT(*) FROM chests");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,6 +54,9 @@ class ChestConfiguration {
         lockpickingChance = serverConfigurationWrapper.getDouble(LOCKPICKING_CHANCE, lockpickingChance);
 
         save();
+
+        logger.logInfo(ChestLocker.class, String.format("Lockpicking chance: %.2f%%", lockpickingChance * 100));
+        logger.logInfo(ChestLocker.class, String.format("All locked chests: %d", getChestCount()));
     }
 
     private void save() {
@@ -100,5 +108,21 @@ class ChestConfiguration {
 
     double getLockpickingChance() {
         return lockpickingChance;
+    }
+
+    private int getChestCount() {
+        int count = 0;
+
+        try {
+            ResultSet rs = chestCountStatement.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
 }

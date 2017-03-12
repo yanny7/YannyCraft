@@ -85,6 +85,12 @@ class BossConfiguration {
         bossDeathExp = serverConfigurationWrapper.getInt(BOSS_DEATH_EXP, bossDeathExp);
 
         save();
+        logger.logInfo(Boss.class, String.format("Spawn rate: %.2f%%", bossSpawnRate * 100));
+        logger.logInfo(Boss.class, String.format("Drop chance: %.2f%%", bossDropChance * 100));
+        logger.logInfo(Boss.class, String.format("Armored monsters health: %d HP", bossArmoredHealth));
+        logger.logInfo(Boss.class, String.format("Other monsters health: %d HP", bossHealth));
+        logger.logInfo(Boss.class, String.format("Armor enchantment chance: %.2f%%", bossEnchantmentChance * 100));
+        logger.logInfo(Boss.class, String.format("Exp on boss death: %d", bossDeathExp));
     }
 
     private void save()  {

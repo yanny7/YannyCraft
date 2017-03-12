@@ -13,19 +13,22 @@ import java.util.*;
 public class Lightning implements PartPlugin {
 
     private MainPlugin plugin;
-    private EffectConfiguration effectConfiguration;
+    private LightningConfiguration lightningConfiguration;
     private Map<Location, LightningInfo> lightningsMap = new HashMap<>();
 
     public Lightning(MainPlugin plugin) {
         this.plugin = plugin;
-        effectConfiguration = new EffectConfiguration(plugin);
+
+        lightningConfiguration = new LightningConfiguration(plugin);
     }
 
     @Override
     public void onEnable() {
         plugin.getCommand("lightning").setExecutor(new LightningExecutor());
 
-        Set<LightningInfo> lightnings = effectConfiguration.getLightnings();
+        lightningConfiguration.load();
+
+        Set<LightningInfo> lightnings = lightningConfiguration.getLightnings();
 
         for(LightningInfo lightningInfo : lightnings) {
             lightningInfo.id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
@@ -35,6 +38,7 @@ public class Lightning implements PartPlugin {
 
             lightningsMap.put(lightningInfo.location, lightningInfo);
         }
+
     }
 
     @Override
@@ -81,7 +85,7 @@ public class Lightning implements PartPlugin {
                     }, 20 * delay, 20 * delay);
 
                     lightningsMap.put(location, lightningInfo);
-                    effectConfiguration.addLightning(lightningInfo);
+                    lightningConfiguration.addLightning(lightningInfo);
                     player.sendMessage(ChatColor.GREEN + "Lightning created");
                     break;
                 }
@@ -104,7 +108,7 @@ public class Lightning implements PartPlugin {
                         lightningsMap.remove(lightningInfo.location);
                         Bukkit.getScheduler().cancelTask(lightningInfo.id);
 
-                        effectConfiguration.removeLightning(lightningInfo.location);
+                        lightningConfiguration.removeLightning(lightningInfo.location);
                         player.sendMessage(ChatColor.GREEN + "Lightning removed");
                     }
                     break;

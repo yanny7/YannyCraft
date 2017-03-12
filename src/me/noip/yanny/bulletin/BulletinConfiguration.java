@@ -1,6 +1,7 @@
 package me.noip.yanny.bulletin;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,12 +24,14 @@ class BulletinConfiguration {
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private List<Message> messageMap = new ArrayList<>();
     private MainPlugin plugin;
+    private LoggerHandler logger;
     private int delay;
     private int schedulerId;
     private Random random = new Random();
 
     BulletinConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
 
         serverConfigurationWrapper = new ServerConfigurationWrapper(plugin, CONFIGURATION_NAME);
 
@@ -46,7 +49,7 @@ class BulletinConfiguration {
         }
         for (String string : messagesSection.getKeys(false)) {
             ConfigurationSection messageSection = messagesSection.getConfigurationSection(string);
-            String content = messageSection.getString(MSG_CONTENT, "Message not loaded: " + string);
+            String content = messageSection.getString(MSG_CONTENT, "Message not loaded correctly: " + string);
             boolean disabled = messageSection.getBoolean(MSG_DISABLED, false);
             Message message = new Message(content);
             message.disabled = disabled;
@@ -55,6 +58,8 @@ class BulletinConfiguration {
         scheduleMessage();
 
         save();
+        logger.logInfo(Bulletin.class, String.format("Message delay: %d min", delay));
+        logger.logInfo(Bulletin.class, String.format("Messages pool: %d", messageMap.size()));
     }
 
     private void save()  {

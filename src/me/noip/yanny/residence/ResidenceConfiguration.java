@@ -1,6 +1,7 @@
 package me.noip.yanny.residence;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Area;
 import me.noip.yanny.utils.Utils;
@@ -21,17 +22,20 @@ class ResidenceConfiguration {
     private static final String RESIDENCE_MATERIAL = "res_material";
 
     private MainPlugin plugin;
+    private LoggerHandler logger;
     private ServerConfigurationWrapper serverConfigurationWrapper;
 
     private PreparedStatement addResidenceStatement;
     private PreparedStatement getResidenceStatement;
     private PreparedStatement getAllResidenceStatement;
     private PreparedStatement removeResidenceStatement;
+    private PreparedStatement residenceCountStatement;
 
     private Material residenceMaterial;
 
     ResidenceConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+        logger = plugin.getLoggerHandler();
 
         Connection connection = plugin.getConnection();
 
@@ -40,6 +44,7 @@ class ResidenceConfiguration {
             getResidenceStatement = connection.prepareStatement("SELECT Location1, Location2 FROM residence WHERE Player = ?");
             getAllResidenceStatement = connection.prepareStatement("SELECT Player, Location1, Location2 FROM residence");
             removeResidenceStatement = connection.prepareStatement("DELETE FROM residence WHERE Player = ? AND Location1 = ? AND Location2 = ?");
+            residenceCountStatement = connection.prepareStatement("SELECT COUNT(*) FROM residence");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,6 +68,9 @@ class ResidenceConfiguration {
         residenceMaterial = Material.getMaterial(serverConfigurationWrapper.getString(RESIDENCE_MATERIAL, residenceMaterial.name()));
 
         save();
+
+        logger.logInfo(Residence.class, String.format("Residence material: %s", residenceMaterial.name()));
+        logger.logInfo(Residence.class, String.format("Stored residences: %d", getResidenceCount()));
     }
 
     private void save() {
@@ -142,5 +150,21 @@ class ResidenceConfiguration {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getResidenceCount() {
+        int count = 0;
+
+        try {
+            ResultSet rs = residenceCountStatement.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
 }
