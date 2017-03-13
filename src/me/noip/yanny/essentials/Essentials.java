@@ -10,6 +10,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,10 +24,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static me.noip.yanny.essentials.EssentialsTranslation.*;
 
@@ -68,6 +67,7 @@ public class Essentials implements PartPlugin {
         plugin.getCommand("back").setExecutor(new BackExecutor());
         plugin.getCommand("home").setExecutor(new HomeExecutor());
         plugin.getCommand("sethome").setExecutor(new SetHomeExecutor());
+        plugin.getCommand("killall").setExecutor(new KillAllExecutor());
 
         server.getOnlinePlayers().forEach(player -> permissionAttachment.put(player.getUniqueId(), player.addAttachment(plugin)));
     }
@@ -388,6 +388,45 @@ public class Essentials implements PartPlugin {
             Player player = (Player) commandSender;
             essentialsConfiguration.setHomeLocation(player, player.getLocation());
             player.sendMessage(HOME_CREATED.display());
+            return true;
+        }
+    }
+
+    class KillAllExecutor implements CommandExecutor {
+        @Override
+        public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+            if (!(commandSender instanceof Player) || (args.length > 1)) {
+                return false;
+            }
+
+            Player player = (Player) commandSender;
+
+            if (args.length == 1) {
+                int distance;
+
+                try {
+                    distance = Integer.parseInt(args[0]);
+                } catch (Exception e) {
+                    player.sendMessage(ChatColor.RED + "Error: " + e.getLocalizedMessage());
+                    return true;
+                }
+
+                List<Entity> entities = player.getNearbyEntities(distance, distance, distance);
+                int count = 0;
+
+                for (Entity entity : entities) {
+                    if (entity instanceof Monster) {
+                        entity.remove();
+                        count++;
+                    }
+                }
+
+                player.sendMessage(ChatColor.GREEN + String.format("%d monsters around you was removed", count));
+            } else {
+                Collection<Monster> monsters = player.getWorld().getEntitiesByClass(Monster.class);
+                monsters.forEach(Entity::remove);
+                player.sendMessage(ChatColor.GREEN + String.format("%d monsters was removed from server", monsters.size()));
+            }
             return true;
         }
     }

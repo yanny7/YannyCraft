@@ -67,6 +67,10 @@ commands:
     description: Nastavi rychlost hraca
     permission: yannycraft.speed
     usage: /speed [speed]
+  killall:
+    description: Zabije vsetky prisery okolo hraca
+    permission: yannycraft.killall
+    usage: /killall
 # Home commands
   back:
     description: Vrat sa na miesto pred teleportom
@@ -137,6 +141,8 @@ permissions:
   yannycraft.clrinv:
     default: op
   yannycraft.speed:
+    default: op
+  yannycraft.killall:
     default: op
   yannycraft.back:
     default: true
