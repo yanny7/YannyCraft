@@ -108,14 +108,14 @@ class BossConfiguration {
         if (event.getEntity() instanceof Monster) {
             Monster monster = (Monster)event.getEntity();
 
-            if (monster.hasMetadata("BOSS")) {
+            if (monster.hasMetadata("RPG")) {
                 //List<ItemStack> drops = event.getDrops();
                 event.setDroppedExp(bossDeathExp);
             }
         }
     }
 
-    void createBoss(Monster monster, CreatureSpawnEvent.SpawnReason spawnReason) {
+    boolean createBoss(Monster monster, CreatureSpawnEvent.SpawnReason spawnReason) {
         if ((spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL) && (random.nextDouble() <= bossSpawnRate)) {
             monster.setMetadata("RPG", new FixedMetadataValue(plugin, null));
 
@@ -152,7 +152,10 @@ class BossConfiguration {
             //monster.setGlowing(true); // can cause rendering problem for some settings
             monster.setCanPickupItems(true);
             //monster.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 0, false, true), true); // player can be affected forever
+            return true;
         }
+
+        return false;
     }
 
     private ItemStack randomEnchantment(ItemStack itemStack, Random random) {

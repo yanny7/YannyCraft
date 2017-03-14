@@ -7,14 +7,12 @@ import me.noip.yanny.utils.PartPlugin;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.*;
@@ -174,19 +172,6 @@ public class RPG implements PartPlugin {
         void onPlayerRegister(PlayerRegisterEvent event) {
             Player player = event.getPlayer();
             RpgPlayer.registerPlayer(plugin, player);
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
-        void onMobDamaged(EntityDamageEvent event) {
-            if (event.getEntity() instanceof Monster) {
-                Monster monster = (Monster)event.getEntity();
-
-                if ((monster.getHealth() - event.getFinalDamage()) < monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-                    monster.setCustomName(ChatColor.YELLOW + "" + (int)Math.ceil(monster.getHealth() - event.getFinalDamage()) + "/" + (int)monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-                    monster.setCustomNameVisible(true);
-                }
-            }
         }
     }
 }
