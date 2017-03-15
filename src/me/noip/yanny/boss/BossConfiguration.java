@@ -75,7 +75,6 @@ class BossConfiguration {
     private static final String BOSS_SPAWN_RATE = "boss_spawn_rate";
     private static final String BOSS_DROP_CHANCE = "boss_drop_chance";
     private static final String BOSS_ENCHANTMENT_CHANCE = "boss_enchantment_chance";
-    private static final String BOSS_DEATH_EXP = "boss_death_exp";
 
     private static final String CONFIGURATION_NAME = "boss";
 
@@ -87,7 +86,6 @@ class BossConfiguration {
     private double bossSpawnRate = 0.05;
     private double bossDropChance = 0.2;
     private double bossEnchantmentChance = 0.1;
-    private int bossDeathExp = 100;
 
     BossConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
@@ -102,20 +100,17 @@ class BossConfiguration {
         bossSpawnRate = serverConfigurationWrapper.getDouble(BOSS_SPAWN_RATE, bossSpawnRate);
         bossDropChance = serverConfigurationWrapper.getDouble(BOSS_DROP_CHANCE, bossDropChance);
         bossEnchantmentChance = serverConfigurationWrapper.getDouble(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
-        bossDeathExp = serverConfigurationWrapper.getInt(BOSS_DEATH_EXP, bossDeathExp);
 
         save();
         logger.logInfo(Boss.class, String.format("Spawn rate: %.2f%%", bossSpawnRate * 100));
         logger.logInfo(Boss.class, String.format("Drop chance: %.2f%%", bossDropChance * 100));
         logger.logInfo(Boss.class, String.format("Armor enchantment chance: %.2f%%", bossEnchantmentChance * 100));
-        logger.logInfo(Boss.class, String.format("Exp on boss death: %d", bossDeathExp));
     }
 
     private void save()  {
         serverConfigurationWrapper.set(BOSS_SPAWN_RATE, bossSpawnRate);
         serverConfigurationWrapper.set(BOSS_DROP_CHANCE, bossDropChance);
         serverConfigurationWrapper.set(BOSS_ENCHANTMENT_CHANCE, bossEnchantmentChance);
-        serverConfigurationWrapper.set(BOSS_DEATH_EXP, bossDeathExp);
 
         serverConfigurationWrapper.save();
     }
