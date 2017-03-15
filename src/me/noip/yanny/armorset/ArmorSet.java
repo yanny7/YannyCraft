@@ -1,7 +1,7 @@
 package me.noip.yanny.armorset;
 
 import me.noip.yanny.MainPlugin;
-import me.noip.yanny.rpg.Rarity;
+import me.noip.yanny.utils.Rarity;
 import me.noip.yanny.utils.CustomItemStack;
 import me.noip.yanny.utils.PartPlugin;
 import org.apache.commons.lang.mutable.MutableInt;
@@ -21,6 +21,7 @@ public class ArmorSet implements PartPlugin {
 
     private MainPlugin plugin;
     private ArmorSetConfiguration armorSetConfiguration;
+    private Map<ItemSet, MutableInt> playerSets = new HashMap<>();
 
     public ArmorSet(MainPlugin plugin) {
         this.plugin = plugin;
@@ -50,38 +51,34 @@ public class ArmorSet implements PartPlugin {
                         playerItems.add(shield);
                     }
 
-                    Map<ItemSet, MutableInt> sets = new HashMap<>();
+                    playerSets.clear();
 
                     for (CustomItemStack customItemStack : playerItems) {
                         ItemSet itemSet = armorSets.get(customItemStack);
 
-                        if (sets.containsKey(itemSet)) {
-                            sets.get(itemSet).add(1);
+                        if (playerSets.containsKey(itemSet)) {
+                            playerSets.get(itemSet).add(1);
                         } else {
-                            sets.put(itemSet, new MutableInt(1));
+                            playerSets.put(itemSet, new MutableInt(1));
                         }
                     }
 
-                    for (Map.Entry<ItemSet, MutableInt> entry : sets.entrySet()) {
+                    for (Map.Entry<ItemSet, MutableInt> entry : playerSets.entrySet()) {
                         ItemSet itemSet = entry.getKey();
                         int count = entry.getValue().intValue();
                         Map<PotionEffectType, Integer> effectFromSet = itemSet.getEffect(count);
 
+                        //TODO fix BOOST potion issue
                         if (effectFromSet != null) {
                             for (Map.Entry<PotionEffectType, Integer> effect : effectFromSet.entrySet()) {
                                 PotionEffectType potionEffectType = effect.getKey();
-                                PotionEffect potionEffect = new PotionEffect(potionEffectType, 20 * 2 + 1, effect.getValue() - 1);
-
-                                if (player.hasPotionEffect(potionEffectType)) {
-                                    player.removePotionEffect(potionEffectType);
-                                }
-
-                                player.addPotionEffect(potionEffect);
+                                PotionEffect potionEffect = new PotionEffect(potionEffectType, 20 * 2, effect.getValue() - 1);
+                                player.addPotionEffect(potionEffect, true);
                             }
                         }
                     }
                 }
-            }, 20, 20 * 2
+            }, 20, 20
         );
     }
 
@@ -92,6 +89,10 @@ public class ArmorSet implements PartPlugin {
 
     public Map<CustomItemStack, ItemSet> getArmorSets() {
         return armorSetConfiguration.getArmorSets();
+    }
+
+    public List<ItemSet> getArmorSets(Rarity rarity) {
+        return armorSetConfiguration.getSetByRarity(rarity);
     }
 
     private class ArmorSetExecutor implements CommandExecutor {

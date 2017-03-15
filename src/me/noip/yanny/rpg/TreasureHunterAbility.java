@@ -2,6 +2,7 @@ package me.noip.yanny.rpg;
 
 import me.noip.yanny.utils.ItemInfo;
 import me.noip.yanny.utils.Items;
+import me.noip.yanny.utils.Rarity;
 import me.noip.yanny.utils.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Effect;
@@ -41,58 +42,50 @@ class TreasureHunterAbility extends Ability {
         }
 
         if (random.nextDouble() <= 0.01 + rpgPlayer.getStatsLevel(skillType) / 1000 * 0.24) {
-            Rarity[] values = Rarity.values();
+            Rarity rarity = Rarity.randomRarity();
+            List<ItemStack> treasure = rpgConfiguration.getTreasure(rarity);
 
-            for (int i = values.length - 1; i >= 0; i--) {
-                Rarity next = values[i];
-                double rand = random.nextDouble();
+            if (treasure.size() > 0) {
+                ItemStack itemStack = treasure.get(random.nextInt(treasure.size()));
+                Entity newEntity = entity.getWorld().dropItemNaturally(entity.getLocation(), itemStack);
+                newEntity.setVelocity(Utils.computeThrow(entity.getLocation(), rpgPlayer.getPlayer().getLocation()));
 
-                if (rand <= next.getProbability()) {
-                    List<ItemStack> treasure = rpgConfiguration.getTreasure(next);
-
-                    if (treasure.size() > 0) {
-                        ItemStack itemStack = treasure.get(random.nextInt(treasure.size()));
-                        Entity newEntity = entity.getWorld().dropItemNaturally(entity.getLocation(), itemStack);
-                        newEntity.setVelocity(Utils.computeThrow(entity.getLocation(), rpgPlayer.getPlayer().getLocation()));
-
-                        switch (next) {
-                            case SCRAP:
-                            case COMMON:
-                            case UNCOMMON:
-                                entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4);
-                                break;
-                            case RARE:
-                            case EXOTIC:
-                            case HEROIC:
-                                entity.getWorld().playEffect(entity.getLocation(), Effect.MOBSPAWNER_FLAMES, 4);
-                                break;
-                            case EPIC:
-                            case LEGENDARY:
-                            case MYTHIC:
-                            case GODLIKE:
-                                entity.getWorld().playEffect(entity.getLocation(), Effect.DRAGON_BREATH, 4);
-                                break;
-                        }
-
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        String displayName = itemMeta.getDisplayName();
-
-                        if (displayName == null) {
-                            ItemInfo itemInfo = Items.itemByType(itemStack.getType(), itemStack.getData().getData());
-
-                            if (itemInfo != null) {
-                                displayName = itemInfo.getName();
-                            } else {
-                                displayName = StringUtils.capitalize(itemStack.getType().name().toLowerCase().replace("_", " "));
-                            }
-                        }
-
-                        rpgPlayer.getPlayer().sendMessage(TREASURE_FOUND.display().replace("{TREASURE}", next.getChatColor() + displayName + TREASURE_FOUND.getChatColor()));
-                    }
-
-                    return next;
+                switch (rarity) {
+                    case SCRAP:
+                    case COMMON:
+                    case UNCOMMON:
+                        entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4);
+                        break;
+                    case RARE:
+                    case EXOTIC:
+                    case HEROIC:
+                        entity.getWorld().playEffect(entity.getLocation(), Effect.MOBSPAWNER_FLAMES, 4);
+                        break;
+                    case EPIC:
+                    case LEGENDARY:
+                    case MYTHIC:
+                    case GODLIKE:
+                        entity.getWorld().playEffect(entity.getLocation(), Effect.DRAGON_BREATH, 4);
+                        break;
                 }
+
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                String displayName = itemMeta.getDisplayName();
+
+                if (displayName == null) {
+                    ItemInfo itemInfo = Items.itemByType(itemStack.getType(), itemStack.getData().getData());
+
+                    if (itemInfo != null) {
+                        displayName = itemInfo.getName();
+                    } else {
+                        displayName = StringUtils.capitalize(itemStack.getType().name().toLowerCase().replace("_", " "));
+                    }
+                }
+
+                rpgPlayer.getPlayer().sendMessage(TREASURE_FOUND.display().replace("{TREASURE}", rarity.getChatColor() + displayName + TREASURE_FOUND.getChatColor()));
             }
+
+            return rarity;
         }
 
         return null;

@@ -1,13 +1,10 @@
-package me.noip.yanny.rpg;
+package me.noip.yanny.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public enum Rarity {
     SCRAP(1.0, "Odpad", ChatColor.GRAY),
@@ -26,6 +23,7 @@ public enum Rarity {
     private String displayName;
     private ChatColor chatColor;
     private static Map<String, Rarity> byName = new HashMap<>();
+    private static Random random = new Random();
 
     static {
         for (Rarity rarity : values()) {
@@ -57,6 +55,21 @@ public enum Rarity {
 
     public static Rarity getByName(String name) {
         return byName.get(name);
+    }
+
+    public static Rarity randomRarity() {
+        Rarity[] values = values();
+
+        for (int i = values.length - 1; i >= 0; i--) {
+            Rarity next = values[i];
+            double rand = random.nextDouble();
+
+            if (rand <= next.getProbability()) {
+                return next;
+            }
+        }
+
+        return values[0];
     }
 
     public static void loadDefaults(Map<Rarity, List<ItemStack>> treasureItems) {

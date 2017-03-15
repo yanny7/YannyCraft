@@ -1,6 +1,6 @@
 package me.noip.yanny.armorset;
 
-import me.noip.yanny.rpg.Rarity;
+import me.noip.yanny.utils.Rarity;
 import me.noip.yanny.utils.CustomItemStack;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -74,7 +74,7 @@ public class ItemSet {
         return name;
     }
 
-    List<CustomItemStack> getItems() {
+    public List<CustomItemStack> getItems() {
         return items;
     }
 

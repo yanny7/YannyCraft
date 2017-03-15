@@ -1,6 +1,7 @@
 package me.noip.yanny.rpg;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.Rarity;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;

@@ -1,7 +1,7 @@
 package me.noip.yanny.armorset;
 
 import me.noip.yanny.MainPlugin;
-import me.noip.yanny.rpg.Rarity;
+import me.noip.yanny.utils.Rarity;
 import me.noip.yanny.utils.CustomItemStack;
 import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
