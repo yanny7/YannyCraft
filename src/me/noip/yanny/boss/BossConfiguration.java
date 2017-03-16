@@ -21,7 +21,7 @@ import java.util.*;
 class BossConfiguration {
 
     static final Map<Integer, Rarity> RARITY_TO_HEALTH_MAP = new HashMap<Integer, Rarity>() {{
-        put(50, Rarity.SCRAP);
+        put(50, Rarity.BASIC);
         put(70, Rarity.COMMON);
         put(100, Rarity.UNCOMMON);
         put(150, Rarity.RARE);
@@ -57,7 +57,7 @@ class BossConfiguration {
     };
 
     private static final Map<Rarity, BossStats> RARITY_BOSS_STATS = new HashMap<Rarity, BossStats>() {{
-        put(Rarity.SCRAP, new BossStats(50, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.WOOD_SWORD));
+        put(Rarity.BASIC, new BossStats(50, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.WOOD_SWORD));
         put(Rarity.COMMON, new BossStats(70, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.WOOD_SWORD));
         put(Rarity.UNCOMMON, new BossStats(100, Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS, Material.IRON_SWORD));
         put(Rarity.RARE, new BossStats(150, Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS, Material.IRON_SWORD));

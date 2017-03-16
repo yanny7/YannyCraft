@@ -26,7 +26,7 @@ class FishingSkill extends Skill {
     }
 
     static void loadDefaults(Map<Rarity, Integer> exp) {
-        exp.put(Rarity.SCRAP, 50);
+        exp.put(Rarity.BASIC, 50);
         exp.put(Rarity.COMMON, 100);
         exp.put(Rarity.UNCOMMON, 200);
         exp.put(Rarity.RARE, 500);
@@ -79,7 +79,7 @@ class FishingSkill extends Skill {
                         if (item.getType() == Material.RAW_FISH) {
                             switch (item.getData().getData()) {
                                 case 0:
-                                    exp = rpgConfiguration.getFishingExp(Rarity.SCRAP);
+                                    exp = rpgConfiguration.getFishingExp(Rarity.BASIC);
                                     break;
                                 case 1:
                                     exp = rpgConfiguration.getFishingExp(Rarity.UNCOMMON);

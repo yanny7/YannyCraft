@@ -51,7 +51,7 @@ class TreasureHunterAbility extends Ability {
                 newEntity.setVelocity(Utils.computeThrow(entity.getLocation(), rpgPlayer.getPlayer().getLocation()));
 
                 switch (rarity) {
-                    case SCRAP:
+                    case BASIC:
                     case COMMON:
                     case UNCOMMON:
                         entity.getWorld().playEffect(entity.getLocation(), Effect.SMOKE, 4);
@@ -115,7 +115,7 @@ class TreasureHunterAbility extends Ability {
                         block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), itemStack);
 
                         switch (next) {
-                            case SCRAP:
+                            case BASIC:
                             case COMMON:
                             case UNCOMMON:
                                 block.getWorld().playEffect(block.getLocation(), Effect.SMOKE, 4);

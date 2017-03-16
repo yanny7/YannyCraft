@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public enum Rarity {
-    SCRAP(1.0, "Odpad", ChatColor.GRAY),
+    BASIC(1.0, "Odpad", ChatColor.GRAY),
     COMMON(0.4, "Bezne", ChatColor.WHITE),
     UNCOMMON(0.16, "Vzacne", ChatColor.YELLOW),
     RARE(0.064, "Rarita", ChatColor.GOLD),
@@ -73,7 +73,7 @@ public enum Rarity {
     }
 
     public static void loadDefaults(Map<Rarity, List<ItemStack>> treasureItems) {
-        treasureItems.put(Rarity.SCRAP, new LinkedList<>());
+        treasureItems.put(Rarity.BASIC, new LinkedList<>());
         treasureItems.put(Rarity.COMMON, new LinkedList<>());
         treasureItems.put(Rarity.UNCOMMON, new LinkedList<>());
         treasureItems.put(Rarity.RARE, new LinkedList<>());
@@ -84,7 +84,7 @@ public enum Rarity {
         treasureItems.put(Rarity.MYTHIC, new LinkedList<>());
         treasureItems.put(Rarity.GODLIKE, new LinkedList<>());
 
-        treasureItems.get(SCRAP).add(new ItemStack(Material.COAL));
+        treasureItems.get(BASIC).add(new ItemStack(Material.COAL));
 
         treasureItems.get(COMMON).add(new ItemStack(Material.IRON_INGOT));
 
