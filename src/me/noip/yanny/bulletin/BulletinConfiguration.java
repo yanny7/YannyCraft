@@ -14,7 +14,7 @@ import java.util.Random;
 
 class BulletinConfiguration {
 
-    private static final String CONFIGURATION_NAME = "bulletin";
+    private static final String CONFIGURATION_NAME = "bulletin.yml";
     private static final String MESSAGES_SECTION = "messages";
     private static final String DELAY_SECTION = "delay";
 

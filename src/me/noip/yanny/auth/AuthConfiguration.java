@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 
 class AuthConfiguration {
 
-    private static final String CONFIGURATION_NAME = "auth";
+    private static final String CONFIGURATION_NAME = "auth.yml";
     private static final String TRANSLATION_SECTION = "translation";
 
     private PreparedStatement userCountStatement;

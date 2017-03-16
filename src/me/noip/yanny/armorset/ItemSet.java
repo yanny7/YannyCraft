@@ -4,8 +4,6 @@ import me.noip.yanny.utils.Rarity;
 import me.noip.yanny.utils.CustomItemStack;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 
@@ -17,13 +15,6 @@ public class ItemSet {
     private Rarity rarity;
     private Map<Integer, Map<PotionEffectType, Integer>> effects;
 
-    ItemSet(String name, Rarity rarity) {
-        this.name = name;
-        this.rarity = rarity;
-        items = new ArrayList<>();
-        effects = new HashMap<>();
-    }
-
     ItemSet(String name, List<CustomItemStack> items, Rarity rarity, Map<Integer, Map<PotionEffectType, Integer>> setEffect) {
         this.name = name;
         this.items = items;
@@ -32,20 +23,27 @@ public class ItemSet {
         buildLoreFromEffects();
     }
 
-    void addItem(Material material, String displayName, Map<Enchantment, Integer> enchantments) {
-        CustomItemStack customItemStack = new CustomItemStack(material);
-        ItemMeta itemMeta = customItemStack.getItemMeta();
-        itemMeta.setDisplayName(rarity.getChatColor() + "" + ChatColor.ITALIC + displayName);
-        enchantments.forEach((enchantment, level) -> itemMeta.addEnchant(enchantment, level, false));
-        customItemStack.setItemMeta(itemMeta);
-        items.add(customItemStack);
+    String getName() {
+        return name;
     }
 
-    void addEffect(int setCount, Map<PotionEffectType, Integer> effects) {
-        this.effects.put(setCount, effects);
+    public List<CustomItemStack> getItems() {
+        return items;
     }
 
-    void buildLoreFromEffects() {
+    public Rarity getRarity() {
+        return rarity;
+    }
+
+    Map<PotionEffectType, Integer> getEffect(int setCount) {
+        return effects.get(setCount);
+    }
+
+    Map<Integer, Map<PotionEffectType, Integer>> getEffects() {
+        return effects;
+    }
+
+    private void buildLoreFromEffects() {
         List<String> lore = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         lore.add("Set bonus:");
@@ -68,26 +66,6 @@ public class ItemSet {
             itemMeta.setLore(lore);
             customItemStack.setItemMeta(itemMeta);
         }
-    }
-
-    String getName() {
-        return name;
-    }
-
-    public List<CustomItemStack> getItems() {
-        return items;
-    }
-
-    public Rarity getRarity() {
-        return rarity;
-    }
-
-    Map<PotionEffectType, Integer> getEffect(int setCount) {
-        return effects.get(setCount);
-    }
-
-    Map<Integer, Map<PotionEffectType, Integer>> getEffects() {
-        return effects;
     }
 
     @Override

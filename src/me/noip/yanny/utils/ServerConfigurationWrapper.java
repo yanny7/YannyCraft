@@ -12,7 +12,7 @@ public class ServerConfigurationWrapper extends YamlConfiguration {
 
     public ServerConfigurationWrapper(MainPlugin plugin, String configName) {
         this.plugin = plugin;
-        file = new File(plugin.getDataFolder() + "/" + configName + ".yml");
+        file = new File(plugin.getDataFolder() + "/" + configName);
     }
 
     public void load() {

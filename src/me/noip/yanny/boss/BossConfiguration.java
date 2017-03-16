@@ -76,7 +76,7 @@ class BossConfiguration {
     private static final String BOSS_DROP_CHANCE = "boss_drop_chance";
     private static final String BOSS_ENCHANTMENT_CHANCE = "boss_enchantment_chance";
 
-    private static final String CONFIGURATION_NAME = "boss";
+    private static final String CONFIGURATION_NAME = "boss.yml";
 
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private MainPlugin plugin;

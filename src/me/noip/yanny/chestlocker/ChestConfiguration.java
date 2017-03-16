@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 
 class ChestConfiguration {
 
-    private static final String CONFIGURATION_NAME = "chests";
+    private static final String CONFIGURATION_NAME = "chests.yml";
     private static final String TRANSLATION_SECTION = "translation";
     private static final String LOCKPICKING_CHANCE = "lockpicking_chance";
 

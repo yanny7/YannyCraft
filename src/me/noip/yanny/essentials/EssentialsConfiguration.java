@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 
 class EssentialsConfiguration {
 
-    private static final String CONFIGURATION_NAME = "essentials";
+    private static final String CONFIGURATION_NAME = "essentials.yml";
 
     private static final String TRANSLATION_SECTION = "translation";
     private static final String SPAWN_SECTION = "spawn";

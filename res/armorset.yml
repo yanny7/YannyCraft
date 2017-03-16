@@ -1,0 +1,1611 @@
+armorset:
+  OldLeatherSet:
+    rarity: UNCOMMON
+    items:
+      LEATHER_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Speed(1)
+        name: §e§oOld leather helmet
+        enchantments:
+        - DURABILITY:1
+      LEATHER_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Speed(1)
+        name: §e§oOld leather chestplate
+        enchantments:
+        - DURABILITY:1
+      LEATHER_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Speed(1)
+        name: §e§oOld leather leggings
+        enchantments:
+        - DURABILITY:1
+      LEATHER_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Speed(1)
+        name: §e§oOld leather boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Speed(1)
+        name: §e§oOld leather shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '5':
+      - SPEED:1
+  OldIronSet:
+    rarity: UNCOMMON
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Health boost(1)
+        name: §e§oOld iron helmet
+        enchantments:
+        - DURABILITY:1
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Health boost(1)
+        name: §e§oOld iron chestplate
+        enchantments:
+        - DURABILITY:1
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Health boost(1)
+        name: §e§oOld iron leggings
+        enchantments:
+        - DURABILITY:1
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Health boost(1)
+        name: §e§oOld iron boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Health boost(1)
+        name: §e§oOld iron shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '5':
+      - HEALTH_BOOST:1
+  OldChainmailSet:
+    rarity: UNCOMMON
+    items:
+      CHAINMAIL_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fast digging(1)
+        name: §e§oOld chainmail helmet
+        enchantments:
+        - DURABILITY:1
+      CHAINMAIL_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fast digging(1)
+        name: §e§oOld chainmail chestplate
+        enchantments:
+        - DURABILITY:1
+      CHAINMAIL_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fast digging(1)
+        name: §e§oOld chainmail leggings
+        enchantments:
+        - DURABILITY:1
+      CHAINMAIL_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fast digging(1)
+        name: §e§oOld chainmail boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fast digging(1)
+        name: §e§oOld chainmail shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '5':
+      - FAST_DIGGING:1
+  LeatherSet:
+    rarity: RARE
+    items:
+      LEATHER_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Night vision(1), Speed(1)
+        name: §6§oLeather helmet
+        enchantments:
+        - DURABILITY:1
+      LEATHER_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Night vision(1), Speed(1)
+        name: §6§oLeather chestplate
+        enchantments:
+        - DURABILITY:1
+      LEATHER_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Night vision(1), Speed(1)
+        name: §6§oLeather leggings
+        enchantments:
+        - DURABILITY:1
+      LEATHER_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Night vision(1), Speed(1)
+        name: §6§oLeather boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Night vision(1), Speed(1)
+        name: §6§oLeather shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '4':
+      - SPEED:1
+      '5':
+      - NIGHT_VISION:1
+      - SPEED:1
+  IronSet:
+    rarity: RARE
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Damage resistance(1)
+        name: §6§oIron helmet
+        enchantments:
+        - DURABILITY:1
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Damage resistance(1)
+        name: §6§oIron chestplate
+        enchantments:
+        - DURABILITY:1
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Damage resistance(1)
+        name: §6§oIron leggings
+        enchantments:
+        - DURABILITY:1
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Damage resistance(1)
+        name: §6§oIron boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Damage resistance(1)
+        name: §6§oIron shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '4':
+      - HEALTH_BOOST:1
+      '5':
+      - DAMAGE_RESISTANCE:1
+  ChainmailSet:
+    rarity: RARE
+    items:
+      CHAINMAIL_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(1), Speed(1)
+        name: §6§oChainmail helmet
+        enchantments:
+        - DURABILITY:1
+      CHAINMAIL_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(1), Speed(1)
+        name: §6§oChainmail chestplate
+        enchantments:
+        - DURABILITY:1
+      CHAINMAIL_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(1), Speed(1)
+        name: §6§oChainmail leggings
+        enchantments:
+        - DURABILITY:1
+      CHAINMAIL_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(1), Speed(1)
+        name: §6§oChainmail boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(1), Speed(1)
+        name: §6§oChainmail shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '4':
+      - FAST_DIGGING:1
+      '5':
+      - FAST_DIGGING:1
+      - SPEED:1
+  GoldSet:
+    rarity: EXOTIC
+    items:
+      GOLD_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(1), Health boost(1)
+        name: §a§oGold helmet
+        enchantments:
+        - DURABILITY:1
+      GOLD_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(1), Health boost(1)
+        name: §a§oGold chestplate
+        enchantments:
+        - DURABILITY:1
+      GOLD_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(1), Health boost(1)
+        name: §a§oGold leggings
+        enchantments:
+        - DURABILITY:1
+      GOLD_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(1), Health boost(1)
+        name: §a§oGold boots
+        enchantments:
+        - DURABILITY:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(1), Health boost(1)
+        name: §a§oGold shield
+        enchantments:
+        - DURABILITY:1
+    set_effects:
+      '4':
+      - DAMAGE_RESISTANCE:1
+      '5':
+      - DAMAGE_RESISTANCE:1
+      - HEALTH_BOOST:1
+  NewLeatherSet:
+    rarity: EXOTIC
+    items:
+      LEATHER_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2)
+        name: §a§oNew leather helmet
+        enchantments:
+        - DURABILITY:2
+        - PROTECTION_EXPLOSIONS:1
+      LEATHER_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2)
+        name: §a§oNew leather chestplate
+        enchantments:
+        - DURABILITY:2
+      LEATHER_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2)
+        name: §a§oNew leather leggings
+        enchantments:
+        - DURABILITY:2
+      LEATHER_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2)
+        name: §a§oNew leather boots
+        enchantments:
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2)
+        name: §a§oNew leather shield
+        enchantments:
+        - DURABILITY:2
+    set_effects:
+      '4':
+      - SPEED:1
+      '5':
+      - SPEED:2
+  NewIronSet:
+    rarity: EXOTIC
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2)
+        name: §a§oNew iron helmet
+        enchantments:
+        - DURABILITY:2
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2)
+        name: §a§oNew iron chestplate
+        enchantments:
+        - DURABILITY:2
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2)
+        name: §a§oNew iron leggings
+        enchantments:
+        - DURABILITY:2
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2)
+        name: §a§oNew iron boots
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2)
+        name: §a§oNew iron shield
+        enchantments:
+        - DURABILITY:2
+    set_effects:
+      '4':
+      - HEALTH_BOOST:1
+      '5':
+      - HEALTH_BOOST:2
+  NewChainmailSet:
+    rarity: EXOTIC
+    items:
+      CHAINMAIL_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2)
+        name: §a§oNew chainmail helmet
+        enchantments:
+        - DURABILITY:2
+      CHAINMAIL_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2)
+        name: §a§oNew chainmail chestplate
+        enchantments:
+        - DURABILITY:2
+      CHAINMAIL_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2)
+        name: §a§oNew chainmail leggings
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:1
+        - DURABILITY:2
+      CHAINMAIL_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2)
+        name: §a§oNew chainmail boots
+        enchantments:
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2)
+        name: §a§oNew chainmail shield
+        enchantments:
+        - DURABILITY:2
+    set_effects:
+      '4':
+      - FAST_DIGGING:1
+      '5':
+      - FAST_DIGGING:2
+  NewGoldSet:
+    rarity: EXOTIC
+    items:
+      GOLD_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2)
+        name: §a§oNew gold helmet
+        enchantments:
+        - DURABILITY:2
+      GOLD_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2)
+        name: §a§oNew gold chestplate
+        enchantments:
+        - DURABILITY:2
+        - THORNS:1
+      GOLD_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2)
+        name: §a§oNew gold leggings
+        enchantments:
+        - DURABILITY:2
+      GOLD_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2)
+        name: §a§oNew gold boots
+        enchantments:
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2)
+        name: §a§oNew gold shield
+        enchantments:
+        - DURABILITY:3
+    set_effects:
+      '4':
+      - DAMAGE_RESISTANCE:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+  HeroicLeatherSet:
+    rarity: HEROIC
+    items:
+      LEATHER_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2), Fast digging(1)
+        name: §2§oHeroic leather helmet
+        enchantments:
+        - DURABILITY:2
+        - PROTECTION_EXPLOSIONS:1
+      LEATHER_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2), Fast digging(1)
+        name: §2§oHeroic leather chestplate
+        enchantments:
+        - DURABILITY:2
+        - PROTECTION_FALL:1
+      LEATHER_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2), Fast digging(1)
+        name: §2§oHeroic leather leggings
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+      LEATHER_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2), Fast digging(1)
+        name: §2§oHeroic leather boots
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:1
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Speed(1)
+        - §55 items:§b Speed(2), Fast digging(1)
+        name: §2§oHeroic leather shield
+        enchantments:
+        - PROTECTION_PROJECTILE:1
+        - DURABILITY:2
+    set_effects:
+      '4':
+      - SPEED:1
+      '5':
+      - SPEED:2
+      - FAST_DIGGING:1
+  HeroicIronSet:
+    rarity: HEROIC
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2), Damage resistance(1)
+        name: §2§oHeroic iron helmet
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2), Damage resistance(1)
+        name: §2§oHeroic iron chestplate
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2), Damage resistance(1)
+        name: §2§oHeroic iron leggings
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2), Damage resistance(1)
+        name: §2§oHeroic iron boots
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Health boost(1)
+        - §55 items:§b Health boost(2), Damage resistance(1)
+        name: §2§oHeroic iron shield
+        enchantments:
+        - PROTECTION_FIRE:1
+        - DURABILITY:2
+    set_effects:
+      '4':
+      - HEALTH_BOOST:1
+      '5':
+      - HEALTH_BOOST:2
+      - DAMAGE_RESISTANCE:1
+  HeroicChainmailSet:
+    rarity: HEROIC
+    items:
+      CHAINMAIL_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2), Damage resistance(1)
+        name: §2§oHeroic chainmail helmet
+        enchantments:
+        - DURABILITY:2
+        - THORNS:1
+      CHAINMAIL_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2), Damage resistance(1)
+        name: §2§oHeroic chainmail chestplate
+        enchantments:
+        - DURABILITY:2
+        - THORNS:1
+      CHAINMAIL_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2), Damage resistance(1)
+        name: §2§oHeroic chainmail leggings
+        enchantments:
+        - DURABILITY:2
+        - THORNS:1
+      CHAINMAIL_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2), Damage resistance(1)
+        name: §2§oHeroic chainmail boots
+        enchantments:
+        - DURABILITY:2
+        - THORNS:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Fast digging(1)
+        - §55 items:§b Fast digging(2), Damage resistance(1)
+        name: §2§oHeroic chainmail shield
+        enchantments:
+        - DURABILITY:2
+        - THORNS:1
+    set_effects:
+      '4':
+      - FAST_DIGGING:1
+      '5':
+      - FAST_DIGGING:2
+      - DAMAGE_RESISTANCE:1
+  HeroicGoldSet:
+    rarity: HEROIC
+    items:
+      GOLD_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic gold helmet
+        enchantments:
+        - DURABILITY:2
+        - WATER_WORKER:1
+      GOLD_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic gold chestplate
+        enchantments:
+        - OXYGEN:1
+        - DURABILITY:2
+      GOLD_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic gold leggings
+        enchantments:
+        - OXYGEN:1
+        - DURABILITY:2
+      GOLD_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic gold boots
+        enchantments:
+        - OXYGEN:1
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §54 items:§b Damage resistance(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic gold shield
+        enchantments:
+        - OXYGEN:1
+        - DURABILITY:3
+    set_effects:
+      '4':
+      - DAMAGE_RESISTANCE:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:2
+  HeroicDiamondSet:
+    rarity: HEROIC
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic diamond helmet
+        enchantments:
+        - DURABILITY:2
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic diamond chestplate
+        enchantments:
+        - DURABILITY:2
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic diamond leggings
+        enchantments:
+        - DURABILITY:2
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic diamond boots
+        enchantments:
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2)
+        name: §2§oHeroic diamond shield
+        enchantments:
+        - DURABILITY:3
+    set_effects:
+      '3':
+      - FAST_DIGGING:1
+      '4':
+      - DAMAGE_RESISTANCE:1
+      - FAST_DIGGING:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:2
+  EpicIronSet:
+    rarity: EPIC
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(2), Damage resistance(2)
+        name: §b§oEpic iron helmet
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(2), Damage resistance(2)
+        name: §b§oEpic iron chestplate
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(2), Damage resistance(2)
+        name: §b§oEpic iron leggings
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(2), Damage resistance(2)
+        name: §b§oEpic iron boots
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(2), Damage resistance(2)
+        name: §b§oEpic iron shield
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+    set_effects:
+      '3':
+      - HEALTH_BOOST:1
+      '4':
+      - HEALTH_BOOST:2
+      - DAMAGE_RESISTANCE:1
+      '5':
+      - HEALTH_BOOST:2
+      - DAMAGE_RESISTANCE:2
+  EpicChainmailSet:
+    rarity: EPIC
+    items:
+      CHAINMAIL_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Fast digging(2)
+        - §55 items:§b Fast digging(3), Damage resistance(1)
+        name: §b§oEpic chainmail helmet
+        enchantments:
+        - DURABILITY:3
+        - THORNS:2
+      CHAINMAIL_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Fast digging(2)
+        - §55 items:§b Fast digging(3), Damage resistance(1)
+        name: §b§oEpic chainmail chestplate
+        enchantments:
+        - DURABILITY:3
+        - THORNS:2
+      CHAINMAIL_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Fast digging(2)
+        - §55 items:§b Fast digging(3), Damage resistance(1)
+        name: §b§oEpic chainmail leggings
+        enchantments:
+        - DURABILITY:3
+        - THORNS:2
+      CHAINMAIL_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Fast digging(2)
+        - §55 items:§b Fast digging(3), Damage resistance(1)
+        name: §b§oEpic chainmail boots
+        enchantments:
+        - DURABILITY:3
+        - THORNS:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Fast digging(2)
+        - §55 items:§b Fast digging(3), Damage resistance(1)
+        name: §b§oEpic chainmail shield
+        enchantments:
+        - DURABILITY:3
+        - THORNS:2
+    set_effects:
+      '3':
+      - FAST_DIGGING:1
+      '4':
+      - FAST_DIGGING:2
+      '5':
+      - FAST_DIGGING:3
+      - DAMAGE_RESISTANCE:1
+  EpicGoldSet:
+    rarity: EPIC
+    items:
+      GOLD_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(1), Health boost(1)
+        name: §b§oEpic gold helmet
+        enchantments:
+        - DURABILITY:3
+      GOLD_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(1), Health boost(1)
+        name: §b§oEpic gold chestplate
+        enchantments:
+        - OXYGEN:2
+        - DURABILITY:3
+      GOLD_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(1), Health boost(1)
+        name: §b§oEpic gold leggings
+        enchantments:
+        - OXYGEN:2
+        - DURABILITY:3
+      GOLD_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(1), Health boost(1)
+        name: §b§oEpic gold boots
+        enchantments:
+        - OXYGEN:2
+        - DURABILITY:3
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(1), Health boost(1)
+        name: §b§oEpic gold shield
+        enchantments:
+        - OXYGEN:2
+        - DURABILITY:3
+    set_effects:
+      '3':
+      - DAMAGE_RESISTANCE:1
+      '4':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:1
+      - HEALTH_BOOST:1
+  EpicDiamondSet:
+    rarity: EPIC
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3)
+        name: §b§oEpic diamond helmet
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3)
+        name: §b§oEpic diamond chestplate
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3)
+        name: §b§oEpic diamond leggings
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3)
+        name: §b§oEpic diamond boots
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3)
+        name: §b§oEpic diamond shield
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:3
+    set_effects:
+      '3':
+      - FAST_DIGGING:1
+      '4':
+      - DAMAGE_RESISTANCE:1
+      - FAST_DIGGING:2
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:3
+  LegendaryIronSet:
+    rarity: LEGENDARY
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1)
+        name: §3§oLegendary iron helmet
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1)
+        name: §3§oLegendary iron chestplate
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1)
+        name: §3§oLegendary iron leggings
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1)
+        name: §3§oLegendary iron boots
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(1)
+        - §54 items:§b Health boost(2), Damage resistance(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1)
+        name: §3§oLegendary iron shield
+        enchantments:
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+    set_effects:
+      '3':
+      - HEALTH_BOOST:1
+      '4':
+      - HEALTH_BOOST:2
+      - DAMAGE_RESISTANCE:1
+      '5':
+      - HEALTH_BOOST:3
+      - DAMAGE_RESISTANCE:2
+      - SPEED:1
+  LegendaryGoldSet:
+    rarity: LEGENDARY
+    items:
+      GOLD_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1)
+        name: §3§oLegendary gold helmet
+        enchantments:
+        - PROTECTION_PROJECTILE:2
+        - DURABILITY:3
+      GOLD_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1)
+        name: §3§oLegendary gold chestplate
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+      GOLD_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1)
+        name: §3§oLegendary gold leggings
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+      GOLD_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1)
+        name: §3§oLegendary gold boots
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(1)
+        - §54 items:§b Damage resistance(2), Fast digging(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1)
+        name: §3§oLegendary gold shield
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+    set_effects:
+      '3':
+      - DAMAGE_RESISTANCE:1
+      '4':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:2
+      - HEALTH_BOOST:1
+  LegendaryDiamondSet:
+    rarity: LEGENDARY
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1)
+        name: §3§oLegendary diamond helmet
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+        - PROTECTION_EXPLOSIONS:2
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1)
+        name: §3§oLegendary diamond chestplate
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+        - PROTECTION_EXPLOSIONS:2
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1)
+        name: §3§oLegendary diamond leggings
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+        - PROTECTION_EXPLOSIONS:2
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1)
+        name: §3§oLegendary diamond boots
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:2
+        - PROTECTION_EXPLOSIONS:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(1)
+        - §54 items:§b Damage resistance(1), Fast digging(2)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1)
+        name: §3§oLegendary diamond shield
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - DURABILITY:3
+        - PROTECTION_EXPLOSIONS:2
+    set_effects:
+      '3':
+      - FAST_DIGGING:1
+      '4':
+      - DAMAGE_RESISTANCE:1
+      - FAST_DIGGING:2
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:3
+      - NIGHT_VISION:1
+  MythicIronSet:
+    rarity: MYTHIC
+    items:
+      IRON_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(2)
+        - §54 items:§b Health boost(2), Damage resistance(1), Water breathing(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1), Water breathing(1)
+        name: §5§oMythic iron helmet
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      IRON_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(2)
+        - §54 items:§b Health boost(2), Damage resistance(1), Water breathing(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1), Water breathing(1)
+        name: §5§oMythic iron chestplate
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      IRON_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(2)
+        - §54 items:§b Health boost(2), Damage resistance(1), Water breathing(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1), Water breathing(1)
+        name: §5§oMythic iron leggings
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      IRON_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(2)
+        - §54 items:§b Health boost(2), Damage resistance(1), Water breathing(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1), Water breathing(1)
+        name: §5§oMythic iron boots
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Health boost(2)
+        - §54 items:§b Health boost(2), Damage resistance(1), Water breathing(1)
+        - §55 items:§b Health boost(3), Damage resistance(2), Speed(1), Water breathing(1)
+        name: §5§oMythic iron shield
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - THORNS:2
+    set_effects:
+      '3':
+      - HEALTH_BOOST:2
+      '4':
+      - HEALTH_BOOST:2
+      - DAMAGE_RESISTANCE:1
+      - WATER_BREATHING:1
+      '5':
+      - HEALTH_BOOST:3
+      - DAMAGE_RESISTANCE:2
+      - SPEED:1
+      - WATER_BREATHING:1
+  MythicGoldSet:
+    rarity: MYTHIC
+    items:
+      GOLD_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(2)
+        - §54 items:§b Damage resistance(2), Fast digging(1), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1), Speed(1)
+        name: §5§oMythic gold helmet
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - THORNS:1
+      GOLD_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(2)
+        - §54 items:§b Damage resistance(2), Fast digging(1), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1), Speed(1)
+        name: §5§oMythic gold chestplate
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+        - THORNS:1
+      GOLD_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(2)
+        - §54 items:§b Damage resistance(2), Fast digging(1), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1), Speed(1)
+        name: §5§oMythic gold leggings
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+        - THORNS:1
+      GOLD_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(2)
+        - §54 items:§b Damage resistance(2), Fast digging(1), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1), Speed(1)
+        name: §5§oMythic gold boots
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+        - THORNS:1
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Damage resistance(2)
+        - §54 items:§b Damage resistance(2), Fast digging(1), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(2), Health boost(1), Speed(1)
+        name: §5§oMythic gold shield
+        enchantments:
+        - DURABILITY:3
+        - PROTECTION_PROJECTILE:2
+        - OXYGEN:2
+        - THORNS:1
+    set_effects:
+      '3':
+      - DAMAGE_RESISTANCE:2
+      '4':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:1
+      - SPEED:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:2
+      - HEALTH_BOOST:1
+      - SPEED:1
+  MythicDiamondSet:
+    rarity: MYTHIC
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Damage resistance(1), Fast digging(2), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1), Speed(1)
+        name: §5§oMythic diamond helmet
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:2
+        - PROTECTION_FALL:2
+        - PROTECTION_EXPLOSIONS:2
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Damage resistance(1), Fast digging(2), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1), Speed(1)
+        name: §5§oMythic diamond chestplate
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:2
+        - PROTECTION_FALL:2
+        - PROTECTION_EXPLOSIONS:2
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Damage resistance(1), Fast digging(2), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1), Speed(1)
+        name: §5§oMythic diamond leggings
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:2
+        - PROTECTION_FALL:2
+        - PROTECTION_EXPLOSIONS:2
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Damage resistance(1), Fast digging(2), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1), Speed(1)
+        name: §5§oMythic diamond boots
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:2
+        - PROTECTION_FALL:2
+        - PROTECTION_EXPLOSIONS:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Damage resistance(1), Fast digging(2), Speed(1)
+        - §55 items:§b Damage resistance(2), Fast digging(3), Night vision(1), Speed(1)
+        name: §5§oMythic diamond shield
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:2
+        - PROTECTION_FIRE:2
+        - DURABILITY:3
+        - PROTECTION_FALL:2
+        - PROTECTION_EXPLOSIONS:2
+    set_effects:
+      '3':
+      - FAST_DIGGING:2
+      '4':
+      - DAMAGE_RESISTANCE:1
+      - FAST_DIGGING:2
+      - SPEED:1
+      '5':
+      - DAMAGE_RESISTANCE:2
+      - FAST_DIGGING:3
+      - NIGHT_VISION:1
+      - SPEED:1
+  FireSet:
+    rarity: GODLIKE
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fire resistance(1)
+        name: §4§oHelmet of fire
+        enchantments:
+        - PROTECTION_FIRE:4
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fire resistance(1)
+        name: §4§oChestplate of fire
+        enchantments:
+        - PROTECTION_FIRE:4
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fire resistance(1)
+        name: §4§oLeggings of fire
+        enchantments:
+        - PROTECTION_FIRE:4
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fire resistance(1)
+        name: §4§oBoots of fire
+        enchantments:
+        - PROTECTION_FIRE:4
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Fire resistance(1)
+        name: §4§oShield of fire
+        enchantments:
+        - PROTECTION_FIRE:4
+    set_effects:
+      '5':
+      - FIRE_RESISTANCE:1
+  EarthSet:
+    rarity: GODLIKE
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Regeneration(1)
+        name: §4§oHelmet of earth
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:4
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Regeneration(1)
+        name: §4§oChestplate of earth
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:4
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Regeneration(1)
+        name: §4§oLeggings of earth
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:4
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Regeneration(1)
+        name: §4§oBoots of earth
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:4
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §55 items:§b Regeneration(1)
+        name: §4§oShield of earth
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:4
+    set_effects:
+      '5':
+      - REGENERATION:1
+  WindSet:
+    rarity: GODLIKE
+    items:
+      DIAMOND_HELMET:
+        lore:
+        - 'Set bonus:'
+        - §52 items:§b Fast digging(1)
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Fast digging(3)
+        - §55 items:§b Fast digging(4)
+        name: §4§oHelmet of wind
+        enchantments:
+        - LOOT_BONUS_BLOCKS:2
+      DIAMOND_CHESTPLATE:
+        lore:
+        - 'Set bonus:'
+        - §52 items:§b Fast digging(1)
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Fast digging(3)
+        - §55 items:§b Fast digging(4)
+        name: §4§oChestplate of wind
+        enchantments:
+        - LOOT_BONUS_BLOCKS:2
+      DIAMOND_LEGGINGS:
+        lore:
+        - 'Set bonus:'
+        - §52 items:§b Fast digging(1)
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Fast digging(3)
+        - §55 items:§b Fast digging(4)
+        name: §4§oLeggings of wind
+        enchantments:
+        - LOOT_BONUS_BLOCKS:2
+      DIAMOND_BOOTS:
+        lore:
+        - 'Set bonus:'
+        - §52 items:§b Fast digging(1)
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Fast digging(3)
+        - §55 items:§b Fast digging(4)
+        name: §4§oBoots of wind
+        enchantments:
+        - LOOT_BONUS_BLOCKS:2
+      SHIELD:
+        lore:
+        - 'Set bonus:'
+        - §52 items:§b Fast digging(1)
+        - §53 items:§b Fast digging(2)
+        - §54 items:§b Fast digging(3)
+        - §55 items:§b Fast digging(4)
+        name: §4§oShield of wind
+        enchantments:
+        - LOOT_BONUS_BLOCKS:2
+    set_effects:
+      '2':
+      - FAST_DIGGING:1
+      '3':
+      - FAST_DIGGING:2
+      '4':
+      - FAST_DIGGING:3
+      '5':
+      - FAST_DIGGING:4

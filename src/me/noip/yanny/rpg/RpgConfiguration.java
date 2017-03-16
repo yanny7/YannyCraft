@@ -17,7 +17,7 @@ import java.util.Map;
 
 class RpgConfiguration {
 
-    private static final String CONFIGURATION_NAME = "rpg";
+    private static final String CONFIGURATION_NAME = "rpg.yml";
     private static final String TRANSLATION_SECTION = "translation";
     private static final String TREASURE_SECTION = "treasure";
 

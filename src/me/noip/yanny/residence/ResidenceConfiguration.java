@@ -17,7 +17,7 @@ import java.util.List;
 
 class ResidenceConfiguration {
 
-    private static final String CONFIGURATION_NAME = "residence";
+    private static final String CONFIGURATION_NAME = "residence.yml";
     private static final String TRANSLATION_SECTION = "translation";
     private static final String RESIDENCE_MATERIAL = "res_material";
 
