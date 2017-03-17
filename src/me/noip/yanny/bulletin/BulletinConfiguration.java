@@ -44,17 +44,19 @@ class BulletinConfiguration {
         delay = serverConfigurationWrapper.getInt(DELAY_SECTION, delay);
 
         ConfigurationSection messagesSection = serverConfigurationWrapper.getConfigurationSection(MESSAGES_SECTION);
-        if (messagesSection == null) {
-            messagesSection = serverConfigurationWrapper.createSection(MESSAGES_SECTION);
+        if (messagesSection != null) {
+            for (String string : messagesSection.getKeys(false)) {
+                ConfigurationSection messageSection = messagesSection.getConfigurationSection(string);
+                if (messageSection != null) {
+                    String content = messageSection.getString(MSG_CONTENT, "Message not loaded correctly: " + string);
+                    boolean disabled = messageSection.getBoolean(MSG_DISABLED, false);
+                    Message message = new Message(content);
+                    message.disabled = disabled;
+                    messageMap.add(message);
+                }
+            }
         }
-        for (String string : messagesSection.getKeys(false)) {
-            ConfigurationSection messageSection = messagesSection.getConfigurationSection(string);
-            String content = messageSection.getString(MSG_CONTENT, "Message not loaded correctly: " + string);
-            boolean disabled = messageSection.getBoolean(MSG_DISABLED, false);
-            Message message = new Message(content);
-            message.disabled = disabled;
-            messageMap.add(message);
-        }
+
         scheduleMessage();
 
         save();
@@ -64,13 +66,11 @@ class BulletinConfiguration {
 
     private void save()  {
         serverConfigurationWrapper.set(MESSAGES_SECTION, null);
-        ConfigurationSection messagesSection = serverConfigurationWrapper.getConfigurationSection(MESSAGES_SECTION);
-        if (messagesSection == null) {
-            messagesSection = serverConfigurationWrapper.createSection(MESSAGES_SECTION);
-        }
+        ConfigurationSection messagesSection = serverConfigurationWrapper.createSection(MESSAGES_SECTION);
         for (int i = 0; i < messageMap.size(); i++) {
-            Message message = messageMap.get(i);
             ConfigurationSection messageSection = messagesSection.createSection(Integer.toString(i));
+            Message message = messageMap.get(i);
+
             messageSection.set(MSG_CONTENT, message.content);
             messageSection.set(MSG_DISABLED, message.disabled);
         }

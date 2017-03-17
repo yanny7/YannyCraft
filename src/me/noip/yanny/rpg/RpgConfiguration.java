@@ -77,127 +77,114 @@ class RpgConfiguration {
         serverConfigurationWrapper.load();
 
         ConfigurationSection miningSection = serverConfigurationWrapper.getConfigurationSection(EXP_MINING_SECTION);
-        if (miningSection == null) {
-            miningSection = serverConfigurationWrapper.createSection(EXP_MINING_SECTION);
+        if (miningSection != null) {
+            miningExp.putAll(Utils.convertToEnumMap(miningSection.getValues(false), Material.class));
         }
-        miningExp.putAll(Utils.convertToEnumMap(miningSection.getValues(false), Material.class));
 
         ConfigurationSection excavationSection = serverConfigurationWrapper.getConfigurationSection(EXP_EXCAVATION_SECTION);
-        if (excavationSection == null) {
-            excavationSection = serverConfigurationWrapper.createSection(EXP_EXCAVATION_SECTION);
+        if (excavationSection != null) {
+            excavationExp.putAll(Utils.convertToEnumMap(excavationSection.getValues(false), Material.class));
         }
-        excavationExp.putAll(Utils.convertToEnumMap(excavationSection.getValues(false), Material.class));
 
         ConfigurationSection woodcuttingSection = serverConfigurationWrapper.getConfigurationSection(EXP_WOODCUTTING_SECTION);
-        if (woodcuttingSection == null) {
-            woodcuttingSection = serverConfigurationWrapper.createSection(EXP_WOODCUTTING_SECTION);
+        if (woodcuttingSection != null) {
+            woodcuttingExp.putAll(Utils.convertToEnumMap(woodcuttingSection.getValues(false), Material.class));
         }
-        woodcuttingExp.putAll(Utils.convertToEnumMap(woodcuttingSection.getValues(false), Material.class));
 
         ConfigurationSection herbalismSection = serverConfigurationWrapper.getConfigurationSection(EXP_HERBALISM_SECTION);
-        if (herbalismSection == null) {
-            herbalismSection = serverConfigurationWrapper.createSection(EXP_HERBALISM_SECTION);
+        if (herbalismSection != null) {
+            herbalismExp.putAll(Utils.convertToEnumMap(herbalismSection.getValues(false), Material.class));
         }
-        herbalismExp.putAll(Utils.convertToEnumMap(herbalismSection.getValues(false), Material.class));
 
         ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
-        if (fishingSection == null) {
-            fishingSection = serverConfigurationWrapper.createSection(EXP_FISHING_SECTION);
+        if (fishingSection != null) {
+            fishingExp.putAll(Utils.convertToEnumMap(fishingSection.getValues(false), Rarity.class));
         }
-        fishingExp.putAll(Utils.convertToEnumMap(fishingSection.getValues(false), Rarity.class));
 
         ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
-        if (damageSection == null) {
-            damageSection = serverConfigurationWrapper.createSection(EXP_DAMAGE_SECTION);
+        if (damageSection != null) {
+            damageExp.putAll(Utils.convertToEnumMap(damageSection.getValues(false), EntityType.class));
         }
-        damageExp.putAll(Utils.convertToEnumMap(damageSection.getValues(false), EntityType.class));
 
         ConfigurationSection tameSection = serverConfigurationWrapper.getConfigurationSection(EXP_TAME_SECTION);
-        if (tameSection == null) {
-            tameSection = serverConfigurationWrapper.createSection(EXP_TAME_SECTION);
+        if (tameSection != null) {
+            tameExp.putAll(Utils.convertToEnumMap(tameSection.getValues(false), EntityType.class));
         }
-        tameExp.putAll(Utils.convertToEnumMap(tameSection.getValues(false), EntityType.class));
 
         ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
-        if (repairSection == null) {
-            repairSection = serverConfigurationWrapper.createSection(EXP_REPAIR_SECTION);
+        if (repairSection != null) {
+            repairExp = repairSection.getInt(REPAIR_XP, repairExp);
         }
-        repairExp = repairSection.getInt(REPAIR_XP, repairExp);
 
         ConfigurationSection acrobaticsSection = serverConfigurationWrapper.getConfigurationSection(EXP_ACROBATICS_SECTION);
-        if (acrobaticsSection == null) {
-            acrobaticsSection = serverConfigurationWrapper.createSection(EXP_ACROBATICS_SECTION);
+        if (acrobaticsSection != null) {
+            acrobaticsExp = acrobaticsSection.getInt(ACROBATICS_XP, acrobaticsExp);
         }
-        acrobaticsExp = acrobaticsSection.getInt(ACROBATICS_XP, acrobaticsExp);
 
         ConfigurationSection alchemySection = serverConfigurationWrapper.getConfigurationSection(EXP_ALCHEMY_SECTION);
-        if (alchemySection == null) {
-            alchemySection = serverConfigurationWrapper.createSection(EXP_ALCHEMY_SECTION);
+        if (alchemySection != null) {
+            alchemyExp.putAll(Utils.convertToEnumMap(alchemySection.getValues(false), PotionType.class));
         }
-        alchemyExp.putAll(Utils.convertToEnumMap(alchemySection.getValues(false), PotionType.class));
 
         ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
-        if (smeltingSection == null) {
-            smeltingSection = serverConfigurationWrapper.createSection(EXP_SMELTING_SECTION);
+        if (smeltingSection != null) {
+            smeltingExp.putAll(Utils.convertToEnumMap(smeltingSection.getValues(false), Material.class));
         }
-        smeltingExp.putAll(Utils.convertToEnumMap(smeltingSection.getValues(false), Material.class));
 
         ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
-        if (treasureSection == null) {
-            treasureSection = serverConfigurationWrapper.createSection(TREASURE_SECTION);
-        }
-        for (Rarity rarity : Rarity.values()) {
-            List<String> items = treasureSection.getStringList(rarity.name());
-            for (String item : items) {
-                String[] tokens = item.split(" ");
-                Material material;
-                short subtype = 0;
+        if (treasureSection != null) {
+            for (Rarity rarity : Rarity.values()) {
+                List<String> items = treasureSection.getStringList(rarity.name());
+                for (String item : items) {
+                    String[] tokens = item.split(" ");
+                    Material material;
+                    short subtype = 0;
 
-                if (tokens.length > 2) {
-                    logger.logWarn(RPG.class, "RpgConfiguration.load: Cant load ItemStack '" + item + "'");
-                    continue;
-                }
-
-                try {
-                    material = Material.valueOf(tokens[0]);
-                    if (tokens.length == 2) {
-                        subtype = Short.parseShort(tokens[1]);
+                    if (tokens.length > 2) {
+                        logger.logWarn(RPG.class, "RpgConfiguration.load: Cant load ItemStack '" + item + "'");
+                        continue;
                     }
-                } catch (Exception e) {
-                    logger.logWarn(RPG.class, "RpgConfiguration.load: Error: " + e.getLocalizedMessage());
-                    continue;
-                }
 
-                ItemStack itemStack = new ItemStack(material, 1, subtype);
-                List<ItemStack> rarityItems = treasureItems.get(rarity);
-                boolean duplicate = false;
-
-                for (ItemStack it : rarityItems) {
-                    if ((it.getType() == itemStack.getType()) && (it.getData().getData() == itemStack.getData().getData())) {
-                        duplicate = true;
-                        break;
+                    try {
+                        material = Material.valueOf(tokens[0]);
+                        if (tokens.length == 2) {
+                            subtype = Short.parseShort(tokens[1]);
+                        }
+                    } catch (Exception e) {
+                        logger.logWarn(RPG.class, "RpgConfiguration.load: Error: " + e.getLocalizedMessage());
+                        continue;
                     }
-                }
+
+                    ItemStack itemStack = new ItemStack(material, 1, subtype);
+                    List<ItemStack> rarityItems = treasureItems.get(rarity);
+                    boolean duplicate = false;
+
+                    for (ItemStack it : rarityItems) {
+                        if ((it.getType() == itemStack.getType()) && (it.getData().getData() == itemStack.getData().getData())) {
+                            duplicate = true;
+                            break;
+                        }
+                    }
 
 
-                if (!duplicate) {
-                    rarityItems.add(itemStack);
+                    if (!duplicate) {
+                        rarityItems.add(itemStack);
+                    }
                 }
             }
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        for (RpgTranslation translation : RpgTranslation.values()) {
-            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
-        }
-        for (Rarity rarity : Rarity.values()) {
-            rarity.setDisplayName(translationSection.getString(rarity.name(), rarity.getDisplayName()));
-        }
-        for (SkillType skillType : SkillType.values()) {
-            skillType.setDisplayName(translationSection.getString(skillType.name(), skillType.getDisplayName()));
+        if (translationSection != null) {
+            for (RpgTranslation translation : RpgTranslation.values()) {
+                translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+            }
+            for (Rarity rarity : Rarity.values()) {
+                rarity.setDisplayName(translationSection.getString(rarity.name(), rarity.getDisplayName()));
+            }
+            for (SkillType skillType : SkillType.values()) {
+                skillType.setDisplayName(translationSection.getString(skillType.name(), skillType.getDisplayName()));
+            }
         }
 
         save(); // save defaults
@@ -210,40 +197,40 @@ class RpgConfiguration {
     }
 
     private void save() {
-        ConfigurationSection miningSection = serverConfigurationWrapper.getConfigurationSection(EXP_MINING_SECTION);
+        ConfigurationSection miningSection = serverConfigurationWrapper.createSection(EXP_MINING_SECTION);
         miningExp.forEach(((material, value) -> miningSection.set(material.name(), value)));
 
-        ConfigurationSection excavationSection = serverConfigurationWrapper.getConfigurationSection(EXP_EXCAVATION_SECTION);
+        ConfigurationSection excavationSection = serverConfigurationWrapper.createSection(EXP_EXCAVATION_SECTION);
         excavationExp.forEach(((material, value) -> excavationSection.set(material.name(), value)));
 
-        ConfigurationSection woodcuttingSection = serverConfigurationWrapper.getConfigurationSection(EXP_WOODCUTTING_SECTION);
+        ConfigurationSection woodcuttingSection = serverConfigurationWrapper.createSection(EXP_WOODCUTTING_SECTION);
         woodcuttingExp.forEach(((material, value) -> woodcuttingSection.set(material.name(), value)));
 
-        ConfigurationSection herbalismSection = serverConfigurationWrapper.getConfigurationSection(EXP_HERBALISM_SECTION);
+        ConfigurationSection herbalismSection = serverConfigurationWrapper.createSection(EXP_HERBALISM_SECTION);
         herbalismExp.forEach(((material, value) -> herbalismSection.set(material.name(), value)));
 
-        ConfigurationSection fishingSection = serverConfigurationWrapper.getConfigurationSection(EXP_FISHING_SECTION);
+        ConfigurationSection fishingSection = serverConfigurationWrapper.createSection(EXP_FISHING_SECTION);
         fishingExp.forEach(((rarity, value) -> fishingSection.set(rarity.name(), value)));
 
-        ConfigurationSection damageSection = serverConfigurationWrapper.getConfigurationSection(EXP_DAMAGE_SECTION);
+        ConfigurationSection damageSection = serverConfigurationWrapper.createSection(EXP_DAMAGE_SECTION);
         damageExp.forEach(((type, value) -> damageSection.set(type.name(), value)));
 
-        ConfigurationSection tameSection = serverConfigurationWrapper.getConfigurationSection(EXP_TAME_SECTION);
+        ConfigurationSection tameSection = serverConfigurationWrapper.createSection(EXP_TAME_SECTION);
         tameExp.forEach(((type, value) -> tameSection.set(type.name(), value)));
 
-        ConfigurationSection repairSection = serverConfigurationWrapper.getConfigurationSection(EXP_REPAIR_SECTION);
+        ConfigurationSection repairSection = serverConfigurationWrapper.createSection(EXP_REPAIR_SECTION);
         repairSection.set(REPAIR_XP, repairExp);
 
-        ConfigurationSection acrobaticsSection = serverConfigurationWrapper.getConfigurationSection(EXP_ACROBATICS_SECTION);
+        ConfigurationSection acrobaticsSection = serverConfigurationWrapper.createSection(EXP_ACROBATICS_SECTION);
         acrobaticsSection.set(ACROBATICS_XP, acrobaticsExp);
 
-        ConfigurationSection alchemySection = serverConfigurationWrapper.getConfigurationSection(EXP_ALCHEMY_SECTION);
+        ConfigurationSection alchemySection = serverConfigurationWrapper.createSection(EXP_ALCHEMY_SECTION);
         alchemyExp.forEach(((type, value) -> alchemySection.set(type.name(), value)));
 
-        ConfigurationSection smeltingSection = serverConfigurationWrapper.getConfigurationSection(EXP_SMELTING_SECTION);
+        ConfigurationSection smeltingSection = serverConfigurationWrapper.createSection(EXP_SMELTING_SECTION);
         smeltingExp.forEach(((type, value) -> smeltingSection.set(type.name(), value)));
 
-        ConfigurationSection treasureSection = serverConfigurationWrapper.getConfigurationSection(TREASURE_SECTION);
+        ConfigurationSection treasureSection = serverConfigurationWrapper.createSection(TREASURE_SECTION);
         for (Map.Entry<Rarity, List<ItemStack>> entry : treasureItems.entrySet()) {
             List<String> items = new LinkedList<>();
             for (ItemStack itemStack : entry.getValue()) {
@@ -258,7 +245,7 @@ class RpgConfiguration {
             treasureSection.set(entry.getKey().name(), items);
         }
 
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        ConfigurationSection translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         for (RpgTranslation translation : RpgTranslation.values()) {
             translationSection.set(translation.name(), translation.getDisplayName());
         }

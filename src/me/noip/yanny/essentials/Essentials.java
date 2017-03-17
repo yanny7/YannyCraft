@@ -462,15 +462,6 @@ public class Essentials implements PartPlugin {
 
         @SuppressWarnings("unused")
         @EventHandler
-        void onWorldLoad(WorldLoadEvent event) {
-            String spawnWorld = essentialsConfiguration.getSpawnWorld();
-            if ((spawnWorld != null) && (spawnWorld.equals(event.getWorld().getName()))) {
-                essentialsConfiguration.loadSpawnLocation(spawnWorld);
-            }
-        }
-
-        @SuppressWarnings("unused")
-        @EventHandler
         void onPlayerTeleport(PlayerTeleportEvent event) {
             Player player = event.getPlayer();
             Location from = event.getFrom();

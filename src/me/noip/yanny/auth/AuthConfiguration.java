@@ -35,11 +35,10 @@ class AuthConfiguration {
         serverConfigurationWrapper.load();
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        for (AuthTranslation translation : AuthTranslation.values()) {
-            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        if (translationSection != null) {
+            for (AuthTranslation translation : AuthTranslation.values()) {
+                translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+            }
         }
 
         save(); // save defaults
@@ -47,7 +46,7 @@ class AuthConfiguration {
     }
 
     private void save() {
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        ConfigurationSection translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         for (AuthTranslation translation : AuthTranslation.values()) {
             translationSection.set(translation.name(), translation.getDisplayName());
         }

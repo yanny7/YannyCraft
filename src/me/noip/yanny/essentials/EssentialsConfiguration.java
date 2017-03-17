@@ -1,9 +1,11 @@
 package me.noip.yanny.essentials;
 
 import me.noip.yanny.MainPlugin;
+import me.noip.yanny.utils.LoggerHandler;
 import me.noip.yanny.utils.ServerConfigurationWrapper;
 import me.noip.yanny.utils.Utils;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -29,6 +31,8 @@ class EssentialsConfiguration {
     private PreparedStatement getBackStatement;
 
     private MainPlugin plugin;
+    private Server server;
+    private LoggerHandler logger;
     private ServerConfigurationWrapper serverConfigurationWrapper;
     private Location spawnLocation = null;
     private String normalChatFormat = "<&a{PLAYER}&r> {MSG}";
@@ -36,6 +40,8 @@ class EssentialsConfiguration {
 
     EssentialsConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
+        server = plugin.getServer();
+        logger = plugin.getLoggerHandler();
 
         Connection connection = plugin.getConnection();
 
@@ -55,91 +61,87 @@ class EssentialsConfiguration {
         serverConfigurationWrapper.load();
 
         ConfigurationSection spawnSection = serverConfigurationWrapper.getConfigurationSection(SPAWN_SECTION);
-        if (spawnSection == null) {
-            serverConfigurationWrapper.createSection(SPAWN_SECTION);
+        if (spawnSection != null) {
+            String worldName = spawnSection.getString("world");
+
+            World world = server.getWorld(worldName);
+            if (world == null) {
+                if ((server.getWorlds() == null) || (server.getWorlds().isEmpty())) {
+                    logger.logWarn(Essentials.class, "No worlds created");
+                    return;
+                }
+
+                world = server.getWorlds().get(0);
+                logger.logWarn(Essentials.class, "World '" + worldName + "' does not exists, using found world '" + world.getName() + "'");
+            }
+
+            Location defaultSpawn = world.getSpawnLocation();
+            double x = spawnSection.getDouble("x", defaultSpawn.getX());
+            double y = spawnSection.getDouble("y", defaultSpawn.getY());
+            double z = spawnSection.getDouble("z", defaultSpawn.getZ());
+            double yaw = spawnSection.getDouble("yaw", defaultSpawn.getYaw());
+            double pitch = spawnSection.getDouble("pitch", defaultSpawn.getPitch());
+
+            spawnLocation = new Location(world, x, y, z, (float)yaw, (float)pitch);
+        } else {
+            if ((server.getWorlds() == null) || (server.getWorlds().isEmpty())) {
+                logger.logWarn(Essentials.class, "No worlds created");
+                return;
+            }
+
+            spawnLocation = server.getWorlds().get(0).getSpawnLocation();
         }
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        for (EssentialsTranslation translation : EssentialsTranslation.values()) {
-            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
-        }
-
-        // try to load spawn location, after startup this fails, after reload succeed
-        String spawnWorld = getSpawnWorld();
-        if (spawnWorld != null) {
-            for (World world : plugin.getServer().getWorlds()) {
-                if (spawnWorld.equals(world.getName())) {
-                    loadSpawnLocation(spawnWorld);
-                }
+        if (translationSection != null) {
+            for (EssentialsTranslation translation : EssentialsTranslation.values()) {
+                translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
             }
         }
 
         ConfigurationSection chatSection = serverConfigurationWrapper.getConfigurationSection(CHAT_SECTION);
-        if (chatSection == null) {
-            chatSection = serverConfigurationWrapper.createSection(CHAT_SECTION);
+        if (chatSection != null) {
+            normalChatFormat = chatSection.getString(CHAT_NORMAL, normalChatFormat);
+            opChatFormat = chatSection.getString(CHAT_OP, opChatFormat);
         }
-        normalChatFormat = chatSection.getString(CHAT_NORMAL, normalChatFormat);
-        opChatFormat = chatSection.getString(CHAT_OP, opChatFormat);
+
+        logger.logInfo(Essentials.class, String.format("Spawn location: %s [%d %d %d]", spawnLocation.getWorld().getName(), spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ()));
 
         save(); // save defaults
     }
 
     private void save() {
-        if (spawnLocation != null) {
-            ConfigurationSection spawnSection = serverConfigurationWrapper.getConfigurationSection(SPAWN_SECTION);
-            spawnSection.set("world", spawnLocation.getWorld().getName());
-            spawnSection.set("x", spawnLocation.getX());
-            spawnSection.set("y", spawnLocation.getY());
-            spawnSection.set("z", spawnLocation.getZ());
-            spawnSection.set("yaw", spawnLocation.getYaw());
-            spawnSection.set("pitch", spawnLocation.getPitch());
+        if ((server.getWorlds() == null) || (server.getWorlds().isEmpty())) {
+            logger.logWarn(Essentials.class, "No worlds created");
+            return;
         }
 
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        ConfigurationSection spawnSection = serverConfigurationWrapper.createSection(SPAWN_SECTION);
+        spawnSection.set("world", spawnLocation.getWorld().getName());
+        spawnSection.set("x", spawnLocation.getX());
+        spawnSection.set("y", spawnLocation.getY());
+        spawnSection.set("z", spawnLocation.getZ());
+        spawnSection.set("yaw", spawnLocation.getYaw());
+        spawnSection.set("pitch", spawnLocation.getPitch());
+
+        ConfigurationSection translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         for (EssentialsTranslation translation : EssentialsTranslation.values()) {
             translationSection.set(translation.name(), translation.getDisplayName());
         }
 
-        ConfigurationSection chatSection = serverConfigurationWrapper.getConfigurationSection(CHAT_SECTION);
+        ConfigurationSection chatSection = serverConfigurationWrapper.createSection(CHAT_SECTION);
         chatSection.set(CHAT_NORMAL, normalChatFormat);
         chatSection.set(CHAT_OP, opChatFormat);
 
         serverConfigurationWrapper.save();
     }
 
-    String getSpawnWorld() {
-        ConfigurationSection spawnSection = serverConfigurationWrapper.getConfigurationSection(SPAWN_SECTION);
-        return spawnSection.getString("world");
-    }
-
-    void loadSpawnLocation(String worldName) {
-        ConfigurationSection spawnSection = serverConfigurationWrapper.getConfigurationSection(SPAWN_SECTION);
-        double x = spawnSection.getDouble("x", 0);
-        double y = spawnSection.getDouble("y", 100);
-        double z = spawnSection.getDouble("z", 0);
-        double yaw = spawnSection.getDouble("yaw", 0);
-        double pitch = spawnSection.getDouble("pitch", 0);
-
-        spawnLocation = new Location(plugin.getServer().getWorld(worldName), x, y, z, (float)yaw, (float)pitch);
-    }
-
     void setSpawnLocation(Location location) {
         spawnLocation = location;
-
         save();
     }
 
     Location getSpawnLocation() {
-        if (spawnLocation == null) {
-            if (plugin.getServer().getWorlds().size() > 0) {
-                World world = plugin.getServer().getWorlds().get(0);
-                return world.getSpawnLocation();
-            }
-        }
-
         return spawnLocation;
     }
 

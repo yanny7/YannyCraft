@@ -58,11 +58,10 @@ class ResidenceConfiguration {
         serverConfigurationWrapper.load();
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        for (ResidenceTranslation translation : ResidenceTranslation.values()) {
-            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        if (translationSection != null) {
+            for (ResidenceTranslation translation : ResidenceTranslation.values()) {
+                translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+            }
         }
 
         residenceMaterial = Material.getMaterial(serverConfigurationWrapper.getString(RESIDENCE_MATERIAL, residenceMaterial.name()));
@@ -74,7 +73,7 @@ class ResidenceConfiguration {
     }
 
     private void save() {
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        ConfigurationSection translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         for (ResidenceTranslation translation : ResidenceTranslation.values()) {
             translationSection.set(translation.name(), translation.getDisplayName());
         }

@@ -44,11 +44,10 @@ class ChestConfiguration {
         serverConfigurationWrapper.load();
 
         ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
-        if (translationSection == null) {
-            translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
-        }
-        for (ChestTranslation translation : ChestTranslation.values()) {
-            translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+        if (translationSection != null) {
+            for (ChestTranslation translation : ChestTranslation.values()) {
+                translation.setDisplayName(translationSection.getString(translation.name(), translation.getDisplayName()));
+            }
         }
 
         lockpickingChance = serverConfigurationWrapper.getDouble(LOCKPICKING_CHANCE, lockpickingChance);
@@ -60,7 +59,7 @@ class ChestConfiguration {
     }
 
     private void save() {
-        ConfigurationSection translationSection = serverConfigurationWrapper.getConfigurationSection(TRANSLATION_SECTION);
+        ConfigurationSection translationSection = serverConfigurationWrapper.createSection(TRANSLATION_SECTION);
         for (ChestTranslation translation : ChestTranslation.values()) {
             translationSection.set(translation.name(), translation.getDisplayName());
         }
