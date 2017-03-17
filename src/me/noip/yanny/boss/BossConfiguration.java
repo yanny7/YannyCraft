@@ -83,9 +83,9 @@ class BossConfiguration {
     private LoggerHandler logger;
     private Random random = new Random();
 
-    private double bossSpawnRate = 0.05;
-    private double bossDropChance = 0.2;
-    private double bossEnchantmentChance = 0.1;
+    private double bossSpawnRate = 0.25;
+    private double bossDropChance = 0.25;
+    private double bossEnchantmentChance = 0.33;
 
     BossConfiguration(MainPlugin plugin) {
         this.plugin = plugin;
@@ -119,7 +119,7 @@ class BossConfiguration {
         List<ItemSet> itemSets = plugin.getArmorSet().getArmorSets(bossMonster.rarity);
         BossStats bossStats = RARITY_BOSS_STATS.get(bossMonster.rarity);
 
-        if ((itemSets != null) && (itemSets.size() != 0)) {
+        if ((itemSets != null) && (itemSets.size() != 0) && (random.nextDouble() <= bossDropChance)) {
             ItemSet itemSet = itemSets.get(random.nextInt(itemSets.size() - 1));
 
             if (itemSet != null) {
