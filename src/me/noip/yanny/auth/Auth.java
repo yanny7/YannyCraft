@@ -26,11 +26,6 @@ public class Auth implements PartPlugin {
     private MainPlugin plugin;
     private LoggerHandler logger;
 
-    private LoginExecutor loginExecutor;
-    private RegisterExecutor registerExecutor;
-    private ChangePasswordExecutor changePasswordExecutor;
-    private ResetPasswordExecutor resetPasswordExecutor;
-    private AuthListener authListener;
     private AuthConfiguration authConfiguration;
 
     private final Map<UUID, AuthPlayerWrapper> loggedPlayers = new HashMap<>();
@@ -40,22 +35,17 @@ public class Auth implements PartPlugin {
         logger = plugin.getLoggerHandler();
 
         authConfiguration = new AuthConfiguration(plugin);
-        authListener = new AuthListener();
-        loginExecutor = new LoginExecutor();
-        registerExecutor = new RegisterExecutor();
-        changePasswordExecutor = new ChangePasswordExecutor();
-        resetPasswordExecutor = new ResetPasswordExecutor();
     }
 
     @Override
     public void onEnable() {
         authConfiguration.load();
 
-        plugin.getServer().getPluginManager().registerEvents(authListener, plugin);
-        plugin.getCommand("login").setExecutor(loginExecutor);
-        plugin.getCommand("register").setExecutor(registerExecutor);
-        plugin.getCommand("changepassword").setExecutor(changePasswordExecutor);
-        plugin.getCommand("resetpassword").setExecutor(resetPasswordExecutor);
+        plugin.getServer().getPluginManager().registerEvents(new AuthListener(), plugin);
+        plugin.getCommand("login").setExecutor(new LoginExecutor());
+        plugin.getCommand("register").setExecutor(new RegisterExecutor());
+        plugin.getCommand("changepassword").setExecutor(new ChangePasswordExecutor());
+        plugin.getCommand("resetpassword").setExecutor(new ResetPasswordExecutor());
 
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             AuthPlayerWrapper authPlayerWrapper = new AuthPlayerWrapper(plugin, player);

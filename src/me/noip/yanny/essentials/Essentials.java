@@ -33,8 +33,8 @@ public class Essentials implements PartPlugin {
     private Server server;
     private LoggerHandler logger;
 
-    private Map<UUID, PermissionAttachment> permissionAttachment;
-    private Map<Player, Player> teleportRequest;
+    private Map<UUID, PermissionAttachment> permissionAttachment = new HashMap<>();
+    private Map<UUID, UUID> teleportRequest = new HashMap<>();
     private EssentialsConfiguration essentialsConfiguration;
 
     public Essentials(MainPlugin plugin) {
@@ -42,8 +42,6 @@ public class Essentials implements PartPlugin {
         server = plugin.getServer();
         logger = plugin.getLoggerHandler();
 
-        permissionAttachment = new HashMap<>();
-        teleportRequest = new HashMap<>();
         essentialsConfiguration = new EssentialsConfiguration(plugin);
     }
 
@@ -171,7 +169,7 @@ public class Essentials implements PartPlugin {
             if (target != null) {
                 player.sendMessage(TPA_SENDED.display());
                 target.sendMessage(TPA_RECEIVED.display().replace("{player}", ChatColor.GOLD + player.getDisplayName() + TPA_RECEIVED.getChatColor()));
-                teleportRequest.put(target, player);
+                teleportRequest.put(target.getUniqueId(), player.getUniqueId());
             } else {
                 player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
             }
@@ -207,17 +205,18 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
+            UUID target = teleportRequest.remove(player.getUniqueId());
 
-            if (teleportRequest.containsKey(player)) {
-                Player target = teleportRequest.remove(player);
+            if (target != null) {
+                Player targetPlayer = server.getPlayer(target);
 
-                if (target != null) {
-                    target.teleport(player.getLocation());
-                } else {
-                    player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
+                if (targetPlayer != null) {
+                    targetPlayer.teleport(player.getLocation());
+                    return true;
                 }
             }
 
+            player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
             return true;
         }
     }
@@ -230,12 +229,19 @@ public class Essentials implements PartPlugin {
             }
 
             Player player = (Player) commandSender;
+            UUID target = teleportRequest.remove(player.getUniqueId());
 
-            if (teleportRequest.containsKey(player)) {
-                Player target = teleportRequest.remove(player);
-                player.sendMessage(TPDENY.display());
-                target.sendMessage(ERR_TPDENY.display());
+            if (target != null) {
+                Player targetPlayer = server.getPlayer(target);
+
+                if (targetPlayer != null) {
+                    player.sendMessage(TPDENY.display());
+                    targetPlayer.sendMessage(ERR_TPDENY.display());
+                    return true;
+                }
             }
+
+            player.sendMessage(ERR_INVALID_PLAYER.display().replace("{player}", ChatColor.GOLD + args[0] + ERR_INVALID_PLAYER.getChatColor()));
             return true;
         }
     }

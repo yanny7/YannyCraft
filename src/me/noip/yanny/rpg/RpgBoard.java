@@ -20,7 +20,7 @@ class RpgBoard {
     private Plugin plugin;
     private Server server;
     private Map<UUID, RpgPlayer> playerMap;
-    private Map<Player, Objective> objectiveMap = new HashMap<>();
+    private Map<UUID, Objective> objectiveMap = new HashMap<>();
 
     RpgBoard(Plugin plugin, Map<UUID, RpgPlayer> playerMap) {
         this.plugin = plugin;
@@ -30,7 +30,7 @@ class RpgBoard {
 
     void onEnable() {
         server.getPluginManager().registerEvents(new RpgBoardListener(), plugin);
-        server.getOnlinePlayers().forEach(player -> objectiveMap.put(player, createObjective(player)));
+        server.getOnlinePlayers().forEach(player -> objectiveMap.put(player.getUniqueId(), createObjective(player)));
     }
 
     void onDisable() {
@@ -39,7 +39,7 @@ class RpgBoard {
     }
 
     void updateObjective(SkillType statsType, Player player, int value) {
-        Objective objective = objectiveMap.get(player);
+        Objective objective = objectiveMap.get(player.getUniqueId());
         Score score = objective.getScore(ChatColor.GOLD + statsType.getDisplayName());
         score.setScore(value);
     }
@@ -65,7 +65,7 @@ class RpgBoard {
         void onPlayerLogin(PlayerAuthEvent event) {
             Player player = event.getPlayer();
             Objective objective = createObjective(player);
-            objectiveMap.put(player, objective);
+            objectiveMap.put(player.getUniqueId(), objective);
         }
     }
 }
